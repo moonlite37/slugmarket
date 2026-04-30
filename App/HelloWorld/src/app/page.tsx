@@ -11,6 +11,7 @@ export default function Home() {
     <div>Authors: </div>
     <div>Tyler Ham</div>
     <div>Iman Oshaghi</div>
+    <div>Dat Le</div>
     </>
   );
 }
