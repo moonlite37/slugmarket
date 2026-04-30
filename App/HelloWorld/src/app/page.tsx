@@ -10,6 +10,7 @@ export default function Home() {
     <div>Hello World!</div>
     <div>Authors: </div>
     <div>Tyler Ham</div>
+    <div>Iman Oshaghi</div>
     </>
   );
 }
