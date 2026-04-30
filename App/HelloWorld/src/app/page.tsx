@@ -6,6 +6,10 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
+    <>
     <div>Hello World!</div>
+    <div>Authors: </div>
+    <div>Tyler Ham</div>
+    </>
   );
 }
