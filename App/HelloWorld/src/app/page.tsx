@@ -12,6 +12,7 @@ export default function Home() {
     <div>Iman Oshaghi</div>
     <div>Dat Le</div>
     <div>Tyler Ham</div>
+    <div>Howard Li</div>
     </>
   );
 }
