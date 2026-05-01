@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1777666993369" clover="3.2.0">
+  <project timestamp="1777666993369" name="All files">
+    <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0" elements="7" coveredelements="0" complexity="0" loc="4" ncloc="4" packages="2" files="7" classes="7"/>
+    <package name="src">
+      <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+      <file name="App.css" path="/Users/tyham/Documents/cse187/slug-market/App/shopper/src/App.css">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+      <file name="App.tsx" path="/Users/tyham/Documents/cse187/slug-market/App/shopper/src/App.tsx">
+        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+      </file>
+      <file name="index.css" path="/Users/tyham/Documents/cse187/slug-market/App/shopper/src/index.css">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+      <file name="main.tsx" path="/Users/tyham/Documents/cse187/slug-market/App/shopper/src/main.tsx">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="6" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.assets">
+      <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="hero.png" path="/Users/tyham/Documents/cse187/slug-market/App/shopper/src/assets/hero.png">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+      <file name="react.svg" path="/Users/tyham/Documents/cse187/slug-market/App/shopper/src/assets/react.svg">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+      <file name="vite.svg" path="/Users/tyham/Documents/cse187/slug-market/App/shopper/src/assets/vite.svg">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+    </package>
+  </project>
+</coverage>
