@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/App.tsx</title>
+    <title>Code coverage report for src/index.css</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,18 +19,18 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">src</a> App.tsx</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">src</a> index.css</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>0/0</span>
             </div>
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -174,27 +174,14 @@
 <a name='L109'></a><a href='#L109'>109</a>
 <a name='L110'></a><a href='#L110'>110</a>
 <a name='L111'></a><a href='#L111'>111</a>
-<a name='L112'></a><a href='#L112'>112</a>
-<a name='L113'></a><a href='#L113'>113</a>
-<a name='L114'></a><a href='#L114'>114</a>
-<a name='L115'></a><a href='#L115'>115</a>
-<a name='L116'></a><a href='#L116'>116</a>
-<a name='L117'></a><a href='#L117'>117</a>
-<a name='L118'></a><a href='#L118'>118</a>
-<a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a>
-<a name='L123'></a><a href='#L123'>123</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L112'></a><a href='#L112'>112</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -211,7 +198,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -299,136 +285,117 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 &nbsp;
-function <span class="fstat-no" title="function not covered" >App() {</span>
-  const [count, <span class="cstat-no" title="statement not covered" >setCount] = useState(0)</span>
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-    &lt;&gt;
-      &lt;section id="center"&gt;
-        &lt;div className="hero"&gt;
-          &lt;img src={heroImg} className="base" width="170" height="179" alt="" /&gt;
-          &lt;img src={reactLogo} className="framework" alt="React logo" /&gt;
-          &lt;img src={viteLogo} className="vite" alt="Vite logo" /&gt;
-        &lt;/div&gt;
-        &lt;div&gt;
-          &lt;h1&gt;Get started&lt;/h1&gt;
-          &lt;p&gt;
-            Edit &lt;code&gt;src/App.tsx&lt;/code&gt; and save to test &lt;code&gt;HMR&lt;/code&gt;
-          &lt;/p&gt;
-        &lt;/div&gt;
-        &lt;button
-          type="button"
-          className="counter"
-<span class="fstat-no" title="function not covered" >          onClick={() =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >s</span>etCount((c</span>ount) =&gt; <span class="cstat-no" title="statement not covered" >count + 1)}</span></span>
-        &gt;
-          Count is {count}
-        &lt;/button&gt;
-      &lt;/section&gt;
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 &nbsp;
-      &lt;div className="ticks"&gt;&lt;/div&gt;
-&nbsp;
-      &lt;section id="next-steps"&gt;
-        &lt;div id="docs"&gt;
-          &lt;svg className="icon" role="presentation" aria-hidden="true"&gt;
-            &lt;use href="/icons.svg#documentation-icon"&gt;&lt;/use&gt;
-          &lt;/svg&gt;
-          &lt;h2&gt;Documentation&lt;/h2&gt;
-          &lt;p&gt;Your questions, answered&lt;/p&gt;
-          &lt;ul&gt;
-            &lt;li&gt;
-              &lt;a href="https://vite.dev/" target="_blank"&gt;
-                &lt;img className="logo" src={viteLogo} alt="" /&gt;
-                Explore Vite
-              &lt;/a&gt;
-            &lt;/li&gt;
-            &lt;li&gt;
-              &lt;a href="https://react.dev/" target="_blank"&gt;
-                &lt;img className="button-icon" src={reactLogo} alt="" /&gt;
-                Learn more
-              &lt;/a&gt;
-            &lt;/li&gt;
-          &lt;/ul&gt;
-        &lt;/div&gt;
-        &lt;div id="social"&gt;
-          &lt;svg className="icon" role="presentation" aria-hidden="true"&gt;
-            &lt;use href="/icons.svg#social-icon"&gt;&lt;/use&gt;
-          &lt;/svg&gt;
-          &lt;h2&gt;Connect with us&lt;/h2&gt;
-          &lt;p&gt;Join the Vite community&lt;/p&gt;
-          &lt;ul&gt;
-            &lt;li&gt;
-              &lt;a href="https://github.com/vitejs/vite" target="_blank"&gt;
-                &lt;svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                &gt;
-                  &lt;use href="/icons.svg#github-icon"&gt;&lt;/use&gt;
-                &lt;/svg&gt;
-                GitHub
-              &lt;/a&gt;
-            &lt;/li&gt;
-            &lt;li&gt;
-              &lt;a href="https://chat.vite.dev/" target="_blank"&gt;
-                &lt;svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                &gt;
-                  &lt;use href="/icons.svg#discord-icon"&gt;&lt;/use&gt;
-                &lt;/svg&gt;
-                Discord
-              &lt;/a&gt;
-            &lt;/li&gt;
-            &lt;li&gt;
-              &lt;a href="https://x.com/vite_js" target="_blank"&gt;
-                &lt;svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                &gt;
-                  &lt;use href="/icons.svg#x-icon"&gt;&lt;/use&gt;
-                &lt;/svg&gt;
-                X.com
-              &lt;/a&gt;
-            &lt;/li&gt;
-            &lt;li&gt;
-              &lt;a href="https://bsky.app/profile/vite.dev" target="_blank"&gt;
-                &lt;svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                &gt;
-                  &lt;use href="/icons.svg#bluesky-icon"&gt;&lt;/use&gt;
-                &lt;/svg&gt;
-                Bluesky
-              &lt;/a&gt;
-            &lt;/li&gt;
-          &lt;/ul&gt;
-        &lt;/div&gt;
-      &lt;/section&gt;
-&nbsp;
-      &lt;div className="ticks"&gt;&lt;/div&gt;
-      &lt;section id="spacer"&gt;&lt;/section&gt;
-    &lt;/&gt;
-  )
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
 }
 &nbsp;
-export default App
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+&nbsp;
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+&nbsp;
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+&nbsp;
+body {
+  margin: 0;
+}
+&nbsp;
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+&nbsp;
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+&nbsp;
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+&nbsp;
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -436,7 +403,7 @@ export default App
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-01T20:23:13.364Z
+                at 2026-05-01T22:45:14.219Z
             </div>
         <script src="../prettify.js"></script>
         <script>
