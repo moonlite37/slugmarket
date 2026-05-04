@@ -1,0 +1,42 @@
+{
+  "devDependencies": {
+    "@eslint/js": "*",
+    "@types/cors": "*",
+    "@types/express": "*",
+    "@types/jsonwebtoken": "*",
+    "@types/node": "*",
+    "@types/pg": "*",
+    "@types/supertest": "*",
+    "@vitest/coverage-v8": "*",
+    "eslint": "*",
+    "globals": "*",
+    "jscpd": "*",
+    "nodemon": "*",
+    "supertest": "*",
+    "ts-node": "*",
+    "ts-postgres": "*",
+    "typescript": "*",
+    "typescript-eslint": "*",
+    "vitest": "*"
+  },
+  "dependencies": {
+    "cors": "*",
+    "dotenv": "*",
+    "express": "*",
+    "jsonwebtoken": "*",
+    "pg": "*"
+  },
+  "nodemonConfig": {
+    "watch": ["src"],
+    "ext": "ts",
+    "exec": "ts-node src/server.ts"
+  },
+  "scripts": {
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "node build/src/server.js",
+    "test": "npm run lint && npm run cpd && vitest run --no-file-parallelism --testTimeout=3000 --coverage",
+    "lint": "eslint src/**/*.[jt]s --fix",
+    "cpd": "jscpd src --silent"
+  }
+}
