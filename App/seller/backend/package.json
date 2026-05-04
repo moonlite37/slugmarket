@@ -7,7 +7,9 @@
     "@types/node": "*",
     "@types/pg": "*",
     "@types/supertest": "*",
+    "@types/swagger-ui-express": "*",
     "@vitest/coverage-v8": "*",
+    "concurrently": "*",
     "eslint": "*",
     "globals": "*",
     "jscpd": "*",
@@ -24,7 +26,10 @@
     "dotenv": "*",
     "express": "*",
     "jsonwebtoken": "*",
-    "pg": "*"
+    "pg": "*",
+    "swagger-ui-express": "*",
+    "tsoa": "*",
+    "zod": "*"
   },
   "nodemonConfig": {
     "watch": ["src"],
@@ -32,9 +37,12 @@
     "exec": "ts-node src/server.ts"
   },
   "scripts": {
-    "dev": "nodemon",
+    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "swagger": "tsoa spec-and-routes",
     "build": "tsc",
+    "prebuild": "npm run swagger",
     "start": "node build/src/server.js",
+    "prestart": "npm run build",
     "test": "npm run lint && npm run cpd && vitest run --no-file-parallelism --testTimeout=3000 --coverage",
     "lint": "eslint src/**/*.[jt]s --fix",
     "cpd": "jscpd src --silent"

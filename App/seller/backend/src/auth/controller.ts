@@ -1,5 +1,9 @@
-import { Request, Response } from 'express';
+import { Controller, Get, Route } from 'tsoa';
 
-export async function auth(_req: Request, res: Response) {
-  res.status(200).json([]);
+@Route('auth')
+export class AuthController extends Controller {
+  @Get()
+  public async getAuth(): Promise<unknown[]> {
+    return [];
+  }
 }

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2024",
     "module": "commonjs",
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./build",
 
     "strict": true,
@@ -13,6 +13,9 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
 
     "esModuleInterop": true,
 
