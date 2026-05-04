@@ -1,0 +1,50 @@
+{
+  "devDependencies": {
+    "@eslint/js": "*",
+    "@types/cors": "*",
+    "@types/express": "*",
+    "@types/jsonwebtoken": "*",
+    "@types/node": "*",
+    "@types/pg": "*",
+    "@types/supertest": "*",
+    "@types/swagger-ui-express": "*",
+    "@vitest/coverage-v8": "*",
+    "concurrently": "*",
+    "eslint": "*",
+    "globals": "*",
+    "jscpd": "*",
+    "nodemon": "*",
+    "supertest": "*",
+    "ts-node": "*",
+    "ts-postgres": "*",
+    "typescript": "*",
+    "typescript-eslint": "*",
+    "vitest": "*"
+  },
+  "dependencies": {
+    "cors": "*",
+    "dotenv": "*",
+    "express": "*",
+    "jsonwebtoken": "*",
+    "pg": "*",
+    "swagger-ui-express": "*",
+    "tsoa": "*",
+    "zod": "*"
+  },
+  "nodemonConfig": {
+    "watch": ["src"],
+    "ext": "ts",
+    "exec": "ts-node src/server.ts"
+  },
+  "scripts": {
+    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "swagger": "tsoa spec-and-routes",
+    "build": "tsc",
+    "prebuild": "npm run swagger",
+    "start": "node build/src/server.js",
+    "prestart": "npm run build",
+    "test": "npm run lint && npm run cpd && vitest run --no-file-parallelism --testTimeout=3000 --coverage",
+    "lint": "eslint src/**/*.[jt]s --fix",
+    "cpd": "jscpd src --silent"
+  }
+}
