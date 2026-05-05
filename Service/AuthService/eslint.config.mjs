@@ -16,5 +16,18 @@ export default tseslint.config(
         expect: 'readonly',
       },
     },
+    rules: {
+      'no-console': 'off',
+
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'prefer-const': 'error',
+      'no-var': 'error',
+      eqeqeq: 'error',
+
+      indent: ['error', 'tab'],
+      semi: ['error', 'always'],
+      quotes: ['error', 'single'],
+      'comma-dangle': ['error', 'always-multiline'],
+    },
   },
 );
