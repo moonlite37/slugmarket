@@ -34,6 +34,27 @@
 				"security": [],
 				"parameters": []
 			}
+		},
+		"/login/callback": {
+			"get": {
+				"operationId": "LoginCallback",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "code",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
 		}
 	},
 	"servers": [

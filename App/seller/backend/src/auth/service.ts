@@ -16,4 +16,19 @@ export class AuthService {
       scope: ['openid', 'email', 'profile'],
     });
   }
+
+  public async loginCallback(authCode: string): Promise<void> {
+    const { tokens } = await this.oAuth2Client.getToken(authCode);
+
+    const ticket = await this.oAuth2Client.verifyIdToken({
+      idToken: tokens.id_token as string,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const email = payload?.email;
+    const name = payload?.name;
+    console.log(email);
+    console.log(name);
+  }
 }
