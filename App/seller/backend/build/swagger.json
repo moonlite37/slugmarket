@@ -23,20 +23,12 @@
 		"contact": {}
 	},
 	"paths": {
-		"/auth": {
+		"/login": {
 			"get": {
-				"operationId": "GetAuth",
+				"operationId": "Login",
 				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {},
-									"type": "array"
-								}
-							}
-						}
+					"204": {
+						"description": "No content"
 					}
 				},
 				"security": [],

@@ -29,24 +29,24 @@ export function RegisterRoutes(app: Router) {
 
 
     
-        const argsAuthController_getAuth: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsAuthController_login: Record<string, TsoaRoute.ParameterSchema> = {
         };
-        app.get('/auth',
+        app.get('/login',
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.getAuth)),
+            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.login)),
 
-            async function AuthController_getAuth(request: ExRequest, response: ExResponse, next: any) {
+            async function AuthController_login(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_getAuth, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_login, request, response });
 
                 const controller = new AuthController();
 
               await templateService.apiHandler({
-                methodName: 'getAuth',
+                methodName: 'login',
                 controller,
                 response,
                 next,
