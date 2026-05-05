@@ -1,3 +1,4 @@
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
 CREATE DATABASE auth;
+\connect auth
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;

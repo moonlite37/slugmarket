@@ -16,6 +16,10 @@ describe('login', () => {
 		const res = await Login('johnpork@email.com', 'johnpork');
 		expect(res.body.name).toBe('John Pork');
 	});
+	it('returns auth token', async () => {
+		const res = await Login('anna@books.com', 'annaadmin');
+		expect(res.body.authToken).toBeDefined();
+	});
 	it('fake user', async () => {
 		const res = await Login('johnny@email.com', 'johnpork');
 		expect(res.status).toBe(401);

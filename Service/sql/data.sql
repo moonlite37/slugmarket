@@ -1,4 +1,5 @@
 -- Auth Database
+\connect auth
 INSERT INTO users (data)
 VALUES (
 	jsonb_build_object(
