@@ -99,7 +99,9 @@ export function RegisterRoutes(app: Router) {
         app.get('/login/callback',
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
             ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.loginCallback)),
+            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.loginCallback)),
 
+            async function AuthController_loginCallback(request: ExRequest, response: ExResponse, next: any) {
             async function AuthController_loginCallback(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -107,10 +109,12 @@ export function RegisterRoutes(app: Router) {
             let validatedArgs: any[] = [];
             try {
                 validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_loginCallback, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_loginCallback, request, response });
 
                 const controller = new AuthController();
 
               await templateService.apiHandler({
+                methodName: 'loginCallback',
                 methodName: 'loginCallback',
                 controller,
                 response,
