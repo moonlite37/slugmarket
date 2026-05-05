@@ -1,4 +1,8 @@
 import { OAuth2Client } from 'google-auth-library';
+import { EncryptJWT } from 'jose';
+
+const TEXT_ENCODED_SECRET = new TextEncoder().encode(process.env.SECRET);
+const JWE_ALGORITHM = 'A256CBC-HS512';
 
 export class AuthService {
   private oAuth2Client: OAuth2Client;
@@ -7,7 +11,7 @@ export class AuthService {
     this.oAuth2Client = new OAuth2Client({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      redirectUri: 'http://localhost:3010/api/v0/login/callback',
+      redirectUri: process.env.GOOGLE_REDIRECT_URL,
     });
   }
 
@@ -17,7 +21,7 @@ export class AuthService {
     });
   }
 
-  public async loginCallback(authCode: string): Promise<void> {
+  public async loginCallback(authCode: string): Promise<string> {
     const { tokens } = await this.oAuth2Client.getToken(authCode);
 
     const ticket = await this.oAuth2Client.verifyIdToken({
@@ -26,9 +30,13 @@ export class AuthService {
     });
 
     const payload = ticket.getPayload();
-    const email = payload?.email;
+    // const email = payload?.email;
     const name = payload?.name;
-    console.log(email);
-    console.log(name);
+
+    return await new EncryptJWT({ name: name })
+      .setProtectedHeader({ alg: 'dir', enc: JWE_ALGORITHM })
+      .setIssuedAt()
+      .setExpirationTime('2h')
+      .encrypt(TEXT_ENCODED_SECRET);
   }
 }

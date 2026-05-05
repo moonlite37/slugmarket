@@ -3,6 +3,19 @@ import { describe, it, expect, vi } from 'vitest';
 import { LoginTicket } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
 
+vi.mock('jose', () => {
+  return {
+    EncryptJWT: vi.fn(
+      class {
+        setProtectedHeader = vi.fn().mockReturnThis();
+        setIssuedAt = vi.fn().mockReturnThis();
+        setExpirationTime = vi.fn().mockReturnThis();
+        encrypt = vi.fn().mockResolvedValue('mocked-jwe');
+      },
+    ),
+  };
+});
+
 vi.mock('google-auth-library', async (importOriginal) => {
   const actual = await importOriginal<typeof import('google-auth-library')>();
   return {
@@ -42,6 +55,6 @@ describe('login', () => {
 
   it('google login callback', async () => {
     const res = await request.get('/api/v0/login/callback?code=fakeCode');
-    expect(res.status).toBe(204);
+    expect(res.status).toBe(302);
   });
 });

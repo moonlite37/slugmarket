@@ -26,6 +26,7 @@
     "dotenv": "*",
     "express": "*",
     "google-auth-library": "^10.6.2",
+    "jose": "^6.2.3",
     "jsonwebtoken": "*",
     "pg": "*",
     "swagger-ui-express": "*",
