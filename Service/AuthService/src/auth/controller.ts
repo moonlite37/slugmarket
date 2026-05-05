@@ -16,6 +16,11 @@ export class AuthController extends Controller {
 	public async login(
         @Body() credentials: Credentials,
 	): Promise<Authenticated | undefined> {
-		return await new AuthService().login(credentials);
+		const user = await new AuthService().login(credentials);
+		if (!user) {
+			this.setStatus(401);
+			return undefined;
+		}
+		return user;
 	}
 }

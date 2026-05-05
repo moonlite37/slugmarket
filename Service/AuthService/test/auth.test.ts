@@ -16,4 +16,8 @@ describe('login', () => {
 		const res = await Login('johnpork@email.com', 'johnpork');
 		expect(res.body.name).toBe('John Pork');
 	});
+	it('fake user', async () => {
+		const res = await Login('johnny@email.com', 'johnpork');
+		expect(res.status).toBe(401);
+	});
 });
