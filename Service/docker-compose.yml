@@ -1,0 +1,19 @@
+services:
+  postgres:
+    container_name: slug-market
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./sql/databases.sql:/docker-entrypoint-initdb.d/1.databases.sql
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/2.schema.sql
+      - ./sql/data.sql:/docker-entrypoint-initdb.d/3.data.sql
+
+volumes:
+  postgres-data:
