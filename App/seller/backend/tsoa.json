@@ -5,7 +5,7 @@
   "spec": {
     "outputDirectory": "build",
     "specVersion": 3,
-    "schemes": [ "http" ],
+    "schemes": ["http"],
     "basePath": "/api/v0",
     "securityDefinitions": {
       "jwt": {
@@ -19,6 +19,7 @@
     }
   },
   "routes": {
-    "routesDir": "build"
+    "routesDir": "build",
+    "authenticationModule": "./src/auth/middleware.ts"
   }
 }

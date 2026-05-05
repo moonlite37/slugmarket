@@ -19,17 +19,41 @@
 		}
 	},
 	"info": {
-		"title": "TSOA",
-		"version": "1.0.0",
-		"description": "Build swagger-compliant REST APIs using TypeScript and Node",
-		"license": {
-			"name": "MIT"
-		},
-		"contact": {
-			"name": "unknown"
-		}
+		"title": "",
+		"contact": {}
 	},
 	"paths": {
+		"/check": {
+			"get": {
+				"operationId": "Check",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
 		"/login": {
 			"get": {
 				"operationId": "Login",

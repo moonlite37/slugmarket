@@ -1,5 +1,5 @@
 import { OAuth2Client } from 'google-auth-library';
-import { EncryptJWT } from 'jose';
+import { EncryptJWT, jwtDecrypt } from 'jose';
 
 const TEXT_ENCODED_SECRET = new TextEncoder().encode(process.env.SECRET);
 const JWE_ALGORITHM = 'A256CBC-HS512';
@@ -38,5 +38,10 @@ export class AuthService {
       .setIssuedAt()
       .setExpirationTime('2h')
       .encrypt(TEXT_ENCODED_SECRET);
+  }
+
+  public async check(token: string): Promise<object> {
+    const { payload } = await jwtDecrypt(token, TEXT_ENCODED_SECRET);
+    return payload;
   }
 }
