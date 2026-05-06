@@ -30,6 +30,37 @@
 		}
 	},
 	"paths": {
+		"/check": {
+			"get": {
+				"operationId": "Check",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
 		"/login": {
 			"get": {
 				"operationId": "Login",
@@ -40,6 +71,27 @@
 				},
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/login/callback": {
+			"get": {
+				"operationId": "LoginCallback",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "code",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/login/callback": {
