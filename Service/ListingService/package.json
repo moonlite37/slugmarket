@@ -1,0 +1,52 @@
+{
+  "name": "listingservice",
+  "main": "build/src/server.js",
+  "type": "commonjs",
+  "nodemonConfig": {
+    "watch": ["src"],
+    "ext": "ts",
+    "exec": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.20.0",
+    "swagger-ui-express": "^5.0.1",
+    "tsoa": "^7.0.0-alpha.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.0",
+    "@types/pg": "^8.20.0",
+    "@types/supertest": "^7.2.0",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@eslint/js": "*",
+    "@vitest/coverage-v8": "*",
+    "concurrently": "*",
+    "eslint": "*",
+    "globals": "*",
+    "jscpd": "*",
+    "nodemon": "*",
+    "supertest": "^7.2.2",
+    "ts-node": "*",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "*",
+    "vitest": "^4.1.5"
+  },
+  "scripts": {
+    "cpd": "jscpd src test --silent",
+    "lint": "eslint test/**/*.[jt]s src/**/*.[jt]s --fix",
+    "prestart": "npm run build",
+    "start": "node build/src/server.js",
+    "prebuild": "npm run swagger",
+    "build": "tsc",
+    "predev": "npm run swagger",
+    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "swagger": "tsoa spec-and-routes",
+    "pretest": "(npm run swagger) && (npm run lint) && (npm run cpd)",
+    "test": "vitest run --no-file-parallelism --testTimeout=3000 --coverage"
+  }
+}
