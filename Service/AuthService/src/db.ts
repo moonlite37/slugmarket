@@ -7,7 +7,7 @@ dotenv.config({path: path.resolve(__dirname, '../../.env')});
 const pool = new Pool({
 	host: 'localhost',
 	port: 5432,
-	database: process.env.POSTGRES_DB,
+	database: 'auth',
 	user: process.env.POSTGRES_USER,
 	password: process.env.POSTGRES_PASSWORD,
 });

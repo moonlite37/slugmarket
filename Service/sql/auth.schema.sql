@@ -1,6 +1,5 @@
-\connect auth
-
 DROP TABLE IF EXISTS users CASCADE;
+
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   data JSONB NOT NULL

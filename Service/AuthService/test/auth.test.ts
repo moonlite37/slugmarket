@@ -1,4 +1,5 @@
 import {describe, expect, it} from 'vitest';
+
 import supertest from 'supertest';
 import {server} from './setup';
 
@@ -16,11 +17,14 @@ describe('login', () => {
 		const res = await Login('johnpork@email.com', 'johnpork');
 		expect(res.body.name).toBe('John Pork');
 	});
-	it('returns auth token', async () => {
-		const res = await Login('anna@books.com', 'annaadmin');
-		expect(res.body.authToken).toBeDefined();
+	it('sets http only cookie', async () => {
+		const res = await Login('johnpork@email.com', 'johnpork');
+		const setCookie = res.headers['set-cookie'];
+		const cookies = Array.isArray(setCookie) ? setCookie : [setCookie];
+		const authCookie = cookies?.find((cookie) => cookie.startsWith('authToken='));
+		expect(authCookie).toContain('HttpOnly');
 	});
-	it('fake user', async () => {
+	it('rejects fake cred', async () => {
 		const res = await Login('johnny@email.com', 'johnpork');
 		expect(res.status).toBe(401);
 	});

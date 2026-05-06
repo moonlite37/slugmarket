@@ -21,6 +21,11 @@ export class AuthController extends Controller {
 			this.setStatus(401);
 			return undefined;
 		}
+		this.setHeader(
+			'Set-Cookie',
+			`authToken=${user.authToken}; HttpOnly; Path=/; SameSite=Strict`,
+		);
+		
 		return user;
 	}
 }

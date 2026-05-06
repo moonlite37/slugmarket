@@ -22,8 +22,8 @@ const run = async (file: string) => {
 const reset = async () => {
 	const sqlDir = path.resolve(__dirname, '../../sql');
 
-	await run(path.join(sqlDir, 'schema.sql'));
-	await run(path.join(sqlDir, 'data.sql'));
+	await run(path.join(sqlDir, 'auth.schema.sql'));
+	await run(path.join(sqlDir, 'auth.data.sql'));
 };
 
 export { reset, shutdown };

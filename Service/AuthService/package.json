@@ -3,7 +3,9 @@
   "main": "build/src/server.js",
   "type": "commonjs",
   "nodemonConfig": {
-    "watch": ["src"],
+    "watch": [
+      "src"
+    ],
     "ext": "ts",
     "exec": "tsx src/server.ts"
   },
@@ -11,18 +13,19 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "jose": "^6.2.3",
     "pg": "^8.20.0",
     "swagger-ui-express": "^5.0.1",
     "tsoa": "^7.0.0-alpha.0"
   },
   "devDependencies": {
+    "@eslint/js": "*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.6.0",
     "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.0",
     "@types/swagger-ui-express": "^4.1.8",
-    "@eslint/js": "*",
     "@vitest/coverage-v8": "*",
     "concurrently": "*",
     "eslint": "*",
