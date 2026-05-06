@@ -41,7 +41,7 @@ export class AuthService {
 		const { rows: result } = await pool.query<UserRow>({
 			text: `
 				SELECT id, data->>'name' AS name
-				FROM users
+				FROM "user"
 				WHERE data->>'email' = $1
 				AND data->>'password' = crypt($2, data->>'password')
 			`,
@@ -76,7 +76,7 @@ export class AuthService {
 		const sub = payload?.sub;
 
 		const query = `
-			INSERT INTO users (data)
+			INSERT INTO "user" (data)
 			VALUES (jsonb_build_object('name', $1::text, 'email', $2::text, 'sub', $3::text))
 			ON CONFLICT ((data->>'sub')) DO UPDATE
 				SET data = EXCLUDED.data

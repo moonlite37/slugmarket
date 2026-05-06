@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS "user" CASCADE;
 
-CREATE TABLE users (
+CREATE TABLE "user" (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   data JSONB NOT NULL
 );
 
-CREATE UNIQUE INDEX users_sub_idx ON users ((data->>'sub'));
+CREATE UNIQUE INDEX user_sub_idx ON "user" ((data->>'sub'));

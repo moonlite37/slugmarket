@@ -11,10 +11,10 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql
+      - ./sql:/sql
       - ./sql/databases.sql:/docker-entrypoint-initdb.d/1.databases.sql
       - ./sql/auth.connect.sql:/docker-entrypoint-initdb.d/2.auth.connect.sql
-      - ./sql/auth.schema.sql:/docker-entrypoint-initdb.d/3.auth.schema.sql
-      - ./sql/auth.data.sql:/docker-entrypoint-initdb.d/4.auth.data.sql
+      - ./sql/listing.connect.sql:/docker-entrypoint-initdb.d/3.listing.connect.sql
 
 volumes:
   postgres-data:

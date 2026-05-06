@@ -1,5 +1,5 @@
 -- Auth Database
-INSERT INTO users (data)
+INSERT INTO "user" (data)
 VALUES (
   jsonb_build_object(
     'name', 'John Pork',
