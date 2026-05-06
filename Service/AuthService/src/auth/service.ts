@@ -82,7 +82,7 @@ export class AuthService {
 			VALUES (jsonb_build_object('name', $1::text, 'email', $2::text, 'sub', $3::text))
 			ON CONFLICT ((data->>'sub')) DO UPDATE
 				SET data = EXCLUDED.data
-			RETURNING id;
+			RETURNING id, data->>'name' AS name;
 		`;
 
 		const result = await pool.query<UserRow>(query, [name, email, sub]);

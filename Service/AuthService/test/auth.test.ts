@@ -88,6 +88,11 @@ describe('oauth login', () => {
 		expect(res.headers.location).toContain('accounts.google.com');
 	});
 
+	it('clicks cancel on google login', async () => {
+		const res = await request.get('/api/v0/oauthlogin/callback?error=access_denied');
+		expect(res.body).toEqual({});
+	});
+
 	it('same uuid returned for same user on re-login', async () => {
 		await request.get('/api/v0/oauthlogin/callback?code=fakeCode');
 		await request.get('/api/v0/oauthlogin/callback?code=fakeCode');
