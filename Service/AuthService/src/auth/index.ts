@@ -4,6 +4,9 @@ export interface Credentials {
 }
 
 export interface Authenticated {
-  name: string,
-  accessToken: string
+  name: string
+}
+
+export interface AuthenticatedUser extends Authenticated {
+  authToken: string
 }

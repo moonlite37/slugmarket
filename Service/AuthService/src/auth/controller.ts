@@ -1,6 +1,6 @@
 import { Route, Controller, Post, Body, Response, Get, Query } from 'tsoa';
 
-import { Credentials, Authenticated } from '.';
+import { Credentials, Authenticated, AuthenticatedUser } from '.';
 import { AuthService } from './service';
 
 @Route('')
@@ -15,6 +15,11 @@ export class AuthController extends Controller {
 			this.setStatus(401);
 			return undefined;
 		}
+		this.setHeader(
+			'Set-Cookie',
+			`authToken=${user.authToken}; HttpOnly; Path=/; SameSite=Strict`,
+		);
+		
 		return user;
 	}
 
@@ -28,7 +33,7 @@ export class AuthController extends Controller {
   @Get('oauthlogin/callback')
   public async oauthLoginCallback(
     @Query('code') authCode: string,
-  ): Promise<string> {
+  ): Promise<AuthenticatedUser> {
   	return await new AuthService().oauthLoginCallback(authCode);
   }
 }
