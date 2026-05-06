@@ -1,6 +1,6 @@
 import { Route, Controller, Post, Body, Response, Get, Query } from 'tsoa';
 
-import { Credentials, Authenticated, AuthenticatedUser } from '.';
+import { Credentials, Authenticated } from '.';
 import { AuthService } from './service';
 
 @Route('')
@@ -33,7 +33,7 @@ export class AuthController extends Controller {
   @Get('oauthlogin/callback')
   public async oauthLoginCallback(
     @Query('code') authCode: string,
-  ): Promise<AuthenticatedUser> {
+  ): Promise<Authenticated> {
   	return await new AuthService().oauthLoginCallback(authCode);
   }
 }

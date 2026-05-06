@@ -4,7 +4,7 @@ import * as path from 'path';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-import { Credentials, AuthenticatedUser } from '.';
+import { Credentials, Authenticated } from '.';
 import { pool } from '../db';
 import { OAuth2Client } from 'google-auth-library';
 
@@ -12,8 +12,6 @@ interface UserRow {
   id: string;
   name: string;
 }
-
-console.log(process.env.SECRET);
 
 const TEXT_ENCODED_SECRET = new TextEncoder().encode(process.env.SECRET);
 const JWE_ALGORITHM = 'A256CBC-HS512';
@@ -39,7 +37,7 @@ export class AuthService {
 
 	public async login(
 		credentials: Credentials,
-	): Promise<AuthenticatedUser | undefined> {
+	): Promise<Authenticated | undefined> {
 		const { rows: result } = await pool.query<UserRow>({
 			text: `
 				SELECT id, data->>'name' AS name
@@ -64,7 +62,7 @@ export class AuthService {
 		});
 	}
 
-	public async oauthLoginCallback(authCode: string): Promise<AuthenticatedUser> {
+	public async oauthLoginCallback(authCode: string): Promise<Authenticated> {
 		const { tokens } = await this.oAuth2Client.getToken(authCode);
 
 		const ticket = await this.oAuth2Client.verifyIdToken({
