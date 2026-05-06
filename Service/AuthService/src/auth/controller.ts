@@ -33,7 +33,10 @@ export class AuthController extends Controller {
   @Get('oauthlogin/callback')
   public async oauthLoginCallback(
     @Query('code') authCode: string,
-  ): Promise<Authenticated> {
+  ): Promise<Authenticated | undefined> {
+  	if (!authCode) {
+		return undefined;
+	}
   	return await new AuthService().oauthLoginCallback(authCode);
   }
 }
