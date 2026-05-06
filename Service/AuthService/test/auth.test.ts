@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import supertest from 'supertest';
 import { request } from './setup';
+import { EncryptJWT } from 'jose';
 import { LoginTicket } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
 
@@ -38,6 +39,7 @@ vi.mock('google-auth-library', async (importOriginal) => {
 						getPayload: () => ({
 							email: 'test@example.com',
 							name: 'Test User',
+							sub: 'test-sub-123',
 						}),
 					} as LoginTicket),
 			);
@@ -79,8 +81,11 @@ describe('oauth login', () => {
 		expect(res.headers.location).toContain('accounts.google.com');
 	});
 
-	it('google login callback', async () => {
-		const res = await request.get('/api/v0/oauthlogin/callback?code=fakeCode');
-		expect(res.status).toBe(302);
+	it('same uuid returned for same user on re-login', async () => {
+		await request.get('/api/v0/oauthlogin/callback?code=fakeCode');
+		await request.get('/api/v0/oauthlogin/callback?code=fakeCode');
+
+		const calls = (EncryptJWT as ReturnType<typeof vi.fn>).mock.calls;
+		expect(calls[0][0].id).toBe(calls[1][0].id);
 	});
 });
