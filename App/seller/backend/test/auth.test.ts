@@ -14,3 +14,16 @@ describe('oauth login', () => {
 		expect(res.body.url).toBe('mock-url');
 	});
 });
+
+describe('oauth login callback', () => {
+	it('returns 302 when no code', async () => {
+		const res = await request.get('/api/v0/oauthlogin/callback');
+		expect(res.status).toBe(302);
+	});
+
+	it('sets cookie and redirects when code is provided', async () => {
+		const res = await request.get('/api/v0/oauthlogin/callback?code=validcode');
+		expect(res.status).toBe(302);
+		expect(res.headers['set-cookie'][0]).toContain('authToken=mock-token');
+	});
+});

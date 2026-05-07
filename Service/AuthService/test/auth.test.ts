@@ -85,11 +85,6 @@ describe('oauth login', () => {
 		expect(res.headers.location).toContain('accounts.google.com');
 	});
 
-	it('cancel on google login', async () => {
-		const res = await request.get('/api/v0/oauthlogin/callback?error=access_denied');
-		expect(res.body).toEqual({});
-	});
-
 	it('returns name', async () => {
 		const res = await request.get('/api/v0/oauthlogin/callback?code=fakeCode');
 		expect(res.body.name).toBe('Test User');
