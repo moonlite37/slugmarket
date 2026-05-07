@@ -1,9 +1,11 @@
-import type { NextPage } from 'next'
+import type { NextPage } from 'next';
+
+import Login from './login/View';
 
 const Page: NextPage = () => {
-    return (
-        <p>Admin</p>
-    )
-}
+	return (
+		<Login />
+	);
+};
 
-export default Page
+export default Page;

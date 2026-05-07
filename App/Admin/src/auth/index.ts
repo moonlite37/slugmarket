@@ -8,5 +8,6 @@ export interface Credentials {
 }
 
 export interface Authenticated {
-  name: string
+  name: string,
+  authToken: string
 }
