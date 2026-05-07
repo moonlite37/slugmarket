@@ -7,7 +7,7 @@ export async function login(credentials: Credentials) : Promise<Authenticated|un
 	try {
 		return await new AuthService().login(credentials);
 	}
-	catch (err) {
-		return err;
+	catch {
+		return undefined;
 	}
 }

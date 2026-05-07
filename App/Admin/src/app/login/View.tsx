@@ -1,7 +1,9 @@
 'use client';
-import { Box, Button, Paper, Stack, Typography, TextField } from '@mui/material';
+import { Box, Button, IconButton, Paper, Stack, Typography, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import { useState } from 'react';
@@ -125,7 +127,36 @@ const Login = () => {
 					</Stack>
 
 					{error && (
-						<Typography color="error">Error logging in, please try again</Typography>
+						<Box
+							sx={{
+								alignItems: 'center',
+								backgroundColor: '#fef2f2',
+								border: '1px solid #fecaca',
+								borderRadius: 1.25,
+								color: '#b91c1c',
+								display: 'flex',
+								gap: 1,
+								px: 1.5,
+								py: 1.25,
+							}}
+						>
+							<ErrorOutlineRoundedIcon fontSize="small" />
+							<Typography sx={{ color: 'inherit', flex: 1, fontSize: 14, fontWeight: 600 }}>
+								Error logging in, please try again
+							</Typography>
+							<IconButton
+								aria-label="dismiss login error"
+								onClick={() => { setError(false); }}
+								size="small"
+								sx={{
+									color: 'inherit',
+									mr: -0.75,
+									p: 0.5,
+								}}
+							>
+								<CloseRoundedIcon fontSize="small" />
+							</IconButton>
+						</Box>
 					)}
 
 					<Button
