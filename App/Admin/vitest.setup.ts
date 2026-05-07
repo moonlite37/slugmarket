@@ -1,6 +1,19 @@
 import { beforeEach, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
+
+import { MockRouter } from './test/mockRouter';
+
 import '@testing-library/jest-dom/vitest';
+
+vi.mock('server-only', () => { return { }; });
+
+vi.mock('next/navigation', () => {
+	return {
+		useRouter: vi.fn().mockImplementation(() => {
+			return MockRouter;
+		}),
+	};
+});
 
 vi.mock('next/headers', async (importOriginal) => {
 	const actual = await importOriginal<typeof import('next/headers')>();

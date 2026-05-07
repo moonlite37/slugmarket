@@ -1,11 +1,7 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { cookies } from 'next/headers';
 
 import { AuthService } from '../src/auth/service';
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 describe('login', () => {
 	it('returns name', async () => {
