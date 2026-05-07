@@ -1,10 +1,13 @@
-function App() {
+import GlobalStyles from '@mui/material/GlobalStyles';
+import Login from './Login';
 
+function App() {
   return (
     <>
-      <div>Hello</div>
+      <GlobalStyles styles={{ body: { overflow: 'hidden', margin: 0 } }} />
+      <Login />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
