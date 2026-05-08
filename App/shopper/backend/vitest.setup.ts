@@ -7,7 +7,7 @@ export const server = setupServer(
   http.get('http://localhost:3010/api/v0/oauthlogin', ({ request }) => {
     const url = new URL(request.url);
     const app = url.searchParams.get('app');
-    if (app === 'seller') {
+    if (app === 'shopper') {
       return new HttpResponse(null, {
         status: 302,
         headers: { Location: 'mock-url' },
@@ -20,7 +20,7 @@ export const server = setupServer(
     ({ request }) => {
       const url = new URL(request.url);
       const app = url.searchParams.get('app');
-      if (app === 'seller') {
+      if (app === 'shopper') {
         return HttpResponse.json({ authToken: 'mock-token' });
       }
       return passthrough();
@@ -31,3 +31,4 @@ export const server = setupServer(
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
+

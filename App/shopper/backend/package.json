@@ -13,6 +13,7 @@
     "eslint": "*",
     "globals": "*",
     "jscpd": "*",
+    "msw": "^2.14.3",
     "nodemon": "*",
     "supertest": "*",
     "ts-node": "*",
@@ -25,6 +26,8 @@
     "cors": "*",
     "dotenv": "*",
     "express": "*",
+    "google-auth-library": "^10.6.2",
+    "jose": "^6.2.3",
     "jsonwebtoken": "*",
     "pg": "*",
     "swagger-ui-express": "*",
@@ -32,11 +35,14 @@
     "zod": "*"
   },
   "nodemonConfig": {
-    "watch": ["src"],
+    "watch": [
+      "src"
+    ],
     "ext": "ts",
     "exec": "ts-node src/server.ts"
   },
   "scripts": {
+    "predev": "npm run swagger",
     "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
     "swagger": "tsoa spec-and-routes",
     "build": "tsc",

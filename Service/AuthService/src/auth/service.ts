@@ -16,8 +16,8 @@ interface UserRow {
 const TEXT_ENCODED_SECRET = new TextEncoder().encode(process.env.SECRET);
 const JWE_ALGORITHM = 'A256CBC-HS512';
 
-export const encryptJwe = async (id: string): Promise<string> => {
-	return await new EncryptJWT({ id })
+export const encryptJwe = async (id: string, role: string): Promise<string> => {
+	return await new EncryptJWT({ id, role })
 		.setProtectedHeader({ alg: 'dir', enc: JWE_ALGORITHM })
 		.setIssuedAt()
 		.setExpirationTime('2h')
@@ -52,18 +52,25 @@ export class AuthService {
 		}
 		return {
 			name: result[0].name,
-			authToken: await encryptJwe(result[0].id),
+			authToken: await encryptJwe(result[0].id, 'admin'),
 		};
 	}
 
-	public async oauthLogin(): Promise<string> {
+	public async oauthLogin(app: 'seller' | 'shopper'): Promise<string> {
+		const redirectUri = app === 'shopper'
+			? process.env.GOOGLE_REDIRECT_URL_SHOPPER
+			: process.env.GOOGLE_REDIRECT_URL_SELLER;
 		return this.oAuth2Client.generateAuthUrl({
 			scope: ['openid', 'email', 'profile'],
+			redirect_uri: redirectUri,
 		});
 	}
 
-	public async oauthLoginCallback(authCode: string): Promise<Authenticated> {
-		const { tokens } = await this.oAuth2Client.getToken(authCode);
+	public async oauthLoginCallback(authCode: string, app: 'seller' | 'shopper'): Promise<Authenticated> {
+		const redirectUri = app === 'shopper'
+			? process.env.GOOGLE_REDIRECT_URL_SHOPPER
+			: process.env.GOOGLE_REDIRECT_URL_SELLER;
+		const { tokens } = await this.oAuth2Client.getToken({ code: authCode, redirect_uri: redirectUri });
 
 		const ticket = await this.oAuth2Client.verifyIdToken({
 			idToken: tokens.id_token as string,
@@ -86,7 +93,7 @@ export class AuthService {
 		const result = await pool.query<UserRow>(query, [name, email, sub]);
 		return {
 			name: result.rows[0].name,
-			authToken: await encryptJwe(result.rows[0].id),
+			authToken: await encryptJwe(result.rows[0].id, app),
 		};
 	}
 }

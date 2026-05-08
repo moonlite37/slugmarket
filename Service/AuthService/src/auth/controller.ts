@@ -24,8 +24,10 @@ export class AuthController extends Controller {
 	}
 
   @Get('oauthlogin')
-  public async oauthLogin(): Promise<void> {
-  	const url = await new AuthService().oauthLogin();
+  public async oauthLogin(
+    @Query('app') app: 'seller' | 'shopper',
+  ): Promise<void> {
+  	const url = await new AuthService().oauthLogin(app);
   	this.setStatus(302);
   	this.setHeader('Location', url);
   }
@@ -33,7 +35,8 @@ export class AuthController extends Controller {
   @Get('oauthlogin/callback')
   public async oauthLoginCallback(
     @Query('code') authCode: string,
+    @Query('app') app: 'seller' | 'shopper',
   ): Promise<Authenticated | undefined> {
-  	return await new AuthService().oauthLoginCallback(authCode);
+  	return await new AuthService().oauthLoginCallback(authCode, app);
   }
 }

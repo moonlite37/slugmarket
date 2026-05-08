@@ -29,24 +29,54 @@ export function RegisterRoutes(app: Router) {
 
 
     
-        const argsAuthController_getAuth: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsAuthController_oauthLogin: Record<string, TsoaRoute.ParameterSchema> = {
         };
-        app.get('/auth',
+        app.get('/oauthlogin',
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.getAuth)),
+            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.oauthLogin)),
 
-            async function AuthController_getAuth(request: ExRequest, response: ExResponse, next: any) {
+            async function AuthController_oauthLogin(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_getAuth, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_oauthLogin, request, response });
 
                 const controller = new AuthController();
 
               await templateService.apiHandler({
-                methodName: 'getAuth',
+                methodName: 'oauthLogin',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAuthController_oauthLoginCallback: Record<string, TsoaRoute.ParameterSchema> = {
+                authCode: {"in":"query","name":"code","dataType":"string"},
+        };
+        app.get('/oauthlogin/callback',
+            ...(fetchMiddlewares<RequestHandler>(AuthController)),
+            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.oauthLoginCallback)),
+
+            async function AuthController_oauthLoginCallback(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_oauthLoginCallback, request, response });
+
+                const controller = new AuthController();
+
+              await templateService.apiHandler({
+                methodName: 'oauthLoginCallback',
                 controller,
                 response,
                 next,
