@@ -13,3 +13,12 @@ export interface Listing {
   
   images?: string[];
 }
+
+export interface NewListing {
+  title: string
+  description: string
+  price: number
+  stock: number
+  categories: string[]
+  images?: string[]
+}

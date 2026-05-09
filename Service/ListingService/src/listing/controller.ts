@@ -2,9 +2,12 @@ import {
 	Route,
 	Controller,
 	Get,
+	Post,
+  	Body,
+  	SuccessResponse,
 } from 'tsoa';
 
-import { Listing } from '.';
+import { Listing, NewListing } from '.';
 import { ListingService } from './service';
 
 // endpoint is currently unauthenticated
@@ -17,4 +20,17 @@ export class ListingController extends Controller {
 		const res = await new ListingService().getListing();
 		return res;
 	}
+
+	@Post('listing')
+	@SuccessResponse('201', 'Created')
+    public async createListing(
+		@Body() listing: NewListing,
+    ): Promise<Listing> {
+    	this.setStatus(201);
+    	const res = await new ListingService().createListing(
+    		'00000000-0000-0000-0000-000000000001',
+    		listing,
+    	);
+    	return res;
+    }
 }
