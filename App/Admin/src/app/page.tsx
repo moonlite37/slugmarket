@@ -1,9 +1,9 @@
-import type { NextPage } from 'next'
+import type { NextPage } from 'next';
 
 const Page: NextPage = () => {
-    return (
-        <p>Admin</p>
-    )
-}
+	return (
+		<p>Admin Dashboard</p>
+	);
+};
 
-export default Page
+export default Page;

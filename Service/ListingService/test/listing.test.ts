@@ -36,3 +36,5 @@ describe('listing', () => {
 		expect(res.body[0].price).toBeDefined();
 	});
 });
+
+

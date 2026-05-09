@@ -80,29 +80,39 @@ describe('login', () => {
 });
 
 describe('oauth login', () => {
-	it('redirects to google', async () => {
-		const res = await request.get('/api/v0/oauthlogin');
+	it('redirects to google for seller', async () => {
+		const res = await request.get('/api/v0/oauthlogin?app=seller');
 		expect(res.headers.location).toContain('accounts.google.com');
 	});
 
-	it('cancel on google login', async () => {
-		const res = await request.get('/api/v0/oauthlogin/callback?error=access_denied');
-		expect(res.body).toEqual({});
+	it('redirects to google for shopper', async () => {
+		const res = await request.get('/api/v0/oauthlogin?app=shopper');
+		expect(res.headers.location).toContain('accounts.google.com');
 	});
 
-	it('returns name', async () => {
-		const res = await request.get('/api/v0/oauthlogin/callback?code=fakeCode');
+	it('returns name for seller', async () => {
+		const res = await request.get('/api/v0/oauthlogin/callback?code=fakeCode&app=seller');
 		expect(res.body.name).toBe('Test User');
 	});
 
-	it('returns token', async () => {
-		const res = await request.get('/api/v0/oauthlogin/callback?code=fakeCode');
+	it('returns token for seller', async () => {
+		const res = await request.get('/api/v0/oauthlogin/callback?code=fakeCode&app=seller');
+		expect(res.body.authToken).toBeDefined();
+	});
+
+	it('returns name for shopper', async () => {
+		const res = await request.get('/api/v0/oauthlogin/callback?code=fakeCode&app=shopper');
+		expect(res.body.name).toBe('Test User');
+	});
+
+	it('returns token for shopper', async () => {
+		const res = await request.get('/api/v0/oauthlogin/callback?code=fakeCode&app=shopper');
 		expect(res.body.authToken).toBeDefined();
 	});
 
 	it('same uuid returned for same user on re-login', async () => {
-		await request.get('/api/v0/oauthlogin/callback?code=fakeCode');
-		await request.get('/api/v0/oauthlogin/callback?code=fakeCode');
+		await request.get('/api/v0/oauthlogin/callback?code=fakeCode&app=seller');
+		await request.get('/api/v0/oauthlogin/callback?code=fakeCode&app=seller');
 
 		const calls = (EncryptJWT as ReturnType<typeof vi.fn>).mock.calls;
 		expect(calls[0][0].id).toBe(calls[1][0].id);

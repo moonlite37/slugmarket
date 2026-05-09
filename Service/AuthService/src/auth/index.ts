@@ -7,3 +7,8 @@ export interface Authenticated {
   name: string,
   authToken: string
 }
+
+export interface SessionUser {
+  id: string
+  role: string
+}

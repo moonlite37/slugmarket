@@ -10,15 +10,9 @@ node_modules
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
 # next.js
 .next/
 /out/
-
-# production
-/build
 
 # misc
 .DS_Store
@@ -41,5 +35,6 @@ yarn-error.log*
 next-env.d.ts
 
 coverage/
-copypaste/
 build/
+node_modules/
+copypaste/

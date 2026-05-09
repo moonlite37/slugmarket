@@ -3,6 +3,6 @@ dotenv.config();
 
 import app from './app';
 
-app.listen(3010, () => {
-  console.log(`Server Running on port 3010`);
+app.listen(3012, () => {
+  console.log(`Server Running on port 3012`);
 });

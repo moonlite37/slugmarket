@@ -1,22 +1,28 @@
-import * as React from 'react'
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import * as React from 'react';
 
 export const metadata = {
-    title: 'Admin - Slug Market',
-    icons: {
-        icon: [
-            { url: '/favicon.ico' },
-        ]
-    }
-}
+	title: 'Admin - Slug Market',
+	icons: {
+		icon: [
+			{ url: '/favicon.ico' },
+		],
+	},
+};
 
 export default function RootLayout({
-    children,
+	children,
 }: {
-    children: React.ReactNode
+	children: React.ReactNode
 }) {
-    return (
-        <html lang="en">
-            <body>{children}</body>
-        </html>
-    )
+	return (
+		<html lang="en">
+			<body>
+				<AppRouterCacheProvider>
+					{children}
+				</AppRouterCacheProvider>
+
+			</body>
+		</html>
+	);
 }

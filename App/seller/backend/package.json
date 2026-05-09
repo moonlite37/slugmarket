@@ -13,6 +13,7 @@
     "eslint": "*",
     "globals": "*",
     "jscpd": "*",
+    "msw": "^2.14.3",
     "nodemon": "*",
     "supertest": "*",
     "ts-node": "*",

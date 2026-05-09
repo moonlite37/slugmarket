@@ -1,6 +1,7 @@
-import { Route, Controller, Post, Body, Response, Get, Query } from 'tsoa';
+import { Route, Controller, Post, Body, Response, Get, Query, Request } from 'tsoa';
+import * as express from 'express';
 
-import { Credentials, Authenticated } from '.';
+import { Credentials, Authenticated, SessionUser } from '.';
 import { AuthService } from './service';
 
 @Route('')
@@ -22,21 +23,33 @@ export class AuthController extends Controller {
 		
 		return user;
 	}
+  @Get('check')
+  @Response('401', 'Unauthorized')
+  public async check(
+	@Request() req: express.Request,
+  ): Promise<SessionUser | undefined> {
+  	try {
+  		return await new AuthService().check(req.headers.authorization);
+  	} catch {
+  		this.setStatus(401);
+  		return undefined;
+  	}
+  }
 
   @Get('oauthlogin')
-  public async oauthLogin(): Promise<void> {
-  	const url = await new AuthService().oauthLogin();
+  public async oauthLogin(
+    @Query('app') app: 'seller' | 'shopper',
+  ): Promise<void> {
+  	const url = await new AuthService().oauthLogin(app);
   	this.setStatus(302);
   	this.setHeader('Location', url);
   }
 
   @Get('oauthlogin/callback')
   public async oauthLoginCallback(
-    @Query('code') authCode?: string,
+    @Query('code') authCode: string,
+    @Query('app') app: 'seller' | 'shopper',
   ): Promise<Authenticated | undefined> {
-  	if (!authCode) {
-  		return undefined;
-  	}
-  	return await new AuthService().oauthLoginCallback(authCode);
+  	return await new AuthService().oauthLoginCallback(authCode, app);
   }
 }
