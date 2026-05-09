@@ -1,6 +1,7 @@
-import { Route, Controller, Post, Body, Response, Get, Query } from 'tsoa';
+import { Route, Controller, Post, Body, Response, Get, Query, Request } from 'tsoa';
+import * as express from 'express';
 
-import { Credentials, Authenticated } from '.';
+import { Credentials, Authenticated, SessionUser } from '.';
 import { AuthService } from './service';
 
 @Route('')
@@ -22,6 +23,18 @@ export class AuthController extends Controller {
 		
 		return user;
 	}
+  @Get('check')
+  @Response('401', 'Unauthorized')
+  public async check(
+	@Request() req: express.Request,
+  ): Promise<SessionUser | undefined> {
+  	try {
+  		return await new AuthService().check(req.headers.authorization);
+  	} catch {
+  		this.setStatus(401);
+  		return undefined;
+  	}
+  }
 
   @Get('oauthlogin')
   public async oauthLogin(

@@ -1,10 +1,10 @@
-import { EncryptJWT } from 'jose';
+import { EncryptJWT, jwtDecrypt } from 'jose';
 import dotenv from 'dotenv';
 import * as path from 'path';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-import { Credentials, Authenticated } from '.';
+import { Credentials, Authenticated, SessionUser } from '.';
 import { pool } from '../db';
 import { OAuth2Client } from 'google-auth-library';
 
@@ -95,5 +95,15 @@ export class AuthService {
 			name: result.rows[0].name,
 			authToken: await encryptJwe(result.rows[0].id, app),
 		};
+	}
+	public async check(authHeader?: string): Promise<SessionUser> {
+		if (!authHeader) {
+			throw new Error('Unauthorized');
+		}
+		const token = authHeader.split(' ')[1];
+		const { payload } = await jwtDecrypt(token, TEXT_ENCODED_SECRET, {
+			contentEncryptionAlgorithms: [JWE_ALGORITHM],
+		});
+		return { id: payload.id as string, role: payload.role as string };
 	}
 }
