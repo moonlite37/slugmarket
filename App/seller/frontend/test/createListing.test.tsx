@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '../vitest.setup';
 import { http, HttpResponse } from 'msw';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 
 import CreateListing from '@/CreateListing';
 
@@ -71,4 +72,15 @@ describe('Create Listing Form', () => {
 		await user.click(screen.getByRole('button', { name: /create listing/i }));
 		expect(screen.queryByText('Listing created')).toBeNull();
 	});
+
+    it('renders at /listing/new route', () => {
+	render(
+		<MemoryRouter initialEntries={['/listing/new']}>
+			<Routes>
+				<Route path="/listing/new" element={<CreateListing />} />
+			</Routes>
+		</MemoryRouter>,
+	);
+	screen.getByPlaceholderText('Title');
+});
 });
