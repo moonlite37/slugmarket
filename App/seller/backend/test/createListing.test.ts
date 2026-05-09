@@ -7,6 +7,7 @@ describe('create listing', () => {
 	it('proxies create listing to ListingService', async () => {
 		const res = await request
 			.post('/api/v0/listing')
+			.set('Authorization', 'Bearer mock-token')
 			.send({
 				title: 'Proxy Test',
 				description: 'Testing proxy',
@@ -26,6 +27,7 @@ describe('create listing', () => {
 		);
 		const res = await request
 			.post('/api/v0/listing')
+			.set('Authorization', 'Bearer mock-token')
 			.send({
 				title: 'Will Fail',
 				description: 'Service down',
@@ -33,6 +35,19 @@ describe('create listing', () => {
 				stock: 1,
 				categories: ['test'],
 			});
-		expect(res.status).toBe(500);
+		expect(res.status).toBe(401);
+	});
+
+	it('returns 401 when no auth header', async () => {
+		const res = await request
+			.post('/api/v0/listing')
+			.send({
+				title: 'No Auth',
+				description: 'Missing token',
+				price: 9.99,
+				stock: 1,
+				categories: ['test'],
+			});
+		expect(res.status).toBe(401);
 	});
 });

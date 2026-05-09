@@ -22,11 +22,15 @@ interface Listing {
 }
 
 export class ListingService {
-	public async createListing(listing: NewListing): Promise<Listing> {
+	public async createListing(token: string | undefined, listing: NewListing): Promise<Listing> {
+		if (!token) {
+			throw new Error('Unauthorized');
+		}
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${token}`,
 			},
 			body: JSON.stringify(listing),
 		});
