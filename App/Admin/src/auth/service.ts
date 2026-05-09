@@ -40,6 +40,19 @@ export class AuthService {
 	}
 
 	public async check(): Promise<SessionUser> {
-		throw new Error('Not Implemented Yet');
+		const cookieStore = await cookies();
+		const token = cookieStore.get('session')?.value;
+		if (!token) {
+			throw new Error('No session');
+		}
+		const res = await fetch('http://localhost:3010/api/v0/check', {
+			headers: {
+				'Authorization': `Bearer ${token}`,
+			},
+		});
+		if (res.status !== 200) {
+			throw new Error('Unauthorized');
+		}
+		return res.json();
 	}
 }
