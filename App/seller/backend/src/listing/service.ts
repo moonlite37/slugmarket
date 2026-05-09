@@ -1,0 +1,38 @@
+const LISTING_MICROSERVICE = 'http://localhost:3011/api/v0';
+
+interface NewListing {
+	title: string;
+	description: string;
+	price: number;
+	stock: number;
+	categories: string[];
+	images?: string[];
+}
+
+interface Listing {
+	id: string;
+	title: string;
+	description: string;
+	price: number;
+	stock: number;
+	categories: string[];
+	images?: string[];
+	created: string;
+	author: string;
+}
+
+export class ListingService {
+	public async createListing(listing: NewListing): Promise<Listing> {
+		const res = await fetch(`${LISTING_MICROSERVICE}/listing`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(listing),
+		});
+		if (res.status !== 201) {
+			throw new Error('Failed to create listing');
+		}
+		return res.json();
+	}
+}
