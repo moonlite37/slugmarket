@@ -1,6 +1,7 @@
 import GlobalStyles from '@mui/material/GlobalStyles';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Login from './Login';
+import ListingList from './listing/list';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/" element = {<ListingList/>}/>
         </Routes>
       </BrowserRouter>
     </>
