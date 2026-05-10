@@ -26,12 +26,20 @@ export const server = setupServer(
       return passthrough();
     },
   ),
+  http.get('http://localhost:3010/api/v0/check', () => {
+    return HttpResponse.json({ id: 'mock-id', role: 'seller' });
+  }),
   http.post('http://localhost:3011/api/v0/listing', async ({ request }) => {
-	  const body = await request.json() as Record<string, unknown>;
-	  return HttpResponse.json(
-		  { id: 'mock-listing-id', ...body, created: '2026-05-08', author: 'mock-author' },
-		  { status: 201 },
-	  );
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json(
+      {
+        id: 'mock-listing-id',
+        ...body,
+        created: '2026-05-08',
+        author: 'mock-author',
+      },
+      { status: 201 },
+    );
   }),
 );
 

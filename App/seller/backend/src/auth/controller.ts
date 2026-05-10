@@ -1,4 +1,4 @@
-import { Route, Controller, Get, Query } from 'tsoa';
+import { Route, Controller, Get, Query, Security } from 'tsoa';
 import { AuthService } from './service';
 
 @Route('')
@@ -8,6 +8,12 @@ export class AuthController extends Controller {
     const url = await new AuthService().oauthLogin();
     return { url };
   }
+
+	@Security('cookie')
+	@Get('protected')
+	public async protected(): Promise<{ message: string }> {
+		return { message: 'ok' };
+	}
 
 	@Get('oauthlogin/callback')
 	public async oauthLoginCallback(
