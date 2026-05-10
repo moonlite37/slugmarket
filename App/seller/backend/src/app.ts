@@ -8,6 +8,7 @@ import express, {
 } from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
+import cookieParser from 'cookie-parser';
 
 import { RegisterRoutes } from '../build/routes';
 
@@ -15,6 +16,7 @@ const app: Express = express();
 app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.use(
   '/api/v0/docs',

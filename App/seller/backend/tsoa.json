@@ -8,17 +8,15 @@
     "schemes": ["http"],
     "basePath": "/api/v0",
     "securityDefinitions": {
-      "jwt": {
-        "type": "http",
-        "scheme": "bearer",
-        "scopes": {
-          "member": "member",
-          "admin": "admin"
-        }
+      "cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "authToken"
       }
     }
   },
   "routes": {
-    "routesDir": "build"
+    "routesDir": "build",
+    "authenticationModule": "./src/auth/express.ts"
   }
 }
