@@ -2,6 +2,7 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Login from './Login';
 import ListingList from './listing/list';
+import AuthenticatedRoute from './AuthenticatedRoute';
 
 function App() {
   return (
@@ -11,10 +12,10 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element = {<ListingList/>}/>
+          <Route element={<AuthenticatedRoute />}></Route>
         </Routes>
       </BrowserRouter>
     </>
   );
 }
-
 export default App;
