@@ -60,4 +60,12 @@ export class ListingService {
 			images: listing.images,
 		};
 	}
+
+	public async deleteListing(id: string): Promise<boolean> {
+		const { rowCount } = await pool.query(
+			'DELETE FROM listing WHERE id = $1',
+			[id],
+		);
+		return rowCount > 0;
+	}
 }

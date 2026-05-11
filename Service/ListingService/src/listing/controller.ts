@@ -3,8 +3,11 @@ import {
 	Controller,
 	Get,
 	Post,
+	Delete,
 	Body,
+	Path,
 	Query,
+	Response,
 	SuccessResponse,
 } from 'tsoa';
 import { Listing, CreateListingBody } from '.';
@@ -29,5 +32,19 @@ export class ListingController extends Controller {
 		const { authorId, ...listing } = body;
 		const res = await new ListingService().createListing(authorId, listing);
 		return res;
+	}
+
+	@Delete('listing/{id}')
+	@SuccessResponse('204', 'Deleted')
+	@Response('404', 'Not Found')
+	public async deleteListing(
+		@Path() id: string,
+	): Promise<void> {
+		const deleted = await new ListingService().deleteListing(id);
+		if (!deleted) {
+			this.setStatus(404);
+			return;
+		}
+		this.setStatus(204);
 	}
 }
