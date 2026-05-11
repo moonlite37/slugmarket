@@ -4,6 +4,7 @@ import {
 	Get,
 	Post,
 	Body,
+	Query,
 	SuccessResponse,
 } from 'tsoa';
 import { Listing, CreateListingBody } from '.';
@@ -13,8 +14,9 @@ import { ListingService } from './service';
 export class ListingController extends Controller {
 	@Get('listing')
 	public async getListing(
+		@Query() author?: string,
 	): Promise<Listing[]> {
-		const res = await new ListingService().getListing();
+		const res = await new ListingService().getListing(author);
 		return res;
 	}
 
