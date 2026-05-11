@@ -11,6 +11,7 @@ describe('create listing', () => {
 		const res = await supertest(server)
 			.post('/api/v0/listing')
 			.send({
+				authorId: '00000000-0000-0000-0000-000000000002',
 				title: 'Test Widget',
 				description: 'A test widget for sale',
 				price: 9.99,
@@ -20,12 +21,14 @@ describe('create listing', () => {
 		expect(res.status).toBe(201);
 		expect(res.body.title).toBe('Test Widget');
 		expect(res.body.id).toBeDefined();
+		expect(res.body.author).toBe('00000000-0000-0000-0000-000000000002');
 	});
 
 	it('created listing appears in listing list', async () => {
 		await supertest(server)
 			.post('/api/v0/listing')
 			.send({
+				authorId: '00000000-0000-0000-0000-000000000002',
 				title: 'Findable Widget',
 				description: 'Should appear in list',
 				price: 5.00,
@@ -43,6 +46,7 @@ describe('create listing', () => {
 		const res = await supertest(server)
 			.post('/api/v0/listing')
 			.send({
+				authorId: '00000000-0000-0000-0000-000000000002',
 				title: 'With Images',
 				description: 'Has photos',
 				price: 15.00,

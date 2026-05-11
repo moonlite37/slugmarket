@@ -4,7 +4,7 @@ import {
 	Post,
 	Body,
 	Request,
-	Response,
+	Security,
 	SuccessResponse,
 } from 'tsoa';
 import * as express from 'express';
@@ -22,20 +22,17 @@ interface NewListing {
 @Route('')
 export class ListingController extends Controller {
 	@Post('listing')
+	@Security('jwt')
 	@SuccessResponse('201', 'Created')
-	@Response('401', 'Unauthorized')
 	public async createListing(
 		@Body() listing: NewListing,
 		@Request() req: express.Request,
 	): Promise<unknown> {
-		try {
-			const token = req.headers.authorization?.split(' ')[1];
-			const res = await new ListingService().createListing(token, listing);
-			this.setStatus(201);
-			return res;
-		} catch {
-			this.setStatus(401);
-			return undefined;
-		}
+		this.setStatus(201);
+		const res = await new ListingService().createListing(
+			req.user?.id as string,
+			listing,
+		);
+		return res;
 	}
 }

@@ -3,18 +3,15 @@ import {
 	Controller,
 	Get,
 	Post,
-  	Body,
-  	SuccessResponse,
+	Body,
+	SuccessResponse,
 } from 'tsoa';
-
-import { Listing, NewListing } from '.';
+import { Listing, CreateListingBody } from '.';
 import { ListingService } from './service';
 
-// endpoint is currently unauthenticated
-// it technically doesn't need to be, but will add authcheck when implemented in authservice
 @Route('')
 export class ListingController extends Controller {
-    @Get('listing')
+	@Get('listing')
 	public async getListing(
 	): Promise<Listing[]> {
 		const res = await new ListingService().getListing();
@@ -23,14 +20,12 @@ export class ListingController extends Controller {
 
 	@Post('listing')
 	@SuccessResponse('201', 'Created')
-    public async createListing(
-		@Body() listing: NewListing,
-    ): Promise<Listing> {
-    	this.setStatus(201);
-    	const res = await new ListingService().createListing(
-    		'00000000-0000-0000-0000-000000000001',
-    		listing,
-    	);
-    	return res;
-    }
+	public async createListing(
+		@Body() body: CreateListingBody,
+	): Promise<Listing> {
+		this.setStatus(201);
+		const { authorId, ...listing } = body;
+		const res = await new ListingService().createListing(authorId, listing);
+		return res;
+	}
 }

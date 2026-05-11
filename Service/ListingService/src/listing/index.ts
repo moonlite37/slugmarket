@@ -22,3 +22,7 @@ export interface NewListing {
   categories: string[]
   images?: string[]
 }
+
+export interface CreateListingBody extends NewListing {
+  authorId: string
+}

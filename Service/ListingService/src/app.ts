@@ -3,12 +3,11 @@ import express, {
 	Router,
 	Response as ExResponse, 
 	Request as ExRequest, 
-	ErrorRequestHandler ,
+	ErrorRequestHandler,
 	NextFunction,
 } from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
-
 import {RegisterRoutes} from '../build/routes';
 
 const app: Express = express();
@@ -26,10 +25,8 @@ const router = Router();
 RegisterRoutes(router);
 app.use('/api/v0', router);
 
-// uncomment when somethin with actual errors shows up
-/*
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next: NextFunction) => {
-	res.status(err.status || 500).json( {
+	res.status(err.status || 500).json({
 		message: err.message,
 		errors: err.errors,
 		status: err.status,
@@ -37,6 +34,5 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next: NextFunction) 
 	_next();
 };
 app.use(errorHandler);
-*/
 
 export default app;
