@@ -6,15 +6,72 @@
 		"parameters": {},
 		"requestBodies": {},
 		"responses": {},
-		"schemas": {},
+		"schemas": {
+			"Listing": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"author": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"created": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"discountPrice": {
+						"type": "number",
+						"format": "double"
+					},
+					"stock": {
+						"type": "number",
+						"format": "double"
+					},
+					"catagories": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"images": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"author",
+					"username",
+					"title",
+					"description",
+					"created",
+					"price",
+					"stock",
+					"catagories"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
 		"securitySchemes": {
-			"jwt": {
-				"type": "http",
-				"scheme": "bearer",
-				"scopes": {
-					"member": "member",
-					"admin": "admin"
-				}
+			"cookie": {
+				"type": "apiKey",
+				"in": "cookie",
+				"name": "authToken"
 			}
 		}
 	},
@@ -23,6 +80,28 @@
 		"contact": {}
 	},
 	"paths": {
+		"/listing": {
+			"get": {
+				"operationId": "GetListing",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Listing"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/oauthlogin": {
 			"get": {
 				"operationId": "OauthLogin",
@@ -47,6 +126,37 @@
 					}
 				},
 				"security": [],
+				"parameters": []
+			}
+		},
+		"/protected": {
+			"get": {
+				"operationId": "Protected",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"cookie": []
+					}
+				],
 				"parameters": []
 			}
 		},

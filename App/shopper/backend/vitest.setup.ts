@@ -47,6 +47,9 @@ export const server = setupServer(
       return HttpResponse.json([listing]);
     },
   ),
+  http.get('http://localhost:3010/api/v0/check', () => {
+    return HttpResponse.json({ id: 'mock-id', role: 'shopper' });
+  }),
 );
 
 beforeAll(() => server.listen());
