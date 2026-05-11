@@ -1,6 +1,7 @@
 import {
 	Route,
 	Controller,
+	Get,
 	Post,
 	Body,
 	Request,
@@ -21,6 +22,15 @@ interface NewListing {
 
 @Route('')
 export class ListingController extends Controller {
+	@Get('listing')
+	@Security('jwt')
+	public async getListings(
+		@Request() req: express.Request,
+	): Promise<unknown> {
+		const res = await new ListingService().getListings(req.user?.id as string);
+		return res;
+	}
+
 	@Post('listing')
 	@Security('jwt')
 	@SuccessResponse('201', 'Created')

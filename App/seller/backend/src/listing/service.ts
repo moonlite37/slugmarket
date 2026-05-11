@@ -22,6 +22,14 @@ interface Listing {
 }
 
 export class ListingService {
+	public async getListings(userId: string): Promise<Listing[]> {
+		const res = await fetch(`${LISTING_MICROSERVICE}/listing?author=${userId}`);
+		if (!res.ok) {
+			throw new Error('Failed to fetch listings');
+		}
+		return res.json();
+	}
+
 	public async createListing(userId: string, listing: NewListing): Promise<Listing> {
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing`, {
 			method: 'POST',
