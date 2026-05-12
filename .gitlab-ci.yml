@@ -63,11 +63,14 @@ stages:
 build-image:
   stage: build
   image: docker:latest
+  tags:
+    - docker
+    - linux
   services:
     - docker:dind
   variables:
-    DOCKER_HOST: tcp://docker:2376
-    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
   before_script:
     - apk add nodejs npm
   script:
