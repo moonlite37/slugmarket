@@ -1,0 +1,77 @@
+image: node:lts
+
+variables:
+  PIPELINE: "true"
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: dev
+  POSTGRES_HOST_AUTH_METHOD: trust
+
+stages:
+  - quality
+  - test
+
+.quality:
+  stage: quality
+  script:
+    - cd $PROJECT_PATH
+    - npm install
+    - npm run lint
+    - npm run cpd
+
+.frontend-test:
+  stage: test
+  script:
+    - cd $PROJECT_PATH
+    - npm install
+    - npm test
+
+auth-service:quality:
+  extends: .quality
+  variables:
+    PROJECT_PATH: Service/AuthService
+
+listing-service:quality:
+  extends: .quality
+  variables:
+    PROJECT_PATH: Service/ListingService
+
+admin:quality:
+  extends: .quality
+  variables:
+    PROJECT_PATH: App/Admin
+
+seller-backend:quality:
+  extends: .quality
+  variables:
+    PROJECT_PATH: App/seller/backend
+
+seller-frontend:quality:
+  extends: .quality
+  variables:
+    PROJECT_PATH: App/seller/frontend
+
+shopper-backend:quality:
+  extends: .quality
+  variables:
+    PROJECT_PATH: App/shopper/backend
+
+shopper-frontend:quality:
+  extends: .quality
+  variables:
+    PROJECT_PATH: App/shopper/frontend
+
+admin:test:
+  extends: .frontend-test
+  variables:
+    PROJECT_PATH: App/Admin
+
+seller-frontend:test:
+  extends: .frontend-test
+  variables:
+    PROJECT_PATH: App/seller/frontend
+
+shopper-frontend:test:
+  extends: .frontend-test
+  variables:
+    PROJECT_PATH: App/shopper/frontend
