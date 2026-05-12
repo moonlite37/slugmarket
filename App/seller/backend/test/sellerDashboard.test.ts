@@ -20,7 +20,7 @@ describe('seller dashboard listings', () => {
 
     it('returns error when ListingService fails', async () => {
 		server.use(
-			http.get('http://localhost:3011/api/v0/listing', () => {
+			http.get('http://127.0.0.1:3011/api/v0/listing', () => {
 				return new HttpResponse(null, { status: 500 });
 			}),
 		);

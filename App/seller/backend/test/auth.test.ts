@@ -44,7 +44,7 @@ describe('auth middleware', () => {
 
 	it('returns 401 when res is not 200', async () => {
 		server.use(
-			http.get('http://localhost:3010/api/v0/check', () => {
+			http.get('http://127.0.0.1:3010/api/v0/check', () => {
 				return new HttpResponse(null, { status: 401 });
 			}),
 		);
@@ -55,7 +55,7 @@ describe('auth middleware', () => {
 
 	it('returns 401 when role is not seller', async () => {
 		server.use(
-			http.get('http://localhost:3010/api/v0/check', () => {
+			http.get('http://127.0.0.1:3010/api/v0/check', () => {
 				return HttpResponse.json({ id: 'mock-id', role: 'shopper' });
 			}),
 		);
