@@ -65,6 +65,8 @@ build-image:
   image: docker:latest
   services:
     - docker:dind
+  before_script:
+    - apk add nodejs npm
   script:
     - npm run package
   artifacts:
