@@ -1,8 +1,5 @@
 image: node:lts
 
-services:
-  - postgres
-
 variables:
   PIPELINE: "true"
   POSTGRES_HOST: postgres
@@ -47,6 +44,8 @@ quality:
 
 microservice-test:
   stage: test
+  services:
+    - postgres
   parallel:
     matrix:
       - PROJECT_PATH: Service/AuthService
