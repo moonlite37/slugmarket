@@ -7,6 +7,13 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 
 import CreateListing from '@/CreateListing';
 
+const fillInOrder = async (user: ReturnType<typeof userEvent.setup>) => {
+	await user.type(screen.getByPlaceholderText('Title'), 'Widget');
+	await user.type(screen.getByPlaceholderText('Description'), 'A widget');
+	await user.type(screen.getByPlaceholderText('Price'), '9.99');
+	await user.type(screen.getByPlaceholderText('Stock'), '5');
+};
+
 describe('Create Listing Form', () => {
 	it('renders title input', () => {
 		render(<CreateListing />);
@@ -36,10 +43,7 @@ describe('Create Listing Form', () => {
     it('submit button enabled when fields filled', async () => {
 		const user = userEvent.setup();
 		render(<CreateListing />);
-		await user.type(screen.getByPlaceholderText('Title'), 'Widget');
-		await user.type(screen.getByPlaceholderText('Description'), 'A widget');
-		await user.type(screen.getByPlaceholderText('Price'), '9.99');
-		await user.type(screen.getByPlaceholderText('Stock'), '5');
+		await fillInOrder(user);
 		const button = screen.getByRole('button', { name: /create listing/i });
 		expect(button).toHaveProperty('disabled', false);
 	});
@@ -47,10 +51,7 @@ describe('Create Listing Form', () => {
 	it('shows success message after submit', async () => {
 		const user = userEvent.setup();
 		render(<CreateListing />);
-		await user.type(screen.getByPlaceholderText('Title'), 'Widget');
-		await user.type(screen.getByPlaceholderText('Description'), 'A widget');
-		await user.type(screen.getByPlaceholderText('Price'), '9.99');
-		await user.type(screen.getByPlaceholderText('Stock'), '5');
+		await fillInOrder(user);
 		await user.click(screen.getByRole('button', { name: /create listing/i }));
 		await waitFor(() => {
 			screen.getByText('Listing created');
@@ -65,10 +66,7 @@ describe('Create Listing Form', () => {
 		);
 		const user = userEvent.setup();
 		render(<CreateListing />);
-		await user.type(screen.getByPlaceholderText('Title'), 'Widget');
-		await user.type(screen.getByPlaceholderText('Description'), 'A widget');
-		await user.type(screen.getByPlaceholderText('Price'), '9.99');
-		await user.type(screen.getByPlaceholderText('Stock'), '5');
+		await fillInOrder(user);
 		await user.click(screen.getByRole('button', { name: /create listing/i }));
 		expect(screen.queryByText('Listing created')).toBeNull();
 	});

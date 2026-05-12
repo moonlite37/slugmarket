@@ -7,14 +7,13 @@ export default function AuthenticatedRoute(): JSX.Element | null {
   const location = useLocation();
 
   useEffect(() => {
-    setChecking(true);
     fetch('http://localhost:3012/api/v0/protected', { credentials: 'include' })
       .then(res => {
         if (!res.ok) throw new Error();
       })
       .catch(() => navigate('/login'))
       .finally(() => setChecking(false));
-  }, [location.pathname]);
+  }, [location.pathname, navigate]);
 
   if (checking) return <div>Checking Credentials</div>;
   return <Outlet />;

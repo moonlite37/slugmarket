@@ -6,7 +6,7 @@ import { listing, listing2 } from '@/listing/__tests__/setup';
 const URL = 'http://localhost:3010/api/v0';
 
 export const server = setupServer(
-	http.get(URL + '/listing', async ({request}) => {
+	http.get(URL + '/listing', async () => {
 		return HttpResponse.json([listing, listing2]);
 	}),
 	http.get('http://localhost:3012/api/v0/oauthlogin', () => {

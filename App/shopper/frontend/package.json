@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest run --no-file-parallelism --testTimeout=3000 --coverage",
+    "test": "npm run lint && npm run cpd && vitest run --no-file-parallelism --testTimeout=3000 --coverage",
     "cpd": "jscpd src test --silent"
   },
   "dependencies": {

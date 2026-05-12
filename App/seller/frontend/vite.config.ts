@@ -15,6 +15,7 @@ export default defineConfig({
     hookTimeout: 20000, 
     setupFiles: ['./vitest.setup.ts'],
     coverage: {
+      
       include: [
         'src/**',
       ],

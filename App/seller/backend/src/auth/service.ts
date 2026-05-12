@@ -1,6 +1,6 @@
 import { SessionUser } from "..";
 
-const AUTH_MICROSERVICE = 'http://localhost:3010/api/v0';
+const AUTH_MICROSERVICE = 'http://127.0.0.1:3010/api/v0';
 
 export class AuthService {
 	public async oauthLogin(): Promise<string> {

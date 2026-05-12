@@ -15,7 +15,7 @@ afterAll(() => server.close());
 
 beforeEach(() => {
     server.use(
-        http.get(URL + '/listing', async ({request}) => {
+        http.get(URL + '/listing', async () => {
           return HttpResponse.json([listing, listing2]);
         }),
     );
