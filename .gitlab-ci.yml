@@ -55,6 +55,7 @@ microservice-test:
     - apt-get update -y
     - apt-get install -y postgresql-client
     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f Service/sql/databases.sql
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -d auth -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"
   script:
     - cd $PROJECT_PATH
     - npm install
