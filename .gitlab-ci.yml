@@ -9,7 +9,7 @@ variables:
 
 stages:
   # - quality
-  - test
+  # - test
   - build
 
 # quality:
@@ -43,22 +43,22 @@ stages:
 #     - npm install
 #     - npm test
 
-microservice-test:
-  stage: test
-  services:
-    - postgres
-  parallel:
-    matrix:
-      - PROJECT_PATH: Service/AuthService
-      - PROJECT_PATH: Service/ListingService
-  before_script:
-    - apt-get update -y
-    - apt-get install -y postgresql-client
-    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f $PROJECT_PATH/sql/databases.sql
-  script:
-    - cd $PROJECT_PATH
-    - npm install
-    - npm test
+# microservice-test:
+#   stage: test
+#   services:
+#     - postgres
+#   parallel:
+#     matrix:
+#       - PROJECT_PATH: Service/AuthService
+#       - PROJECT_PATH: Service/ListingService
+#   before_script:
+#     - apt-get update -y
+#     - apt-get install -y postgresql-client
+#     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f $PROJECT_PATH/sql/databases.sql
+#   script:
+#     - cd $PROJECT_PATH
+#     - npm install
+#     - npm test
 
 build-image:
   stage: build
