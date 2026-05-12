@@ -28,24 +28,14 @@ quality:
     - npm run lint
     - npm run cpd
 
-.frontend-test:
+frontend-test:
   stage: test
+  parallel:
+    matrix:
+      - PROJECT_PATH: App/Admin
+      - PROJECT_PATH: App/seller/frontend
+      - PROJECT_PATH: App/shopper/frontend
   script:
     - cd $PROJECT_PATH
     - npm install
     - npm test
-
-admin:test:
-  extends: .frontend-test
-  variables:
-    PROJECT_PATH: App/Admin
-
-seller-frontend:test:
-  extends: .frontend-test
-  variables:
-    PROJECT_PATH: App/seller/frontend
-
-shopper-frontend:test:
-  extends: .frontend-test
-  variables:
-    PROJECT_PATH: App/shopper/frontend
