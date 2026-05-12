@@ -2,8 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	test: {
-		setupFiles: ['./vitest.setup.ts'],
-		coverage: {
+coverage: {
 			thresholds: {
 				lines: 95,
 				functions: 95,
