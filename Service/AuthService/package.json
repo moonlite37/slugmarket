@@ -6,9 +6,6 @@
     "watch": [
       "src"
     ],
-    "watch": [
-      "src"
-    ],
     "ext": "ts",
     "exec": "tsx src/server.ts"
   },
@@ -23,7 +20,8 @@
     "tsoa": "^7.0.0-alpha.0"
   },
   "devDependencies": {
-    "@eslint/js": "*",
+    "@emnapi/core": "^1.10.0",
+    "@emnapi/runtime": "^1.10.0",
     "@eslint/js": "*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",

@@ -1,4 +1,4 @@
--- Listing Database
+-- fake listings
 INSERT INTO listing (id, author, data)
 VALUES (
   gen_random_uuid(),

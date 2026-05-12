@@ -66,6 +66,6 @@ export class ListingService {
 			'DELETE FROM listing WHERE id = $1',
 			[id],
 		);
-		return rowCount > 0;
+		return (rowCount ?? 0) > 0;
 	}
 }

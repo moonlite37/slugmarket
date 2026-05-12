@@ -1,5 +1,7 @@
 import dotenv from 'dotenv'
-dotenv.config()
+import * as path from 'path'
+
+dotenv.config({ path: path.resolve(process.cwd(), '../../../.env') })
 
 import supertest from 'supertest';
 import app from '../src/app';

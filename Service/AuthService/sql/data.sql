@@ -1,4 +1,3 @@
--- Auth Database
 INSERT INTO "user" (data)
 VALUES (
   jsonb_build_object(
