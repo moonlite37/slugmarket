@@ -65,6 +65,9 @@ build-image:
   image: docker:latest
   services:
     - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
   before_script:
     - apk add nodejs npm
   script:
