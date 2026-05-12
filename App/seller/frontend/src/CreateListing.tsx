@@ -11,6 +11,7 @@ export default function CreateListing() {
 	const handleSubmit = async () => {
 		const res = await fetch('http://localhost:3013/api/v0/listing', {
 			method: 'POST',
+			credentials: 'include',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				title,

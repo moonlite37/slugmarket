@@ -25,7 +25,7 @@ export class AuthController extends Controller {
 			return;
 		}
 		const authToken = await new AuthService().oauthLoginCallback(authCode);
-		this.setHeader('Set-Cookie', `authToken=${authToken}; HttpOnly; Path=/; SameSite=Strict`);
+		this.setHeader('Set-Cookie', `authToken=${authToken}; HttpOnly; Path=/; SameSite=Lax`);
 		this.setStatus(302);
 		this.setHeader('Location', 'http://localhost:5173');
 	}

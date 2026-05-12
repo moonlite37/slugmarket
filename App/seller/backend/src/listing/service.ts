@@ -1,4 +1,4 @@
-const LISTING_MICROSERVICE = 'http://localhost:3011/api/v0';
+const LISTING_MICROSERVICE = 'http://127.0.0.1:3011/api/v0';
 
 interface NewListing {
 	title: string;
