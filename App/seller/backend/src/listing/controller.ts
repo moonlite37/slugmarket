@@ -23,7 +23,7 @@ interface NewListing {
 @Route('')
 export class ListingController extends Controller {
 	@Get('listing')
-	@Security('jwt')
+	@Security('cookie')
 	public async getListings(
 		@Request() req: express.Request,
 	): Promise<unknown> {
@@ -32,7 +32,7 @@ export class ListingController extends Controller {
 	}
 
 	@Post('listing')
-	@Security('jwt')
+	@Security('cookie')
 	@SuccessResponse('201', 'Created')
 	public async createListing(
 		@Body() listing: NewListing,
