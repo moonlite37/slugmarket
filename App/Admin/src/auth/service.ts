@@ -19,7 +19,7 @@ export class AuthService {
 			})
 				.then((res) => {
 					if (res.status !== 200) {
-						reject('Unauthorized');
+						 throw 'Unauthorized';
 					}
 					return res.json();
 				})
