@@ -38,3 +38,5 @@ coverage/
 build/
 node_modules/
 copypaste/
+
+*.tar

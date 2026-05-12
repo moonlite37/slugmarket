@@ -22,8 +22,4 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - ./Service/AuthService/sql/databases.sql:/docker-entrypoint-initdb.d/1.auth.databases.sql
-      - ./Service/AuthService/sql/schema.sql:/docker-entrypoint-initdb.d/2.auth.schema.sql
-      - ./Service/AuthService/sql/data.sql:/docker-entrypoint-initdb.d/3.auth.data.sql
-      - ./Service/ListingService/sql/databases.sql:/docker-entrypoint-initdb.d/4.listing.databases.sql
-      - ./Service/ListingService/sql/schema.sql:/docker-entrypoint-initdb.d/5.listing.schema.sql
-      - ./Service/ListingService/sql/data.sql:/docker-entrypoint-initdb.d/6.listing.data.sql
+      - ./Service/ListingService/sql/databases.sql:/docker-entrypoint-initdb.d/2.listing.databases.sql
