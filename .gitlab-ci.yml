@@ -52,9 +52,8 @@ microservice-test:
       - PROJECT_PATH: Service/AuthService
       - PROJECT_PATH: Service/ListingService
   before_script:
-    - apt-get update -y
-    - apt-get install -y postgresql-client
-    - psql -h postgres -U postgres -f Service/sql/databases.sql
+    - sudo apt-get install -y postgresql postgresql-client
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f Service/sql/databases.sql
   script:
     - cd $PROJECT_PATH
     - npm install
