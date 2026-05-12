@@ -20,10 +20,10 @@ const run = async (file: string) => {
 };
 
 const reset = async () => {
-	const sqlDir = path.resolve(__dirname, '../../sql');
+	const sqlDir = path.resolve(__dirname, '../sql');
 
-	await run(path.join(sqlDir, 'listing.schema.sql'));
-	await run(path.join(sqlDir, 'listing.data.sql'));
+	await run(path.join(sqlDir, 'schema.sql'));
+	await run(path.join(sqlDir, 'data.sql'));
 };
 
 export { reset, shutdown };
