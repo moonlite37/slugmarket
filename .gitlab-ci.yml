@@ -11,8 +11,17 @@ stages:
   - quality
   - test
 
-.quality:
+quality:
   stage: quality
+  parallel:
+    matrix:
+      - PROJECT_PATH: Service/AuthService
+      - PROJECT_PATH: Service/ListingService
+      - PROJECT_PATH: App/Admin
+      - PROJECT_PATH: App/seller/backend
+      - PROJECT_PATH: App/seller/frontend
+      - PROJECT_PATH: App/shopper/backend
+      - PROJECT_PATH: App/shopper/frontend
   script:
     - cd $PROJECT_PATH
     - npm install
@@ -25,41 +34,6 @@ stages:
     - cd $PROJECT_PATH
     - npm install
     - npm test
-
-auth-service:quality:
-  extends: .quality
-  variables:
-    PROJECT_PATH: Service/AuthService
-
-listing-service:quality:
-  extends: .quality
-  variables:
-    PROJECT_PATH: Service/ListingService
-
-admin:quality:
-  extends: .quality
-  variables:
-    PROJECT_PATH: App/Admin
-
-seller-backend:quality:
-  extends: .quality
-  variables:
-    PROJECT_PATH: App/seller/backend
-
-seller-frontend:quality:
-  extends: .quality
-  variables:
-    PROJECT_PATH: App/seller/frontend
-
-shopper-backend:quality:
-  extends: .quality
-  variables:
-    PROJECT_PATH: App/shopper/backend
-
-shopper-frontend:quality:
-  extends: .quality
-  variables:
-    PROJECT_PATH: App/shopper/frontend
 
 admin:test:
   extends: .frontend-test
