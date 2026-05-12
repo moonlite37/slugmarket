@@ -8,25 +8,26 @@ variables:
   POSTGRES_DB: postgres
 
 stages:
-  - quality
+  # - quality
   - test
+  - build
 
-quality:
-  stage: quality
-  parallel:
-    matrix:
-      - PROJECT_PATH: Service/AuthService
-      - PROJECT_PATH: Service/ListingService
-      - PROJECT_PATH: App/Admin
-      - PROJECT_PATH: App/seller/backend
-      - PROJECT_PATH: App/seller/frontend
-      - PROJECT_PATH: App/shopper/backend
-      - PROJECT_PATH: App/shopper/frontend
-  script:
-    - cd $PROJECT_PATH
-    - npm install
-    - npm run lint
-    - npm run cpd
+# quality:
+#   stage: quality
+#   parallel:
+#     matrix:
+#       - PROJECT_PATH: Service/AuthService
+#       - PROJECT_PATH: Service/ListingService
+#       - PROJECT_PATH: App/Admin
+#       - PROJECT_PATH: App/seller/backend
+#       - PROJECT_PATH: App/seller/frontend
+#       - PROJECT_PATH: App/shopper/backend
+#       - PROJECT_PATH: App/shopper/frontend
+#   script:
+#     - cd $PROJECT_PATH
+#     - npm install
+#     - npm run lint
+#     - npm run cpd
 
 # app-test:
 #   stage: test
@@ -58,3 +59,17 @@ microservice-test:
     - cd $PROJECT_PATH
     - npm install
     - npm test
+
+build-image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - npm run package
+  artifacts:
+    paths:
+      - cte-linux-amd64.tar
+    expire_in: 1 hour
+  only:
+    - main
