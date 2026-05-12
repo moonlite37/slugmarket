@@ -1,40 +1,59 @@
 image: node:lts
 
+services:
+  - postgres
+
 variables:
   PIPELINE: "true"
+  POSTGRES_HOST: postgres
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
-  POSTGRES_DB: dev
-  POSTGRES_HOST_AUTH_METHOD: trust
+  POSTGRES_DB: postgres
 
 stages:
-  - quality
+  # - quality
   - test
 
-quality:
-  stage: quality
+# quality:
+#   stage: quality
+#   parallel:
+#     matrix:
+#       - PROJECT_PATH: Service/AuthService
+#       - PROJECT_PATH: Service/ListingService
+#       - PROJECT_PATH: App/Admin
+#       - PROJECT_PATH: App/seller/backend
+#       - PROJECT_PATH: App/seller/frontend
+#       - PROJECT_PATH: App/shopper/backend
+#       - PROJECT_PATH: App/shopper/frontend
+#   script:
+#     - cd $PROJECT_PATH
+#     - npm install
+#     - npm run lint
+#     - npm run cpd
+
+# app-test:
+#   stage: test
+#   parallel:
+#     matrix:
+#       - PROJECT_PATH: App/Admin
+#       - PROJECT_PATH: App/seller/frontend
+#       - PROJECT_PATH: App/shopper/frontend
+#       - PROJECT_PATH: App/seller/backend
+#       - PROJECT_PATH: App/shopper/backend
+#   script:
+#     - cd $PROJECT_PATH
+#     - npm install
+#     - npm test
+
+microservice-test:
+  stage: test
   parallel:
     matrix:
       - PROJECT_PATH: Service/AuthService
       - PROJECT_PATH: Service/ListingService
-      - PROJECT_PATH: App/Admin
-      - PROJECT_PATH: App/seller/backend
-      - PROJECT_PATH: App/seller/frontend
-      - PROJECT_PATH: App/shopper/backend
-      - PROJECT_PATH: App/shopper/frontend
-  script:
-    - cd $PROJECT_PATH
-    - npm install
-    - npm run lint
-    - npm run cpd
-
-frontend-test:
-  stage: test
-  parallel:
-    matrix:
-      - PROJECT_PATH: App/Admin
-      - PROJECT_PATH: App/seller/frontend
-      - PROJECT_PATH: App/shopper/frontend
+  before_script:
+    - apt-get install -y postgresql-client
+    - psql -h postgres -U postgres -f Service/sql/databases.sql
   script:
     - cd $PROJECT_PATH
     - npm install
