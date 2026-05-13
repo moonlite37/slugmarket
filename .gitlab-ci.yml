@@ -72,6 +72,7 @@ build-image:
   before_script:
     - apk add nodejs npm
   script:
+    - npm run installs
     - npm run package
   artifacts:
     paths:
