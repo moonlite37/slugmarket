@@ -15,7 +15,7 @@ export interface Listing {
 
 
 export async function getListing() {
-  const query = 'http://localhost:3010/api/v0/listing';
+  const query = 'http://localhost:3012/api/v0/listing';
   const res = await fetch(query, {
     method: 'GET',
     headers: {
