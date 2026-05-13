@@ -7,6 +7,56 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"OrderItemInput": {
+				"properties": {
+					"listingId": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"listingId",
+					"title",
+					"price",
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateOrderBody": {
+				"properties": {
+					"seller": {
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/OrderItemInput"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"seller",
+					"items",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Listing": {
 				"properties": {
 					"id": {
@@ -80,6 +130,56 @@
 		"contact": {}
 	},
 	"paths": {
+		"/order": {
+			"post": {
+				"operationId": "CreateOrder",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"cookie": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrderBody"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetOrders",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"cookie": []
+					}
+				],
+				"parameters": []
+			}
+		},
 		"/listing": {
 			"get": {
 				"operationId": "GetListing",

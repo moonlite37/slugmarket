@@ -1,10 +1,9 @@
 import { beforeAll, afterEach, afterAll } from 'vitest';
 import { setupServer } from 'msw/node';
-import { http, passthrough, HttpResponse } from 'msw';
-
+import { http, HttpResponse } from 'msw';
 
 const listing = {
-  id: "00000000-0000-0000-0000-000000000002", // gen_random_uuid()
+  id: "00000000-0000-0000-0000-000000000002",
   author: "00000000-0000-0000-0000-000000000001",
   username: "John Pork",
   title: "Pork Chops",
@@ -16,10 +15,8 @@ const listing = {
   images: ["img1.jpg", "img2.jpg"],
 };
 
-
 export const server = setupServer(
-  http.all('http://127.0.0.1*', () => passthrough()),
-  http.get('http://localhost:3010/api/v0/oauthlogin', ({ request }) => {
+  http.get('http://127.0.0.1:3010/api/v0/oauthlogin', ({ request }) => {
     const url = new URL(request.url);
     const app = url.searchParams.get('app');
     if (app === 'shopper') {
@@ -28,31 +25,63 @@ export const server = setupServer(
         headers: { Location: 'mock-url' },
       });
     }
-    return passthrough();
+    return undefined;
   }),
   http.get(
-    'http://localhost:3010/api/v0/oauthlogin/callback',
+    'http://127.0.0.1:3010/api/v0/oauthlogin/callback',
     ({ request }) => {
       const url = new URL(request.url);
       const app = url.searchParams.get('app');
       if (app === 'shopper') {
         return HttpResponse.json({ authToken: 'mock-token' });
       }
-      return passthrough();
+      return undefined;
     },
   ),
-  http.get(
-    'http://localhost:3011/api/v0/listing',
-    () => {
-      return HttpResponse.json([listing]);
-    },
-  ),
-  http.get('http://localhost:3010/api/v0/check', () => {
+  http.get('http://127.0.0.1:3010/api/v0/check', () => {
     return HttpResponse.json({ id: 'mock-id', role: 'shopper' });
+  }),
+  http.get('http://127.0.0.1:3011/api/v0/listing', () => {
+    return HttpResponse.json([listing]);
+  }),
+  http.post('http://127.0.0.1:4000/graphql', async ({ request }) => {
+    const body = await request.json() as { query: string };
+    if (body.query.includes('createOrder')) {
+      return HttpResponse.json({
+        data: {
+          createOrder: {
+            id: 'mock-order-id',
+            shopper: 'mock-id',
+            seller: 'mock-seller',
+            items: [{ listingId: 'mock-listing', title: 'Test', price: 10, quantity: 1 }],
+            total: 10,
+            status: 'pending',
+            created: '2026-05-13',
+          },
+        },
+      });
+    }
+    if (body.query.includes('ordersByShopper')) {
+      return HttpResponse.json({
+        data: {
+          ordersByShopper: [
+            {
+              id: 'mock-order-id',
+              shopper: 'mock-id',
+              seller: 'mock-seller',
+              items: [{ listingId: 'mock-listing', title: 'Test', price: 10, quantity: 1 }],
+              total: 10,
+              status: 'pending',
+              created: '2026-05-13',
+            },
+          ],
+        },
+      });
+    }
+    return HttpResponse.json({ data: {} });
   }),
 );
 
-beforeAll(() => server.listen());
+beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
-
