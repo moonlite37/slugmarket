@@ -11,7 +11,6 @@ stages:
   # - quality
   # - test
   - build
-  # - test-docker
 
 # quality:
 #   stage: quality
@@ -61,33 +60,23 @@ stages:
 #     - npm install
 #     - npm test
 
-# build-image:
-#   stage: build
-#   image: docker:latest
-#   tags:
-#     - docker
-#     - linux
-#   services:
-#     - docker:dind
-#   variables:
-#     DOCKER_HOST: tcp://docker:2376
-#     DOCKER_TLS_CERTDIR: "/certs"
-#   before_script:
-#     - apk add nodejs npm
-#   script:
-#     - npm run package
-#   artifacts:
-#     paths:
-#       - cte-linux-amd64.tar
-#     expire_in: 1 hour
-#   only:
-#     - main
-
-test-docker:
+build-image:
   stage: build
   image: docker:latest
   tags:
-    - docker
-    - linux
+    - build
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - apk add nodejs npm
   script:
-    - docker info
+    - npm run package
+  artifacts:
+    paths:
+      - cte-linux-amd64.tar
+    expire_in: 1 hour
+  only:
+    - main
