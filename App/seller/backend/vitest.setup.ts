@@ -45,6 +45,23 @@ export const server = setupServer(
       { id: 'mock-1', title: 'My Widget', description: 'A widget', price: 10, stock: 5, categories: ['test'], author: 'mock-id', created: '2026-05-10' },
     ]);
   }),
+  http.post('http://127.0.0.1:4000/graphql', async () => {
+    return HttpResponse.json({
+      data: {
+        ordersBySeller: [
+          {
+            id: 'mock-order-id',
+            shopper: 'mock-shopper',
+            seller: 'mock-id',
+            items: [{ listingId: 'mock-listing', title: 'Test', price: 10, quantity: 1 }],
+            total: 10,
+            status: 'pending',
+            created: '2026-05-13',
+          },
+        ],
+      },
+    });
+  }),
 );
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
