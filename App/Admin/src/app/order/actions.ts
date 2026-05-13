@@ -1,6 +1,7 @@
 'use server';
 
-import { Order, OrderService } from '../../order/service';
+import { Order } from '../../order';
+import { OrderService } from '../../order/service';
 
 export async function getOrders(): Promise<Order[]> {
 	return new OrderService().getAll();

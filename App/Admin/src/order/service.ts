@@ -1,23 +1,8 @@
 import 'server-only';
 
+import { Order } from '.';
+
 const ORDER_SERVICE = 'http://127.0.0.1:4000/graphql';
-
-interface OrderItem {
-  listingId: string;
-  title: string;
-  price: number;
-  quantity: number;
-}
-
-export interface Order {
-  id: string;
-  shopper: string;
-  seller: string;
-  items: OrderItem[];
-  total: number;
-  status: string;
-  created: string;
-}
 
 export class OrderService {
 	public async getAll(): Promise<Order[]> {
