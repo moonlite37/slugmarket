@@ -106,3 +106,19 @@ describe('updateOrderStatus', () => {
 		expect(res.body.errors).toBeDefined();
 	});
 });
+
+describe('allOrders', () => {
+	it('returns all orders', async () => {
+		await gql(createOrderMutation(SHOPPER_A, SELLER_A, 'Order One'));
+		await gql(createOrderMutation(SHOPPER_B, SELLER_B, 'Order Two'));
+
+		const res = await gql(`{
+			allOrders {
+				id shopper seller items { title }
+			}
+		}`);
+		expect(res.status).toBe(200);
+		const orders = res.body.data.allOrders;
+		expect(orders.length).toBe(2);
+	});
+});

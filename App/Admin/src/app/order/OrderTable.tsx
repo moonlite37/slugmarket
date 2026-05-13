@@ -1,0 +1,97 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import {
+	Typography,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	Paper,
+	Button,
+} from '@mui/material';
+import { getOrders, updateOrderStatus } from './actions';
+
+interface OrderItem {
+  listingId: string;
+  title: string;
+  price: number;
+  quantity: number;
+}
+
+interface Order {
+  id: string;
+  shopper: string;
+  seller: string;
+  items: OrderItem[];
+  total: number;
+  status: string;
+  created: string;
+}
+
+export default function OrderTable() {
+	const [orders, setOrders] = useState<Order[]>([]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			setOrders(await getOrders());
+		};
+		void fetchData();
+	}, []);
+
+	const handleStatusUpdate = async (id: string, status: string) => {
+		await updateOrderStatus(id, status);
+		setOrders(await getOrders());
+	};
+
+	if (orders.length === 0) {
+		return <Typography color="text.secondary">No orders</Typography>;
+	}
+
+	return (
+		<TableContainer component={Paper} variant="outlined">
+			<Table>
+				<TableHead>
+					<TableRow>
+						<TableCell>Items</TableCell>
+						<TableCell>Total</TableCell>
+						<TableCell>Status</TableCell>
+						<TableCell>Actions</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{orders.map((order) => (
+						<TableRow key={order.id}>
+							<TableCell>
+								{order.items.map((item) => item.title).join(', ')}
+							</TableCell>
+							<TableCell>${order.total}</TableCell>
+							<TableCell>{order.status}</TableCell>
+							<TableCell>
+								{order.status === 'pending' && (
+									<Button
+										size="small"
+										onClick={() => { void handleStatusUpdate(order.id, 'fulfilled'); }}
+									>
+                    Fulfill
+									</Button>
+								)}
+								{order.status !== 'cancelled' && (
+									<Button
+										size="small"
+										color="error"
+										onClick={() => { void handleStatusUpdate(order.id, 'cancelled'); }}
+									>
+                    Cancel
+									</Button>
+								)}
+							</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableContainer>
+	);
+}

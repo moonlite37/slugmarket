@@ -28,6 +28,18 @@ export class OrderService {
 		};
 	}
 
+	public async allOrders(): Promise<Order[]> {
+		const { rows } = await pool.query(
+			'SELECT * FROM "order" ORDER BY data->>\'created\' DESC',
+		);
+		return rows.map(r => ({
+			id: r.id,
+			shopper: r.shopper,
+			seller: r.seller,
+			...r.data,
+		}));
+	}
+
 	public async ordersByShopper(shopperId: string): Promise<Order[]> {
 		const { rows } = await pool.query(
 			'SELECT * FROM "order" WHERE shopper = $1 ORDER BY data->>\'created\' DESC',
