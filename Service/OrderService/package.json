@@ -1,0 +1,53 @@
+{
+  "name": "orderservice",
+  "main": "build/src/server.js",
+  "type": "commonjs",
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts",
+    "exec": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "class-validator": "^0.14.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "graphql": "^16.11.0",
+    "graphql-http": "^1.22.4",
+    "graphql-scalars": "^1.24.1",
+    "pg": "^8.20.0",
+    "reflect-metadata": "^0.2.2",
+    "type-graphql": "^2.0.0-rc.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "*",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.0",
+    "@types/pg": "^8.20.0",
+    "@types/supertest": "^7.2.0",
+    "@vitest/coverage-v8": "*",
+    "concurrently": "*",
+    "eslint": "*",
+    "globals": "*",
+    "jscpd": "*",
+    "nodemon": "*",
+    "supertest": "^7.2.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "*",
+    "vitest": "^4.1.5"
+  },
+  "scripts": {
+    "cpd": "jscpd src test --silent",
+    "lint": "eslint test/**/*.[jt]s src/**/*.[jt]s --fix",
+    "prestart": "npm run build",
+    "start": "node build/src/server.js",
+    "dev": "concurrently \"nodemon\"",
+    "build": "tsc",
+    "pretest": "(npm run lint) && (npm run cpd)",
+    "test": "vitest run --no-file-parallelism --testTimeout=3000 --coverage"
+  }
+}

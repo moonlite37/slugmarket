@@ -13,5 +13,6 @@ services:
       - postgres-data:/var/lib/postgresql
       - ./AuthService/sql/databases.sql:/docker-entrypoint-initdb.d/1.auth.databases.sql
       - ./ListingService/sql/databases.sql:/docker-entrypoint-initdb.d/2.listing.databases.sql
+      - ./OrderService/sql/databases.sql:/docker-entrypoint-initdb.d/3.order.databases.sql
 volumes:
   postgres-data:
