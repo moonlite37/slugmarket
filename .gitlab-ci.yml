@@ -71,10 +71,13 @@ build-image:
     DOCKER_TLS_CERTDIR: "/certs"
   before_script:
     - apk add nodejs npm
+    - docker system prune -af
+    - docker volume prune -af
   script:
     - echo "$ENV_BASE64" | base64 -d > .env
     - npm run installs
     - npm run package
+    - ls -lh cte-linux-amd64.tar
   artifacts:
     paths:
       - cte-linux-amd64.tar
