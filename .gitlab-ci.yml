@@ -70,6 +70,7 @@ build-image:
   variables:
     DOCKER_HOST: tcp://docker:2376
     DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_CERT_PATH: "/certs/client"
   before_script:
     - apk add nodejs npm
   script:
