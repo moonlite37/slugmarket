@@ -10,8 +10,8 @@ variables:
 stages:
   # - quality
   # - test
-  # - build
-  - test-docker
+  - build
+  # - test-docker
 
 # quality:
 #   stage: quality
