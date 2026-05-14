@@ -229,7 +229,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 						color: "primary.dark",
 					}}
 				>
-					{username[0]}
+					{username?.[0] ?? '?'}
 				</Avatar>
 				<Typography sx={{ fontSize: 12, color: "text.secondary" }}>
 					Listed by{" "}

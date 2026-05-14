@@ -5,6 +5,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5174,
+    proxy: {
+      '/shopper/api': {
+        target: 'http://localhost:3012',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/shopper/, ''),
+      },
+    },
   },
   preview: {
     allowedHosts: true,

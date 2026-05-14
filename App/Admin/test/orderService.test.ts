@@ -29,7 +29,7 @@ describe('order service', () => {
     global.fetch = vi.fn().mockResolvedValue({ ok: true });
     await new OrderService().updateStatus('o1', 'fulfilled');
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://127.0.0.1:4000/graphql',
+      'http://localhost:4000/graphql',
       expect.objectContaining({ method: 'POST' }),
     );
   });

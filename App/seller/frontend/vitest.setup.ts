@@ -4,14 +4,14 @@ import { cleanup } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 export const server = setupServer(
-  http.get('/locales/en/translation.json', () =>
+  http.get('/seller/locales/en/translation.json', () =>
     HttpResponse.json({
       'Sign In': 'Sign In',
       'Welcome to SlugMarket': 'Welcome to SlugMarket',
       'Sign in with Google': 'Sign in with Google',
     }),
   ),
-  http.get('/locales/es/translation.json', () =>
+  http.get('/seller/locales/es/translation.json', () =>
     HttpResponse.json({
       'Sign In': 'Iniciar sesión',
       'Welcome to SlugMarket': 'Bienvenido a SlugMarket',

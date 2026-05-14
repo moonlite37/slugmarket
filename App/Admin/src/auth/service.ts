@@ -29,7 +29,7 @@ export class AuthService {
 						secure: process.env.NODE_ENV === 'production',
 						expires: expiresAt,
 						sameSite: 'lax',
-						path: '/',
+						path: '/admin',
 					});
 					resolve(data);
 				})
