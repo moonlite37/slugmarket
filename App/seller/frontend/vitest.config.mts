@@ -17,7 +17,7 @@ export default defineConfig({
 				branches: 95,
 				statements: 95,
 			},
-			exclude: ['build/**'],
+			exclude: ['build/**', 'copypaste/**', 'coverage/**'],
 		},
 	},
 });

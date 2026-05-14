@@ -4,19 +4,20 @@ import Login from './Login';
 import CreateListing from './CreateListing';
 import Dashboard from './Dashboard';
 import AuthenticatedRoute from './AuthenticatedRoute';
-
+import LocaleSwitcher from './LocaleSwitcher';
 function App() {
   return (
     <>
       <GlobalStyles styles={{ body: { overflow: 'hidden', margin: 0 } }} />
+      <LocaleSwitcher />
       <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route element={<AuthenticatedRoute />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/listing/new" element={<CreateListing />} />
-            </Route>
-          </Routes>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route element={<AuthenticatedRoute />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/listing/new" element={<CreateListing />} />
+          </Route>
+        </Routes>
       </BrowserRouter>
     </>
   );
