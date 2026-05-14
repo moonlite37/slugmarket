@@ -23,7 +23,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 	// const [cartAdded, setCartAdded] = useState(false);
 
 	const {
-		author,
+		username,
 		title,
 		description,
 		price,
@@ -224,12 +224,12 @@ export default function ListingCard({ listing }: ListingCardProps) {
 						color: "primary.dark",
 					}}
 				>
-					{author[0]}
+					{username[0]}
 				</Avatar>
 				<Typography sx={{ fontSize: 12, color: "text.secondary" }}>
 					Listed by{" "}
 					<Box component="span" sx={{ color: "text.primary", fontWeight: 500 }}>
-						{author}
+						{username}
 					</Box>
 				</Typography>
 			</Box>

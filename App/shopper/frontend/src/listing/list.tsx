@@ -12,7 +12,7 @@ export default function ListingList() {
 			setListings(data);
 		}
 		load();
-	}, [listings]);
+	}, []);
 	return (
 		<>
 			<Grid>
