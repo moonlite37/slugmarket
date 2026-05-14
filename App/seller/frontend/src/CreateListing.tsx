@@ -9,7 +9,7 @@ export default function CreateListing() {
 	const [submitted, setSubmitted] = useState(false);
 
 	const handleSubmit = async () => {
-		const res = await fetch('http://localhost:3013/api/v0/listing', {
+		const res = await fetch('/seller/api/v0/listing', {
 			method: 'POST',
 			credentials: 'include',
 			headers: { 'Content-Type': 'application/json' },

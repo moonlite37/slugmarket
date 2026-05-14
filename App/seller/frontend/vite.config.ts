@@ -2,9 +2,13 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
  
 export default defineConfig({
+  base: "/seller/",
   plugins: [react()],
   server: {
     port: 5173,
+  },
+  preview: {
+    allowedHosts: true,
   },
   resolve: {
     tsconfigPaths: true
@@ -15,7 +19,6 @@ export default defineConfig({
     hookTimeout: 20000, 
     setupFiles: ['./vitest.setup.ts'],
     coverage: {
-      
       include: [
         'src/**',
       ],
@@ -26,5 +29,3 @@ export default defineConfig({
     },
   },
 })
-
-

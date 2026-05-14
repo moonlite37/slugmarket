@@ -7,7 +7,7 @@ export default function AuthenticatedRoute(): JSX.Element | null {
   const location = useLocation();
 
   useEffect(() => {
-    fetch('http://localhost:3013/api/v0/protected', { credentials: 'include' })
+    fetch('/seller/api/v0/protected', { credentials: 'include' })
       .then(res => {
         if (!res.ok) throw new Error();
       })
