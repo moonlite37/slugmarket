@@ -117,6 +117,25 @@ export default function ListingCard({ listing }: ListingCardProps) {
 				</Typography>
 
 				{/* Categories */}
+				{categories?.length > 0 && (
+					<Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
+						{categories.map((cat: string) => (
+							<Chip
+								key={cat}
+								label={cat}
+								size="small"
+								variant="outlined"
+								sx={{
+									fontSize: 11,
+									height: 22,
+									borderRadius: 1.5,
+									"& .MuiChip-label": { px: 1 },
+								}}
+							/>
+						))}
+					</Box>
+				)}
+				{/* Categories */}
 				{categories.length > 0 && (
 					<Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
 						{categories.map((cat: string) => (
