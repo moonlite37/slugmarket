@@ -21,12 +21,12 @@ export class AuthController extends Controller {
 	): Promise<void> {
 		if (!authCode) {
 			this.setStatus(302);
-			this.setHeader('Location', 'http://localhost:5173/login');
+			this.setHeader('Location', `${process.env.SELLER_FRONTEND_URL}/login`);
 			return;
 		}
 		const authToken = await new AuthService().oauthLoginCallback(authCode);
-		this.setHeader('Set-Cookie', `authToken=${authToken}; HttpOnly; Path=/; SameSite=Lax`);
+		this.setHeader('Set-Cookie', `authToken=${authToken}; HttpOnly; Path=/seller; SameSite=Lax`);
 		this.setStatus(302);
-		this.setHeader('Location', 'http://localhost:5173');
+		this.setHeader('Location', process.env.SELLER_FRONTEND_URL as string);
 	}
 }
