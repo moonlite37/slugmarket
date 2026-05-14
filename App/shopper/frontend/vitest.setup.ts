@@ -1,5 +1,6 @@
 import { afterEach, afterAll, beforeAll, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import { listing, listing2 } from '@/listing/__tests__/setup';
