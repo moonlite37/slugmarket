@@ -2,7 +2,9 @@ import 'server-only';
 
 import { cookies } from 'next/headers';
 
-import { Credentials, Authenticated, SessionUser } from '.';
+import { Credentials, Authenticated, 
+	// SessionUser 
+} from '.';
 
 export class AuthService {
 	public async login(credentials: Credentials): Promise<Authenticated> {
@@ -39,20 +41,20 @@ export class AuthService {
 		});
 	}
 
-	public async check(): Promise<SessionUser> {
-		const cookieStore = await cookies();
-		const token = cookieStore.get('session')?.value;
-		if (!token) {
-			throw new Error('No session');
-		}
-		const res = await fetch('http://localhost:3010/api/v0/check', {
-			headers: {
-				'Authorization': `Bearer ${token}`,
-			},
-		});
-		if (res.status !== 200) {
-			throw new Error('Unauthorized');
-		}
-		return res.json();
-	}
+	// public async check(): Promise<SessionUser> {
+	// 	const cookieStore = await cookies();
+	// 	const token = cookieStore.get('session')?.value;
+	// 	if (!token) {
+	// 		throw new Error('No session');
+	// 	}
+	// 	const res = await fetch('http://localhost:3010/api/v0/check', {
+	// 		headers: {
+	// 			'Authorization': `Bearer ${token}`,
+	// 		},
+	// 	});
+	// 	if (res.status !== 200) {
+	// 		throw new Error('Unauthorized');
+	// 	}
+	// 	return res.json();
+	// }
 }
