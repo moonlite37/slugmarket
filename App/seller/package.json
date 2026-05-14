@@ -1,0 +1,15 @@
+{
+  "name": "slug-market-seller",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --kill-others --names auth,listing,order,backend,frontend \"npm run dev:auth\" \"npm run dev:listing\" \"npm run dev:order\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:auth": "npm --prefix ../../Service/AuthService run dev",
+    "dev:listing": "npm --prefix ../../Service/ListingService run dev",
+    "dev:order": "npm --prefix ../../Service/OrderService run dev",
+    "dev:backend": "npm --prefix ./backend run dev",
+    "dev:frontend": "npm --prefix ./frontend run dev"
+  },
+  "devDependencies": {
+    "concurrently": "*"
+  }
+}
