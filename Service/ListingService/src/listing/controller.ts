@@ -18,8 +18,10 @@ export class ListingController extends Controller {
 	@Get('listing')
 	public async getListing(
 		@Query() author?: string,
+		@Query() minPrice?: number,
+		@Query() maxPrice?: number,
 	): Promise<Listing[]> {
-		const res = await new ListingService().getListing(author);
+		const res = await new ListingService().getListing(author, minPrice, maxPrice);
 		return res;
 	}
 
