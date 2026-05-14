@@ -26,8 +26,24 @@ export const listing2 = {
 	images: ['img3.jpg', 'img4.jpg'],
 };
 
+
 export const mockListings = () => {
-	return http.get('http://localhost:3000/shopper/api/v0/listing', () => {
-		return HttpResponse.json([listing, listing2]);
+	return http.get("/shopper/api/v0/listing", ({ request }) => {
+		const url = new URL(request.url);
+		const minPrice = url.searchParams.get("minPrice");
+		const maxPrice = url.searchParams.get("maxPrice");
+		let listings = [listing, listing2];
+		if (minPrice != null) {
+			listings = listings.filter(
+				(l) => l.price >= Number(minPrice),
+			);
+		}
+		if (maxPrice != null) {
+			listings = listings.filter(
+				(l) => l.price <= Number(maxPrice),
+			);
+		}
+		return HttpResponse.json(listings);
 	});
+
 };

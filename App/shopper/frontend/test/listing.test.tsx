@@ -43,9 +43,7 @@ describe('listing card', () => {
 describe('listing list', () => {
 	it('displays listing cards returned by the API', async () => {
 		server.use(mockListings());
-
 		render(<ListingList />);
-
 		expect(await screen.findByText('Pork Chops')).toBeInTheDocument();
 		expect(await screen.findByText('Iphone 7')).toBeInTheDocument();
 	});

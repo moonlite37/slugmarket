@@ -14,13 +14,18 @@ export interface Listing {
 
 
 
-export async function getListing() {
-  const query = '/shopper/api/v0/listing';
-  const res = await fetch(query, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return res.json();
+export async function getListing(
+	minPrice: number | undefined,
+	maxPrice: number | undefined
+) {
+	const params = new URLSearchParams();
+	if (minPrice !== undefined) {
+		params.append("minPrice", String(minPrice));
+	}
+	if (maxPrice !== undefined) {
+		params.append("maxPrice", String(maxPrice));
+	}
+	const query = `/shopper/api/v0/listing?${params.toString()}`;
+	const res = await fetch(query);
+	return res.json();
 }
