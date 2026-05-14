@@ -39,7 +39,7 @@ describe('Seller Dashboard', () => {
 
     it('handles fetch failure gracefully', async () => {
 	server.use(
-		http.get('http://localhost:3013/api/v0/listing', () => {
+		http.get('http://localhost:3000/seller/api/v0/listing', () => {
 			return new HttpResponse(null, { status: 500 });
 		}),
 	);

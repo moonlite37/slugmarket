@@ -3,7 +3,6 @@ import i18n from './src/utils/i18n';
 import { cleanup } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
-
 export const server = setupServer(
   http.get('/locales/en/translation.json', () =>
     HttpResponse.json({
@@ -12,7 +11,6 @@ export const server = setupServer(
       'Sign in with Google': 'Sign in with Google',
     }),
   ),
-
   http.get('/locales/es/translation.json', () =>
     HttpResponse.json({
       'Sign In': 'Iniciar sesión',
@@ -20,20 +18,17 @@ export const server = setupServer(
       'Sign in with Google': 'Iniciar sesión con Google',
     }),
   ),
-
-  http.get('http://localhost:3013/api/v0/oauthlogin', () => {
+  http.get('http://localhost:3000/seller/api/v0/oauthlogin', () => {
     return HttpResponse.json({ url: 'mock-url' });
   }),
-
-  http.post('http://localhost:3013/api/v0/listing', async ({ request }) => {
+  http.post('http://localhost:3000/seller/api/v0/listing', async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>;
     return HttpResponse.json(
       { id: 'mock-id', ...body, created: '2026-05-08', author: 'mock-author' },
       { status: 201 },
     );
   }),
-
-  http.get('http://localhost:3013/api/v0/listing', () => {
+  http.get('http://localhost:3000/seller/api/v0/listing', () => {
     return HttpResponse.json([
       {
         id: 'mock-1',
@@ -58,7 +53,6 @@ export const server = setupServer(
     ]);
   }),
 );
-
 beforeAll(async () => {
   server.listen();
   if (!i18n.isInitialized) {

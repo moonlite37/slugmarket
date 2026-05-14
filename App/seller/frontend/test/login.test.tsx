@@ -22,11 +22,17 @@ describe('Login Page', async () => {
 
   it('Click Sign In With Google', async () => {
     vi.stubGlobal('location', { href: '' });
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ url: 'mock-url' }),
+    }));
     const user = userEvent.setup();
     render(<Login />);
     await user.click(
       screen.getByRole('button', { name: /sign in with google/i }),
     );
-    expect(location.href).toBe('mock-url');
+    await vi.waitFor(() => {
+      expect(location.href).toBe('mock-url');
+    });
   });
 });

@@ -32,10 +32,10 @@ const listings = [
 ];
 
 export const server = setupServer(
-	http.get('http://localhost:3012/api/v0/listing', async () => {
+	http.get('http://localhost:3000/shopper/api/v0/listing', async () => {
 		return HttpResponse.json(listings);
 	}),
-	http.get('http://localhost:3012/api/v0/oauthlogin', () => {
+	http.get('http://localhost:3000/shopper/api/v0/oauthlogin', () => {
 		return HttpResponse.json({ url: 'mock-url' });
 	}),
 );

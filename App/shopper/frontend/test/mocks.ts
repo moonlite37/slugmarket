@@ -27,7 +27,7 @@ export const listing2 = {
 };
 
 export const mockListings = () => {
-	return http.get('http://localhost:3012/api/v0/listing', () => {
+	return http.get('http://localhost:3000/shopper/api/v0/listing', () => {
 		return HttpResponse.json([listing, listing2]);
 	});
 };

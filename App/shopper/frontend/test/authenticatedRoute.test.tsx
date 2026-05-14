@@ -7,7 +7,7 @@ import AuthenticatedRoute from '@/AuthenticatedRoute';
 
 function authenticatedRouteSetup(status: number) {
   server.use(
-    http.get('http://localhost:3012/api/v0/protected', () => {
+    http.get('http://localhost:3000/shopper/api/v0/protected', () => {
       return new HttpResponse(null, { status });
     }),
   );
