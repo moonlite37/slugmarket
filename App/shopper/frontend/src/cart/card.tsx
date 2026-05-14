@@ -1,11 +1,7 @@
 import { ListItem, ListItemText } from '@mui/material';
+import type { CartItem } from '.'
 
-interface CartItemProps {
-	name: string;
-	price: number;
-}
-
-const CartItem = ({ name, price }: CartItemProps) => {
+const CartItem = ({ name, price }: CartItem) => {
 	return (
 		<ListItem>
 			<ListItemText primary={name} secondary={`$${price.toFixed(2)}`} />

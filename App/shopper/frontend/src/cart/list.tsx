@@ -1,7 +1,22 @@
-import { Typography } from '@mui/material';
+import { useContext } from 'react';
+import { List, Typography } from '@mui/material';
+
+import CartItem from './card';
+import { CartContext } from '../context/cartContext';
 
 const Cart = () => {
-	return <Typography>Shopping Cart</Typography>;
+	const { items } = useContext(CartContext);
+
+	return (
+		<>
+			<Typography>Shopping Cart</Typography>
+			<List>
+				{items.map((item) => (
+					<CartItem key={item.id} id={item.id} name={item.name} price={item.price} />
+				))}
+			</List>
+		</>
+	);
 };
 
 export default Cart;
