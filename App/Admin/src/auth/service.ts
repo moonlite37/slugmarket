@@ -5,7 +5,7 @@ import { Credentials, Authenticated, SessionUser } from '.';
 export class AuthService {
 	public async login(credentials: Credentials): Promise<Authenticated> {
 		return new Promise((resolve, reject) => {
-			fetch('http://localhost:3010/api/v0/login', {
+			fetch('http://127.0.0.1:3010/api/v0/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export class AuthService {
 		if (!token) {
 			throw new Error('No session');
 		}
-		const res = await fetch('http://localhost:3010/api/v0/check', {
+		const res = await fetch('http://127.0.0.1:3010/api/v0/check', {
 			headers: {
 				'Authorization': `Bearer ${token}`,
 			},

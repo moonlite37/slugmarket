@@ -15,7 +15,7 @@ i18n
     fallbackLng: 'en',
 		supportedLngs: Object.keys(supportedLngs),
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
+      loadPath: '/seller/locales/{{lng}}/{{ns}}.json',
     },
     interpolation: { escapeValue: false },
   });

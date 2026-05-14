@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { AuthService } from './auth/service';
 
-const publicRoutes = ['/login'];
+const publicRoutes = ['/login', '/admin/login'];
  
 export default async function proxy(req: NextRequest) {
 	if (!publicRoutes.includes(req.nextUrl.pathname)) {
