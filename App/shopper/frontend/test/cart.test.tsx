@@ -40,4 +40,13 @@ describe('cart list', () => {
 
 		expect(screen.getByText('$10.99')).toBeInTheDocument();
 	});
+	it('renders empty list', () => {
+		render(
+			<CartContext.Provider value={{ items: [] }}>
+				<Cart />
+			</CartContext.Provider>,
+		);
+
+		expect(screen.getByText('Your Car is Empty')).toBeInTheDocument();
+	})
 })
