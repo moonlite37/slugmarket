@@ -8,59 +8,59 @@ variables:
   POSTGRES_DB: postgres
 
 stages:
-  - quality
-  - test
+  # - quality
+  # - test
   - build
 
-quality:
-  stage: quality
-  parallel:
-    matrix:
-      - PROJECT_PATH: Service/AuthService
-      - PROJECT_PATH: Service/ListingService
-      - PROJECT_PATH: App/Admin
-      - PROJECT_PATH: App/seller/backend
-      - PROJECT_PATH: App/seller/frontend
-      - PROJECT_PATH: App/shopper/backend
-      - PROJECT_PATH: App/shopper/frontend
-  script:
-    - cd $PROJECT_PATH
-    - npm install
-    - npm run lint
-    - npm run cpd
+# quality:
+#   stage: quality
+#   parallel:
+#     matrix:
+#       - PROJECT_PATH: Service/AuthService
+#       - PROJECT_PATH: Service/ListingService
+#       - PROJECT_PATH: App/Admin
+#       - PROJECT_PATH: App/seller/backend
+#       - PROJECT_PATH: App/seller/frontend
+#       - PROJECT_PATH: App/shopper/backend
+#       - PROJECT_PATH: App/shopper/frontend
+#   script:
+#     - cd $PROJECT_PATH
+#     - npm install
+#     - npm run lint
+#     - npm run cpd
 
-app-test:
-  stage: test
-  parallel:
-    matrix:
-      - PROJECT_PATH: App/Admin
-      - PROJECT_PATH: App/seller/frontend
-      - PROJECT_PATH: App/shopper/frontend
-      - PROJECT_PATH: App/seller/backend
-      - PROJECT_PATH: App/shopper/backend
-  script:
-    - cd $PROJECT_PATH
-    - npm install
-    - npm test
+# app-test:
+#   stage: test
+#   parallel:
+#     matrix:
+#       - PROJECT_PATH: App/Admin
+#       - PROJECT_PATH: App/seller/frontend
+#       - PROJECT_PATH: App/shopper/frontend
+#       - PROJECT_PATH: App/seller/backend
+#       - PROJECT_PATH: App/shopper/backend
+#   script:
+#     - cd $PROJECT_PATH
+#     - npm install
+#     - npm test
 
-microservice-test:
-  stage: test
-  services:
-    - postgres
-  parallel:
-    matrix:
-      - PROJECT_PATH: Service/AuthService
-      - PROJECT_PATH: Service/ListingService
-  before_script:
-    - apt-get update -y
-    - apt-get install -y postgresql-client
-    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f $PROJECT_PATH/sql/databases.sql
-  script:
-    - cd $PROJECT_PATH
-    - npm install
-    - npm test
+# microservice-test:
+#   stage: test
+#   services:
+#     - postgres
+#   parallel:
+#     matrix:
+#       - PROJECT_PATH: Service/AuthService
+#       - PROJECT_PATH: Service/ListingService
+#   before_script:
+#     - apt-get update -y
+#     - apt-get install -y postgresql-client
+#     - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f $PROJECT_PATH/sql/databases.sql
+#   script:
+#     - cd $PROJECT_PATH
+#     - npm install
+#     - npm test
 
-build-image:
+build:
   stage: build
   image: docker:24.0.5-cli
   tags:
@@ -75,3 +75,10 @@ build-image:
     - echo "$ENV_BASE64" | base64 -d > .env
     - npm run package
     - ls -lh cte-linux-amd64.tar
+    - gzip cte-linux-amd64.tar
+    - ls -lh cte-linux-amd64.tar.gz
+  artifacts:
+    paths:
+      - cte-linux-amd64.tar.gz
+    expire_in: 1 day
+

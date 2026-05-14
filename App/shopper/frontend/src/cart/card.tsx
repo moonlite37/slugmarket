@@ -1,13 +1,9 @@
 import { ListItem, ListItemText } from '@mui/material';
+import type { CartItem } from '.'
 
-interface CartItemProps {
-	name: string;
-	price: number;
-}
-
-const CartItem = ({ name, price }: CartItemProps) => {
+const CartItem = ({ name, price }: CartItem) => {
 	return (
-		<ListItem>
+		<ListItem aria-label={`${name} in cart`}>
 			<ListItemText primary={name} secondary={`$${price.toFixed(2)}`} />
 		</ListItem>
 	);
