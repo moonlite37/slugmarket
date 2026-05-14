@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import SvgIcon from '@mui/material/SvgIcon';
 import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 
 function GoogleIcon() {
   return (
@@ -35,6 +36,8 @@ function GoogleIcon() {
 }
 
 export default function Login() {
+  const { t } = useTranslation();
+
   const handleLogin = async () => {
     const res = await fetch('/seller/api/v0/oauthlogin');
     const { url } = await res.json();
@@ -54,17 +57,17 @@ export default function Login() {
         }}
       >
         <Typography component="h1" variant="h4">
-          Sign In
+          {t('Sign In')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Welcome to SlugMarket
+          {t('Welcome to SlugMarket')}
         </Typography>
         <Button
           variant="outlined"
           startIcon={<GoogleIcon />}
           onClick={handleLogin}
         >
-          Sign in with Google
+          {t('Sign in with Google')}
         </Button>
       </Box>
     </>

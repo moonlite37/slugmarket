@@ -1,7 +1,7 @@
 import { it, expect, describe, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
+import '@/utils/i18n';
 import Login from '@/Login';
 
 describe('Login Page', async () => {

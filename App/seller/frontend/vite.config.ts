@@ -7,6 +7,9 @@ export default defineConfig({
   server: {
     port: 5173,
   },
+  preview: {
+    allowedHosts: true,
+  },
   resolve: {
     tsconfigPaths: true
   },
@@ -16,7 +19,6 @@ export default defineConfig({
     hookTimeout: 20000, 
     setupFiles: ['./vitest.setup.ts'],
     coverage: {
-      
       include: [
         'src/**',
       ],
@@ -27,5 +29,3 @@ export default defineConfig({
     },
   },
 })
-
-
