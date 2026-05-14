@@ -10,4 +10,8 @@ describe('gets a listing', () => {
 		const res = await request.get('/api/v0/listing');
 		expect(res.body.length).toBe(1);
 	});
+	it('Accepts min and max price params', async () => {
+		const res = await request.get('/api/v0/listing?minPrice=200&maxPrice=400');
+		expect(res.status).toBe(200);
+	});
 });
