@@ -2,15 +2,16 @@ import { Listing, NewListing } from '.';
 import {pool} from '../db';
 
 export class ListingService {
-	public async getListing(author?: string): Promise<Listing[]> {
-		let q = 'SELECT * FROM listing';
-		const values: string[] = [];
-		if (author) {
-			q += ' WHERE author = $1';
-			values.push(author);
-		}
-		q += ' ORDER BY data->>\'created\'';
-		const rows = (await pool.query(q, values)).rows;
+	public async getListing(author?: string , minPrice?: number , maxPrice?: number): Promise<Listing[]> {
+		console.log(author, minPrice, maxPrice);
+		const q = `
+			SELECT * FROM listing
+			WHERE ($1::UUID IS NULL OR author = $1)
+			AND ($2::INTEGER IS NULL OR (data->>'price')::DECIMAL >= $2)
+			AND ($3::INTEGER IS NULL OR (data->>'price')::DECIMAL <= $3)
+			ORDER BY data->>'created'
+		`;
+		const rows = (await pool.query(q, [author, minPrice, maxPrice])).rows;
 		return rows.map(r => ({
 			id: r.id,
 			author: r.author,

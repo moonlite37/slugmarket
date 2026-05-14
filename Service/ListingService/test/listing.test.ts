@@ -38,3 +38,18 @@ describe('listing', () => {
 });
 
 
+describe('filters', () => {
+	it('Accepts a min price filter', async () => {
+		const res = await supertest(server).get('/api/v0/listing?minPrice=100');
+		expect(res.body.length).toBe(2);
+	});
+	it('Accepts a min price filter', async () => {
+		const res = await supertest(server).get('/api/v0/listing?maxPrice=200');
+		expect(res.body.length).toBe(2);
+	});
+	it('Accepts both a min and max price filter', async () => {
+		const res = await supertest(server).get('/api/v0/listing?minPrice=100&maxPrice=200');
+		expect(res.body.length).toBe(1);
+	});
+});
+
