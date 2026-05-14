@@ -5,9 +5,9 @@ import dotenv from 'dotenv';
 dotenv.config({path: path.resolve(process.cwd(), '../../.env')});
 
 const pool = new Pool({
-	host: process.env.POSTGRES_HOST ?? 'localhost',
-	port: Number(process.env.POSTGRES_PORT ?? 5432),
-	database: process.env.AUTH_POSTGRES_DB ?? 'auth',
+	host: process.env.POSTGRES_HOST,
+	port: Number(process.env.POSTGRES_PORT),
+	database: process.env.AUTH_POSTGRES_DB,
 	user: process.env.POSTGRES_USER,
 	password: process.env.POSTGRES_PASSWORD,
 });

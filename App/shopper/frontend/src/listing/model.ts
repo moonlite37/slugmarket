@@ -8,14 +8,14 @@ export interface Listing {
   price: number;
   discountPrice?: number;
   stock: number;
-  catagories: string[];
+  categories: string[];
   images: string[];
 }
 
 
 
 export async function getListing() {
-  const query = 'http://localhost:3010/api/v0/listing';
+  const query = 'http://localhost:3012/api/v0/listing';
   const res = await fetch(query, {
     method: 'GET',
     headers: {
