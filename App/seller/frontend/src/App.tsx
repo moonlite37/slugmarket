@@ -10,7 +10,7 @@ function App() {
     <>
       <GlobalStyles styles={{ body: { overflow: 'hidden', margin: 0 } }} />
       <LocaleSwitcher />
-      <BrowserRouter>
+      <BrowserRouter basename="/seller">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route element={<AuthenticatedRoute />}>

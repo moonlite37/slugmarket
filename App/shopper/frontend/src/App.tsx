@@ -8,7 +8,7 @@ function App() {
 	return (
 		<>
 			<GlobalStyles styles={{ body: { overflow: 'hidden', margin: 0 } }} />
-			<BrowserRouter>
+			<BrowserRouter basename="/shopper">
 				<Routes>
 					<Route path="/login" element={<Login />} />
 					<Route path="/" element={<ListingList />} />
