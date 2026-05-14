@@ -5,7 +5,7 @@ import CartItem from './card';
 import { CartContext } from '../context/cartContext';
 
 const Cart = () => {
-	const { items } = useContext(CartContext);
+	const { items, removeFromCart } = useContext(CartContext);
 
 	return (
 		<>
@@ -15,7 +15,7 @@ const Cart = () => {
 			) : (
 				<List>
 					{items.map((item) => (
-						<CartItem key={item.id} id={item.id} name={item.name} price={item.price} />
+						<CartItem key={item.id} id={item.id} name={item.name} price={item.price} onRemove={removeFromCart} />
 					))}
 				</List>
 			)}

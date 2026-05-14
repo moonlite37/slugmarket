@@ -33,7 +33,7 @@ describe('cart list', () => {
 	})
 	it('renders a item name', () => {
 		render(
-			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }], addToCart: () => { } }}>
+			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }], addToCart: () => { }, removeFromCart: () => { } }}>
 				<Cart />
 			</CartContext.Provider>,
 		);
@@ -41,7 +41,7 @@ describe('cart list', () => {
 	});
 	it('renders a item price', () => {
 		render(
-			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }], addToCart: () => { } }}>
+			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }], addToCart: () => { }, removeFromCart: () => { } }}>
 				<Cart />
 			</CartContext.Provider>,
 		);
@@ -68,5 +68,17 @@ describe('add and remove items', () => {
 		);
 		await userEvent.click(await screen.findByLabelText('add Pork Chops to cart'))
 		expect(screen.getByLabelText('Pork Chops in cart')).toBeInTheDocument();
+	})
+	it('remove items from shopping cart', async () => {
+		server.use(mockListings());
+		render(
+			<CartContextProvider>
+				<ListingList />
+				<Cart />
+			</CartContextProvider>,
+		);
+		await userEvent.click(await screen.findByLabelText('add Pork Chops to cart'))
+		await userEvent.click(await screen.findByLabelText('remove Pork Chops from cart'))
+		expect(screen.getByText('Your Car is Empty')).toBeInTheDocument();
 	})
 })

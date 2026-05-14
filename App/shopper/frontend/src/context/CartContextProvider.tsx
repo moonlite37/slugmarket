@@ -14,8 +14,12 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
 		setItems((currentItems) => [...currentItems, item]);
 	};
 
+	const removeFromCart = (id: string) => {
+		setItems((currentItems) => currentItems.filter((item) => item.id !== id));
+	};
+
 	return (
-		<CartContext.Provider value={{ items, addToCart }}>
+		<CartContext.Provider value={{ items, addToCart, removeFromCart }}>
 			{children}
 		</CartContext.Provider>
 	);
