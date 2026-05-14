@@ -1,36 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { http, HttpResponse } from 'msw';
 import { render, screen } from '@testing-library/react';
 
 import ListingCard from '../src/listing/card';
 import ListingList from '../src/listing/list';
 import { server } from '../vitest.setup';
-
-const listing = {
-	id: '00000000-0000-0000-0000-000000000002',
-	author: '00000000-0000-0000-0000-000000000001',
-	username: 'John Pork',
-	title: 'Pork Chops',
-	description: '100% authentic pork chops made from pork',
-	created: new Date().toISOString(),
-	price: 19.99,
-	stock: 42,
-	categories: ['food', 'pork'],
-	images: ['img1.jpg', 'img2.jpg'],
-};
-
-const listing2 = {
-	id: '00000000-0000-0000-0000-000000000003',
-	author: '00000000-0000-0000-0000-000000000002',
-	username: 'Steve Jobs',
-	title: 'Iphone 7',
-	description: 'New and improved Iphone with touch id. 100% less headphone jacks!',
-	created: new Date().toISOString(),
-	price: 799.99,
-	stock: 224,
-	categories: ['phone', 'tech'],
-	images: ['img3.jpg', 'img4.jpg'],
-};
+import { listing, mockListings } from './mocks';
 
 describe('listing card', () => {
 	it('shows listing title', async () => {
@@ -45,7 +19,9 @@ describe('listing card', () => {
 
 	it('has a button to add to cart', async () => {
 		render(<ListingCard listing={listing} />);
-		expect(await screen.findByRole('button', { name: 'Add to cart' })).toBeInTheDocument();
+		expect(
+			await screen.findByRole('button', { name: 'add Pork Chops to cart' }),
+		).toBeInTheDocument();
 	});
 
 	it('shows default price', async () => {
@@ -66,11 +42,7 @@ describe('listing card', () => {
 
 describe('listing list', () => {
 	it('displays listing cards returned by the API', async () => {
-		server.use(
-			http.get('http://localhost:3012/api/v0/listing', () => {
-				return HttpResponse.json([listing, listing2]);
-			}),
-		);
+		server.use(mockListings());
 
 		render(<ListingList />);
 

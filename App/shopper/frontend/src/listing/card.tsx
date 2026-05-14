@@ -10,8 +10,10 @@ import {
 	Divider,
 	Avatar,
 } from "@mui/material";
+import { useContext } from 'react';
 
 import { Listing } from './model'
+import { CartContext } from '../context/cartContext';
 
 interface ListingCardProps {
 	listing: Listing;
@@ -21,8 +23,10 @@ interface ListingCardProps {
 export default function ListingCard({ listing }: ListingCardProps) {
 	// const [saved, setSaved] = useState(false);
 	// const [cartAdded, setCartAdded] = useState(false);
+	const { addToCart } = useContext(CartContext);
 
 	const {
+		id,
 		username,
 		title,
 		description,
@@ -195,8 +199,9 @@ export default function ListingCard({ listing }: ListingCardProps) {
 					variant="contained"
 					fullWidth
 					size="medium"
+					aria-label={`add ${title} to cart`}
 					disabled={!inStock}
-					// onClick={() => {}}
+					onClick={() => addToCart({ id, name: title, price: displayPrice })}
 					disableElevation
 					sx={{
 						borderRadius: 2,

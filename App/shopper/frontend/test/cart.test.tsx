@@ -1,10 +1,15 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import CartItem from '../src/cart/card'
 import Cart from '../src/cart/list'
+import ListingList from '@/listing/list';
 
 import { CartContext } from '../src/context/cartContext';
+import { CartContextProvider } from '../src/context/CartContextProvider';
+import { server } from '../vitest.setup';
+import { mockListings } from './mocks';
 
 describe('cart item', () => {
 	it('renders item', () => {
@@ -19,34 +24,49 @@ describe('cart item', () => {
 
 describe('cart list', () => {
 	it('renders', () => {
-		render(<Cart />)
+		render(
+			<CartContextProvider>
+				<Cart />
+			</CartContextProvider>,
+		);
 		expect(screen.getByText('Shopping Cart')).toBeInTheDocument()
 	})
 	it('renders a item name', () => {
 		render(
-			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }] }}>
+			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }], addToCart: () => { } }}>
 				<Cart />
 			</CartContext.Provider>,
 		);
-
 		expect(screen.getByText('Pork Chop')).toBeInTheDocument();
 	});
 	it('renders a item price', () => {
 		render(
-			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }] }}>
+			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }], addToCart: () => { } }}>
 				<Cart />
 			</CartContext.Provider>,
 		);
-
 		expect(screen.getByText('$10.99')).toBeInTheDocument();
 	});
 	it('renders empty list', () => {
 		render(
-			<CartContext.Provider value={{ items: [] }}>
+			<CartContextProvider>
 				<Cart />
-			</CartContext.Provider>,
+			</CartContextProvider>,
 		);
-
 		expect(screen.getByText('Your Car is Empty')).toBeInTheDocument();
+	})
+})
+
+describe('add and remove items', () => {
+	it('add item to cart', async () => {
+		server.use(mockListings());
+		render(
+			<CartContextProvider>
+				<ListingList />
+				<Cart />
+			</CartContextProvider>,
+		);
+		await userEvent.click(await screen.findByLabelText('add Pork Chops to cart'))
+		expect(screen.getByLabelText('Pork Chops in cart')).toBeInTheDocument();
 	})
 })
