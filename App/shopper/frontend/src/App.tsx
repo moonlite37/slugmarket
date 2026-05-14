@@ -1,8 +1,8 @@
 import GlobalStyles from '@mui/material/GlobalStyles';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './Login';
-import ListingList from './listing/list';
 import AuthenticatedRoute from './AuthenticatedRoute';
+import ShopPage from './pages/Shop';
 
 function App() {
 	return (
@@ -11,7 +11,7 @@ function App() {
 			<BrowserRouter basename="/shopper">
 				<Routes>
 					<Route path="/login" element={<Login />} />
-					<Route path="/" element={<ListingList />} />
+					<Route path="/" element={<ShopPage />} />
 					<Route element={<AuthenticatedRoute />}></Route>
 				</Routes>
 			</BrowserRouter>
