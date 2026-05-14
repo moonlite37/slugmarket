@@ -16,7 +16,7 @@ export default function Dashboard() {
 
 	useEffect(() => {
 		const fetchListings = async () => {
-			const res = await fetch('http://localhost:3013/api/v0/listing', {
+			const res = await fetch('/seller/api/v0/listing', {
 				credentials: 'include',
 			});
 			if (res.ok) {

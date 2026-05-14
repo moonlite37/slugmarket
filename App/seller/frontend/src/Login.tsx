@@ -36,7 +36,7 @@ function GoogleIcon() {
 
 export default function Login() {
   const handleLogin = async () => {
-    const res = await fetch('http://localhost:3013/api/v0/oauthlogin');
+    const res = await fetch('/seller/api/v0/oauthlogin');
     const { url } = await res.json();
     window.location.href = url;
   };
