@@ -9,6 +9,8 @@ import { CartContextProvider } from '@/context/CartContextProvider';
 import { CartContext } from '@/context/cartContext';
 import FilterSidebar from '@/filter/sidebar';
 import { FilterContextProvider } from '@/context/FilterContextProvider';
+import ListingCard from '@/listing/card';
+import { listing } from './mocks';
 
 afterEach(async () => {
   await i18n.changeLanguage('en');
@@ -122,5 +124,57 @@ describe('FilterSidebar Spanish', async () => {
   it('Max placeholder', async () => {
     await renderFilterInSpanish();
     await waitFor(() => screen.getByPlaceholderText(/^Máx$/i));
+  });
+});
+
+const renderListingCardInSpanish = async () => {
+  const user = userEvent.setup();
+  render(
+    <CartContextProvider>
+      <LocaleSwitcher />
+      <ListingCard listing={listing} />
+    </CartContextProvider>,
+  );
+  await user.selectOptions(screen.getByRole('combobox'), 'es');
+};
+
+describe('ListingCard Spanish', async () => {
+  it('Add to cart button', async () => {
+    await renderListingCardInSpanish();
+    await waitFor(() => screen.getByText(/^Agregar al carrito$/i));
+  });
+
+  it('in stock', async () => {
+    await renderListingCardInSpanish();
+    await waitFor(() => screen.getByText(/en stock/i));
+  });
+
+  it('Out of stock', async () => {
+    const user = userEvent.setup();
+    render(
+      <CartContextProvider>
+        <LocaleSwitcher />
+        <ListingCard listing={{ ...listing, stock: 0 }} />
+      </CartContextProvider>,
+    );
+    await user.selectOptions(screen.getByRole('combobox'), 'es');
+    await waitFor(() => screen.getByText(/^Agotado$/i));
+  });
+
+  it('Sold by', async () => {
+    await renderListingCardInSpanish();
+    await waitFor(() => screen.getByText(/^Vendido por$/i));
+  });
+
+  it('discount % off', async () => {
+    const user = userEvent.setup();
+    render(
+      <CartContextProvider>
+        <LocaleSwitcher />
+        <ListingCard listing={{ ...listing, discountPrice: 14.99 }} />
+      </CartContextProvider>,
+    );
+    await user.selectOptions(screen.getByRole('combobox'), 'es');
+    await waitFor(() => screen.getByText(/de descuento/i));
   });
 });

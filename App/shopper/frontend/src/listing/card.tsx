@@ -10,6 +10,7 @@ import {
 	Avatar,
 } from "@mui/material";
 import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Listing } from './model'
 import { CartContext } from '../context/cartContext';
@@ -22,6 +23,7 @@ interface ListingCardProps {
 export default function ListingCard({ listing }: ListingCardProps) {
 	// const [saved, setSaved] = useState(false);
 	// const [cartAdded, setCartAdded] = useState(false);
+	const { t } = useTranslation();
 	const { addToCart } = useContext(CartContext);
 
 	const {
@@ -106,7 +108,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 									${price.toLocaleString()}
 								</Box>
 								<Box component="span" sx={{ color: "success.main" }}>
-									{discount}% off
+									{t('{{discount}}% off', { discount })}
 								</Box>
 							</Typography>
 						)}
@@ -120,7 +122,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 								color: inStock ? "success.main" : "error.main",
 							}}
 						>
-							{inStock ? `${stock} in stock` : "Out of stock"}
+							{inStock ? t('{{stock}} in stock', { stock }) : t('Out of stock')}
 						</Typography>
 					</Box>
 				</Box>
@@ -146,7 +148,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 						transition: "background-color 0.3s ease",
 					}}
 				>
-					{"Add to cart"}
+					{t('Add to cart')}
 				</Button>
 			</CardActions>
 
@@ -165,7 +167,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 					{username}
 				</Avatar>
 				<Typography sx={{ fontSize: 12, color: "text.secondary" }}>
-					Sold by{" "}
+					{t('Sold by')}{" "}
 					<Box component="span" sx={{ color: "text.primary", fontWeight: 500 }}>
 						{username}
 					</Box>

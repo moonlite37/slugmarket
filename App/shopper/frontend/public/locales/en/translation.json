@@ -10,5 +10,10 @@
   "Filters": "Filters",
   "Price": "Price",
   "Min": "Min",
-  "Max": "Max"
+  "Max": "Max",
+  "{{stock}} in stock": "{{stock}} in stock",
+  "Out of stock": "Out of stock",
+  "{{discount}}% off": "{{discount}}% off",
+  "Add to cart": "Add to cart",
+  "Sold by": "Sold by"
 }
