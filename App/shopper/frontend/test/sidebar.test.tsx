@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from "@testing-library/react";
-import FilterSidebar from '../sidebar';
+import FilterSidebar from '@/filter/sidebar';
 import { useState } from "react";
 import { FilterContext } from "@/context/FilterContext";
 import userEvent from '@testing-library/user-event';

@@ -2,8 +2,7 @@ import { http, HttpResponse } from 'msw';
 
 export const listing = {
 	id: '00000000-0000-0000-0000-000000000002',
-	author: '00000000-0000-0000-0000-000000000001',
-	username: 'John Pork',
+	author: 'John Pork',
 	title: 'Pork Chops',
 	description: '100% authentic pork chops made from pork',
 	created: new Date().toISOString(),
@@ -15,8 +14,7 @@ export const listing = {
 
 export const listing2 = {
 	id: '00000000-0000-0000-0000-000000000003',
-	author: '00000000-0000-0000-0000-000000000002',
-	username: 'Steve Jobs',
+	author: 'Steve Jobs',
 	title: 'Iphone 7',
 	description: 'New and improved Iphone with touch id. 100% less headphone jacks!',
 	created: new Date().toISOString(),

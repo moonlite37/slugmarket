@@ -1,7 +1,6 @@
 export interface Listing {
   id: string;
   author: string;
-  username: string;
   title: string;
   description: string;
   created: string;

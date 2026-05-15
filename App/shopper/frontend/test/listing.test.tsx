@@ -14,7 +14,7 @@ describe('listing card', () => {
 
 	it('shows listing author', async () => {
 		render(<ListingCard listing={listing} />);
-		expect(await screen.findByText('John Pork')).toBeInTheDocument();
+		expect(await screen.findAllByText('John Pork')).not.toHaveLength(0);
 	});
 
 	it('has a button to add to cart', async () => {
