@@ -1,19 +1,21 @@
-import { describe, it, vi, beforeAll, beforeEach } from 'vitest';
+import { describe, it, vi, beforeEach } from 'vitest';
 import { render } from '@testing-library/react';
 import { cookies } from 'next/headers';
 import LoginPage from '../src/app/login/page';
 
+vi.mock('../src/app/listing/actions', () => ({
+	getListings: vi.fn().mockResolvedValue([]),
+	deleteListing: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock('../src/app/order/actions', () => ({
+	getOrders: vi.fn().mockResolvedValue([]),
+	updateOrderStatus: vi.fn().mockResolvedValue(undefined),
+}));
+
 describe('page', () => {
-	beforeAll(() => {
-		global.fetch = vi.fn();
-	});
 	beforeEach(() => {
 		vi.clearAllMocks();
-		vi.mocked(global.fetch).mockResolvedValue({
-			ok: true,
-			status: 200,
-			json: async () => [],
-		} as Response);
 	});
 	it('Renders', async () => {
 		const cookieStore = await cookies();
