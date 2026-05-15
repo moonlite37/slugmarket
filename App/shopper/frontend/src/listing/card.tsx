@@ -32,7 +32,6 @@ export default function ListingCard({ listing }: ListingCardProps) {
 		price,
 		discountPrice,
 		stock,
-		categories,
 		images,
 	} = listing;
 
