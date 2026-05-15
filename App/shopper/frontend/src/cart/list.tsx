@@ -1,10 +1,12 @@
 import { useContext } from 'react';
 import { Box, Divider, List, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import CartItem from './card';
 import { CartContext } from '../context/cartContext';
 
 const Cart = () => {
+	const { t } = useTranslation();
 	const { items, removeFromCart } = useContext(CartContext);
 	const total = items.reduce((sum, item) => sum + item.price, 0);
 
@@ -22,16 +24,16 @@ const Cart = () => {
 		>
 			<Box sx={{ px: 3, py: 2 }}>
 				<Typography variant="h5" component="h2" sx={{ fontWeight: 700 }}>
-					Shopping Cart
+					{t('Shopping Cart')}
 				</Typography>
 				<Typography color="text.secondary" sx={{ mt: 0.5 }}>
-					{items.length} {items.length === 1 ? 'item' : 'items'}
+					{items.length} {items.length === 1 ? t('item') : t('items')}
 				</Typography>
 			</Box>
 			<Divider />
 			{items.length === 0 ? (
 				<Box sx={{ px: 3, py: 6, textAlign: 'center' }}>
-					<Typography color="text.secondary">Your Car is Empty</Typography>
+					<Typography color="text.secondary">{t('Your Cart is Empty')}</Typography>
 				</Box>
 			) : (
 				<>
@@ -50,7 +52,7 @@ const Cart = () => {
 							alignItems: 'center',
 						}}
 					>
-						<Typography sx={{ fontWeight: 700 }}>Total</Typography>
+						<Typography sx={{ fontWeight: 700 }}>{t('Total')}</Typography>
 						<Typography sx={{ fontWeight: 700 }}>
 							${total.toFixed(2)}
 						</Typography>

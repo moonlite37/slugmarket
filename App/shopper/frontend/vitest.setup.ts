@@ -3,6 +3,9 @@ import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
+import i18n from './src/utils/i18n';
+import en from './public/locales/en/translation.json';
+import es from './public/locales/es/translation.json';
 
 const listings = [
 	{
@@ -32,6 +35,8 @@ const listings = [
 ];
 
 export const server = setupServer(
+	http.get('/shopper/locales/en/translation.json', () => HttpResponse.json(en)),
+	http.get('/shopper/locales/es/translation.json', () => HttpResponse.json(es)),
 	http.get('http://localhost:3000/shopper/api/v0/listing', async () => {
 		return HttpResponse.json(listings);
 	}),
@@ -40,7 +45,12 @@ export const server = setupServer(
 	}),
 );
 
-beforeAll(() => server.listen());
+beforeAll(async () => {
+	server.listen();
+	if (!i18n.isInitialized) {
+		await new Promise<void>((resolve) => i18n.on('initialized', resolve));
+	}
+});
 afterEach(() => {
 	server.resetHandlers();
 	vi.unstubAllGlobals();

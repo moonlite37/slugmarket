@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,6 +9,7 @@ import Divider from "@mui/material/Divider";
 import { FilterContext } from "@/context/FilterContext";
 
 export default function FilterSidebar() {
+	const { t } = useTranslation();
 	const { minPrice, setMinPrice, maxPrice, setMaxPrice } =
 		useContext(FilterContext);
 
@@ -33,7 +35,7 @@ export default function FilterSidebar() {
 			}}
 		>
 			<Typography variant="h6" gutterBottom>
-				Filters
+				{t('Filters')}
 			</Typography>
 
 			<Divider sx={{ mb: 3 }} />
@@ -43,8 +45,8 @@ export default function FilterSidebar() {
 				color="text.secondary"
 				gutterBottom
 			>
-				Price
-			</Typography>
+				{t('Price')}
+</Typography>
 
 			<Box
 				sx={{
@@ -55,7 +57,7 @@ export default function FilterSidebar() {
 				}}
 			>
 				<TextField
-					placeholder="Min"
+					placeholder={t('Min')}
 					type="number"
 					size="small"
 					value={minPrice ?? ""}
@@ -74,7 +76,7 @@ export default function FilterSidebar() {
 				</Typography>
 
 				<TextField
-					placeholder="Max"
+					placeholder={t('Max')}
 					type="number"
 					size="small"
 					value={maxPrice ?? ""}

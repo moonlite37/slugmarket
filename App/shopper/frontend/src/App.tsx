@@ -5,11 +5,13 @@ import AuthenticatedRoute from './AuthenticatedRoute';
 import ShopPage from './pages/Shop';
 import CartPage from './pages/Cart'
 import { CartContextProvider } from './context/CartContextProvider';
+import LocaleSwitcher from './LocaleSwitcher';
 
 function App() {
 	return (
 		<>
 			<GlobalStyles styles={{ body: { overflow: 'hidden', margin: 0 } }} />
+			<LocaleSwitcher />
 			<BrowserRouter basename="/shopper">
 				<CartContextProvider>
 					<Routes>

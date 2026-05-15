@@ -61,7 +61,7 @@ describe('cart list', () => {
 				<Cart />
 			</CartContextProvider>,
 		);
-		expect(screen.getByText('Your Car is Empty')).toBeInTheDocument();
+		expect(screen.getByText('Your Cart is Empty')).toBeInTheDocument();
 	})
 })
 
@@ -87,6 +87,6 @@ describe('add and remove items', () => {
 		);
 		await userEvent.click(await screen.findByLabelText('add Pork Chops to cart'))
 		await userEvent.click(await screen.findByLabelText('remove Pork Chops from cart'))
-		expect(screen.getByText('Your Car is Empty')).toBeInTheDocument();
+		expect(screen.getByText('Your Cart is Empty')).toBeInTheDocument();
 	})
 })

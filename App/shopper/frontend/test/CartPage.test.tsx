@@ -37,7 +37,7 @@ describe('cart page', () => {
 				</CartContextProvider>
 			</MemoryRouter>,
 		);
-		expect(screen.getByText('Your Car is Empty')).toBeInTheDocument();
+		expect(screen.getByText('Your Cart is Empty')).toBeInTheDocument();
 	});
 
 	it('shows an item added from the shop page', async () => {
@@ -68,6 +68,6 @@ describe('cart page', () => {
 		);
 		await user.click(await screen.findByLabelText('add Pork Chops to cart'));
 		await user.click(screen.getByLabelText('remove Pork Chops from cart'));
-		expect(screen.getByText('Your Car is Empty')).toBeInTheDocument();
+		expect(screen.getByText('Your Cart is Empty')).toBeInTheDocument();
 	});
 });
