@@ -1,5 +1,10 @@
 {
   "Sign In": "Sign In",
   "Welcome to SlugMarket": "Welcome to SlugMarket",
-  "Sign in with Google": "Sign in with Google"
+  "Sign in with Google": "Sign in with Google",
+  "My Listings": "My Listings",
+  "Create New Listing": "Create New Listing",
+  "No listings yet": "No listings yet",
+  "Listing Title": "{{listingTitle}}",
+  "{{stock}} in stock": "{{stock}} in stock"
 }

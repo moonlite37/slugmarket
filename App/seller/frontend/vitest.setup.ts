@@ -3,21 +3,11 @@ import i18n from './src/utils/i18n';
 import { cleanup } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
+import en from './public/locales/en/translation.json';
+import es from './public/locales/es/translation.json';
 export const server = setupServer(
-  http.get('/seller/locales/en/translation.json', () =>
-    HttpResponse.json({
-      'Sign In': 'Sign In',
-      'Welcome to SlugMarket': 'Welcome to SlugMarket',
-      'Sign in with Google': 'Sign in with Google',
-    }),
-  ),
-  http.get('/seller/locales/es/translation.json', () =>
-    HttpResponse.json({
-      'Sign In': 'Iniciar sesión',
-      'Welcome to SlugMarket': 'Bienvenido a SlugMarket',
-      'Sign in with Google': 'Iniciar sesión con Google',
-    }),
-  ),
+  http.get('/seller/locales/en/translation.json', () => HttpResponse.json(en)),
+  http.get('/seller/locales/es/translation.json', () => HttpResponse.json(es)),
   http.get('http://localhost:3000/seller/api/v0/oauthlogin', () => {
     return HttpResponse.json({ url: 'mock-url' });
   }),

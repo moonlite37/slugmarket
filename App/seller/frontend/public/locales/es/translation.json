@@ -1,5 +1,10 @@
 {
   "Sign In": "Iniciar sesión",
   "Welcome to SlugMarket": "Bienvenido a SlugMarket",
-  "Sign in with Google": "Iniciar sesión con Google"
+  "Sign in with Google": "Iniciar sesión con Google",
+  "My Listings": "Mis listados",
+  "Create New Listing": "Crear nuevo anuncio",
+  "No listings yet": "Aún no hay listados.",
+  "Listing Title": "{{listingTitle}}",
+  "{{stock}} in stock": "{{stock}} en stock"
 }
