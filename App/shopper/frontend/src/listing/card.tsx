@@ -27,7 +27,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
 	const {
 		id,
-		username,
+		author,
 		title,
 		description,
 		price,
@@ -229,12 +229,12 @@ export default function ListingCard({ listing }: ListingCardProps) {
 						color: "primary.dark",
 					}}
 				>
-					{username[0]}
+					{author}
 				</Avatar>
 				<Typography sx={{ fontSize: 12, color: "text.secondary" }}>
 					Listed by{" "}
 					<Box component="span" sx={{ color: "text.primary", fontWeight: 500 }}>
-						{username}
+						{author}
 					</Box>
 				</Typography>
 			</Box>
