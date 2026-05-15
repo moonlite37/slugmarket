@@ -1,4 +1,5 @@
-import { Grid } from '@mui/material';
+import { Box } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { getListing } from './model';
 import ListingCard from './card';
 import { useContext, useEffect, useState } from 'react';
@@ -16,12 +17,21 @@ export default function ListingList() {
 		load();
 	}, [minPrice, maxPrice]);
 	return (
-		<>
-			<Grid>
-				{listings.map((l) => (
-					<ListingCard key={l.id} listing={l} />
-				))}
-			</Grid>
-		</>
+		<Box
+
+  sx={{
+    height: '100vh',
+    overflowY: 'auto',
+    p: 2,
+  }}
+>
+  <Grid container spacing={2}>
+    {listings.map((l) => (
+      <Grid key={l.id} >
+        <ListingCard listing={l} />
+      </Grid>
+    ))}
+  </Grid>
+</Box>
 	);
 }

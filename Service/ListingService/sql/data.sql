@@ -19,7 +19,7 @@ VALUES (
 INSERT INTO listing (id, author, data)
 VALUES (
   gen_random_uuid(),
-  '00000000-0000-0000-0000-000000000020',
+  '00000000-0000-0000-0000-000000000002',
   jsonb_build_object(
     'username', 'Omega x Swatch',
     'title', 'Moonswatch',
