@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Typography, Stack, Card, CardContent, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface Listing {
 	id: string;
@@ -12,6 +13,7 @@ interface Listing {
 }
 
 export default function Dashboard() {
+	const { t } = useTranslation();
 	const [listings, setListings] = useState<Listing[]>([]);
 
 	useEffect(() => {
@@ -29,21 +31,21 @@ export default function Dashboard() {
 	return (
 		<Box sx={{ p: 3 }}>
 			<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-				<Typography variant="h5">My Listings</Typography>
+				<Typography variant="h5">{t('My Listings')}</Typography>
 				<Button component={Link} to="/listing/new" variant="contained">
-					Create New Listing
+					{t('Create New Listing')}
 				</Button>
 			</Box>
 			{listings.length === 0 ? (
-				<Typography color="text.secondary">No listings yet</Typography>
+				<Typography color="text.secondary">{t('No listings yet')}</Typography>
 			) : (
 				<Stack spacing={2}>
 					{listings.map((listing) => (
 						<Card key={listing.id} variant="outlined">
 							<CardContent>
-								<Typography variant="h6">{listing.title}</Typography>
+								<Typography variant="h6">{t('Listing Title', { listingTitle: listing.title })}</Typography>
 								<Typography color="text.secondary">{listing.description}</Typography>
-								<Typography>${listing.price} · {listing.stock} in stock</Typography>
+								<Typography>${listing.price} · {t('{{stock}} in stock', { stock: listing.stock })}</Typography>
 							</CardContent>
 						</Card>
 					))}

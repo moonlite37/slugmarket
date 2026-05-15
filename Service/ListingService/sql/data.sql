@@ -4,7 +4,7 @@ VALUES (
   gen_random_uuid(),
   '00000000-0000-0000-0000-000000000001',
   jsonb_build_object(
-    'author', 'John Pork',
+    'username', 'John Pork',
     'title', 'Pork Chops',
     'description', '100% authentic pork chops made from pork',
     'created', NOW(),
@@ -19,9 +19,9 @@ VALUES (
 INSERT INTO listing (id, author, data)
 VALUES (
   gen_random_uuid(),
-  '00000000-0000-0000-0000-000000000020',
+  '00000000-0000-0000-0000-000000000002',
   jsonb_build_object(
-    'author', 'Omega x Swatch',
+    'username', 'Omega x Swatch',
     'title', 'Moonswatch',
     'description', 'Omega bioceramic design with Swatch movement',
     'created', NOW() - INTERVAL '1 day',
@@ -37,7 +37,7 @@ VALUES (
   gen_random_uuid(),
   '00000000-0000-0000-0000-000000000020',
   jsonb_build_object(
-    'author', 'Apple',
+    'username', 'Apple',
     'title', 'Airpods',
     'description', 'Next generation wireless earbuds',
     'created', NOW() - INTERVAL '2 day',

@@ -4,7 +4,6 @@ import {
 	CardContent,
 	CardActions,
 	Button,
-	Chip,
 	Typography,
 	Box,
 	Divider,
@@ -27,13 +26,12 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
 	const {
 		id,
-		author,
+		username,
 		title,
 		description,
 		price,
 		discountPrice,
 		stock,
-		categories,
 		images,
 	} = listing;
 
@@ -67,31 +65,6 @@ export default function ListingCard({ listing }: ListingCardProps) {
 					alt={title}
 					sx={{ borderRadius: "12px 12px 0 0", objectFit: "cover" }}
 				/>
-
-				{ /*
-        <IconButton
-          onClick={() => setSaved((s) => !s)}
-          size="small"
-          aria-label={saved ? "Remove from saved" : "Save listing"}
-          sx={{
-            position: "absolute",
-            top: 10,
-            right: 10,
-            bgcolor: "background.paper",
-            border: "1px solid",
-            borderColor: "grey.200",
-            width: 32,
-            height: 32,
-            "&:hover": { bgcolor: "grey.50" },
-          }}
-        >
-          {saved ? (
-            <FavoriteIcon sx={{ fontSize: 16, color: "error.main" }} />
-          ) : (
-            <FavoriteBorderIcon sx={{ fontSize: 16, color: "text.secondary" }} />
-          )}
-        </IconButton>
-        */}
 			</Box>
 
 			{/* Content */}
@@ -119,46 +92,6 @@ export default function ListingCard({ listing }: ListingCardProps) {
 				>
 					{description}
 				</Typography>
-
-				{/* Categories */}
-				{categories?.length > 0 && (
-					<Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
-						{categories.map((cat: string) => (
-							<Chip
-								key={cat}
-								label={cat}
-								size="small"
-								variant="outlined"
-								sx={{
-									fontSize: 11,
-									height: 22,
-									borderRadius: 1.5,
-									"& .MuiChip-label": { px: 1 },
-								}}
-							/>
-						))}
-					</Box>
-				)}
-				{/* Categories */}
-				{categories.length > 0 && (
-					<Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
-						{categories.map((cat: string) => (
-							<Chip
-								key={cat}
-								label={cat}
-								size="small"
-								variant="outlined"
-								sx={{
-									fontSize: 11,
-									height: 22,
-									borderRadius: 1.5,
-									"& .MuiChip-label": { px: 1 },
-								}}
-							/>
-						))}
-					</Box>
-				)}
-
 				<Divider sx={{ mb: 2 }} />
 
 				{/* Price + stock */}
@@ -229,12 +162,12 @@ export default function ListingCard({ listing }: ListingCardProps) {
 						color: "primary.dark",
 					}}
 				>
-					{author}
+					{username}
 				</Avatar>
 				<Typography sx={{ fontSize: 12, color: "text.secondary" }}>
-					Listed by{" "}
+					Sold by{" "}
 					<Box component="span" sx={{ color: "text.primary", fontWeight: 500 }}>
-						{author}
+						{username}
 					</Box>
 				</Typography>
 			</Box>
