@@ -8,6 +8,7 @@ import i18n from '@/utils/i18n';
 import Login from '@/Login';
 import LocaleSwitcher from '@/LocaleSwitcher';
 import Dashboard from '@/Dashboard';
+import CreateListing from '@/CreateListing';
 
 afterEach(async () => {
   await i18n.changeLanguage('en');
@@ -73,5 +74,48 @@ describe('Dashboard Spanish', async () => {
     );
     await renderDashboardInSpanish();
     await waitFor(() => screen.getByText(/^Aún no hay listados\.$/i));
+  });
+});
+
+const renderCreateListingInSpanish = async () => {
+  const user = userEvent.setup();
+  render(
+    <MemoryRouter>
+      <LocaleSwitcher />
+      <CreateListing />
+    </MemoryRouter>,
+  );
+  await user.selectOptions(screen.getByRole('combobox'), 'es');
+};
+
+describe('CreateListing Spanish', async () => {
+  it('Create Listing', async () => {
+    await renderCreateListingInSpanish();
+    await waitFor(() => screen.getByRole('heading', { name: /^Crear anuncio$/i }));
+  });
+
+  it('Title placeholder', async () => {
+    await renderCreateListingInSpanish();
+    await waitFor(() => screen.getByPlaceholderText(/^Título$/i));
+  });
+
+  it('Description placeholder', async () => {
+    await renderCreateListingInSpanish();
+    await waitFor(() => screen.getByPlaceholderText(/^Descripción$/i));
+  });
+
+  it('Price placeholder', async () => {
+    await renderCreateListingInSpanish();
+    await waitFor(() => screen.getByPlaceholderText(/^Precio$/i));
+  });
+
+  it('Stock placeholder', async () => {
+    await renderCreateListingInSpanish();
+    await waitFor(() => screen.getByPlaceholderText(/^Existencias$/i));
+  });
+
+  it('Create Listing button', async () => {
+    await renderCreateListingInSpanish();
+    await waitFor(() => screen.getByRole('button', { name: /^Crear anuncio$/i }));
   });
 });

@@ -13,9 +13,9 @@ function App() {
       <BrowserRouter basename="/seller">
         <Routes>
           <Route path="/login" element={<Login />} />
+                      <Route path="/listing/new" element={<CreateListing />} />
           <Route element={<AuthenticatedRoute />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/listing/new" element={<CreateListing />} />
           </Route>
         </Routes>
       </BrowserRouter>

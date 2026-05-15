@@ -6,5 +6,11 @@
   "Create New Listing": "Crear nuevo anuncio",
   "No listings yet": "Aún no hay listados.",
   "Listing Title": "{{listingTitle}}",
-  "{{stock}} in stock": "{{stock}} en stock"
+  "{{stock}} in stock": "{{stock}} en stock",
+  "Create Listing": "Crear anuncio",
+  "Listing created": "Anuncio creado",
+  "Title": "Título",
+  "Description": "Descripción",
+  "Price": "Precio",
+  "Stock": "Existencias"
 }

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Box, TextField, Button, Typography, Stack } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export default function CreateListing() {
+	const { t } = useTranslation();
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [price, setPrice] = useState('');
@@ -28,29 +30,29 @@ export default function CreateListing() {
 
 	return (
 		<Box sx={{ p: 3, maxWidth: 500 }}>
-			<Typography variant="h5" sx={{ mb: 2 }}>Create Listing</Typography>
+			<Typography variant="h5" sx={{ mb: 2 }}>{t('Create Listing')}</Typography>
 			{submitted && (
-				<Typography color="success.main" sx={{ mb: 2 }}>Listing created</Typography>
+				<Typography color="success.main" sx={{ mb: 2 }}>{t('Listing created')}</Typography>
 			)}
 			<Stack spacing={2}>
 				<TextField
-					placeholder="Title"
+					placeholder={t('Title')}
 					value={title}
 					onChange={(e) => { setTitle(e.target.value); }}
 				/>
 				<TextField
-					placeholder="Description"
+					placeholder={t('Description')}
 					value={description}
 					onChange={(e) => { setDescription(e.target.value); }}
 				/>
 				<TextField
-					placeholder="Price"
+					placeholder={t('Price')}
 					type="number"
 					value={price}
 					onChange={(e) => { setPrice(e.target.value); }}
 				/>
 				<TextField
-					placeholder="Stock"
+					placeholder={t('Stock')}
 					type="number"
 					value={stock}
 					onChange={(e) => { setStock(e.target.value); }}
@@ -60,7 +62,7 @@ export default function CreateListing() {
 					onClick={handleSubmit}
 					disabled={!title || !description || !price || !stock}
 				>
-					Create Listing
+					{t('Create Listing')}
 				</Button>
 			</Stack>
 		</Box>

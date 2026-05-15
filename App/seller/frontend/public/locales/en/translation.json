@@ -6,5 +6,11 @@
   "Create New Listing": "Create New Listing",
   "No listings yet": "No listings yet",
   "Listing Title": "{{listingTitle}}",
-  "{{stock}} in stock": "{{stock}} in stock"
+  "{{stock}} in stock": "{{stock}} in stock",
+  "Create Listing": "Create Listing",
+  "Listing created": "Listing created",
+  "Title": "Title",
+  "Description": "Description",
+  "Price": "Price",
+  "Stock": "Stock"
 }
