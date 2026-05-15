@@ -45,7 +45,15 @@ describe('cart list', () => {
 				<Cart />
 			</CartContext.Provider>,
 		);
-		expect(screen.getByText('$10.99')).toBeInTheDocument();
+		expect(screen.getAllByText('$10.99').length).toBeGreaterThan(0);
+	});
+	it('renders the total for two items', () => {
+		render(
+			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }, { id: 'chicken', name: 'Iphone 7', price: 9.99 }], addToCart: () => { }, removeFromCart: () => { } }}>
+				<Cart />
+			</CartContext.Provider>,
+		);
+		expect(screen.getByText('$20.98')).toBeInTheDocument();
 	});
 	it('renders empty list', () => {
 		render(

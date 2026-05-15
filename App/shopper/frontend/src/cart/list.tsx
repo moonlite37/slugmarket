@@ -1,25 +1,63 @@
 import { useContext } from 'react';
-import { List, Typography } from '@mui/material';
+import { Box, Divider, List, Typography } from '@mui/material';
 
 import CartItem from './card';
 import { CartContext } from '../context/cartContext';
 
 const Cart = () => {
 	const { items, removeFromCart } = useContext(CartContext);
+	const total = items.reduce((sum, item) => sum + item.price, 0);
 
 	return (
-		<>
-			<Typography>Shopping Cart</Typography>
+		<Box
+			sx={{
+				maxWidth: 720,
+				mx: 'auto',
+				border: '1px solid',
+				borderColor: 'grey.200',
+				borderRadius: 2,
+				bgcolor: 'background.paper',
+				overflow: 'hidden',
+			}}
+		>
+			<Box sx={{ px: 3, py: 2 }}>
+				<Typography variant="h5" component="h2" sx={{ fontWeight: 700 }}>
+					Shopping Cart
+				</Typography>
+				<Typography color="text.secondary" sx={{ mt: 0.5 }}>
+					{items.length} {items.length === 1 ? 'item' : 'items'}
+				</Typography>
+			</Box>
+			<Divider />
 			{items.length === 0 ? (
-				<Typography>Your Car is Empty</Typography>
+				<Box sx={{ px: 3, py: 6, textAlign: 'center' }}>
+					<Typography color="text.secondary">Your Car is Empty</Typography>
+				</Box>
 			) : (
-				<List>
-					{items.map((item) => (
-						<CartItem key={item.id} id={item.id} name={item.name} price={item.price} onRemove={removeFromCart} />
-					))}
-				</List>
+				<>
+					<List disablePadding>
+						{items.map((item) => (
+							<CartItem key={item.id} id={item.id} name={item.name} price={item.price} onRemove={removeFromCart} />
+						))}
+					</List>
+					<Divider />
+					<Box
+						sx={{
+							px: 3,
+							py: 2,
+							display: 'flex',
+							justifyContent: 'space-between',
+							alignItems: 'center',
+						}}
+					>
+						<Typography sx={{ fontWeight: 700 }}>Total</Typography>
+						<Typography sx={{ fontWeight: 700 }}>
+							${total.toFixed(2)}
+						</Typography>
+					</Box>
+				</>
 			)}
-		</>
+		</Box>
 	);
 };
 

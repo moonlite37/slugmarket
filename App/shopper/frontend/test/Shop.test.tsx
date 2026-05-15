@@ -4,13 +4,35 @@ import { server } from '../vitest.setup';
 import { mockListings } from './mocks';
 import ShopPage from '@/pages/Shop';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 
+function CurrentLocation() {
+	const location = useLocation();
+	return <div>{location.pathname}</div>;
+}
 
 describe('listing list', () => {
+	it('routes to cart page', async () => {
+		const user = userEvent.setup();
+		server.use(mockListings());
+		render(
+			<MemoryRouter initialEntries={['/']}>
+				<ShopPage />
+				<CurrentLocation />
+			</MemoryRouter>,
+		);
+		await user.click(screen.getByLabelText(/view cart/i));
+		expect(screen.getByText('/cart')).toBeInTheDocument();
+	});
+
 	it('shows filters when opened', async () => {
 		const user = userEvent.setup();
 		server.use(mockListings());
-		render(<ShopPage />);
+		render(
+			<MemoryRouter>
+				<ShopPage />
+			</MemoryRouter>,
+		);
 		await user.click(screen.getByLabelText(/open filters/i));
 		expect(await screen.findByText('Filters')).toBeInTheDocument();
 	});
@@ -18,7 +40,11 @@ describe('listing list', () => {
 	it('hides filters when closed', async () => {
 		const user = userEvent.setup();
 		server.use(mockListings());
-		render(<ShopPage />);
+		render(
+			<MemoryRouter>
+				<ShopPage />
+			</MemoryRouter>,
+		);
 		await user.click(screen.getByLabelText(/open filters/i));
 		await screen.findByText('Filters');
 		await user.keyboard('{Escape}');
@@ -30,7 +56,11 @@ describe('listing list', () => {
 	it('Displays app page and has functionality', async () => {
 		const user = userEvent.setup();
 		server.use(mockListings());
-		render(<ShopPage />);
+		render(
+			<MemoryRouter>
+				<ShopPage />
+			</MemoryRouter>,
+		);
 		await user.click(screen.getByLabelText(/open filters/i));
 		const minInput = screen.getByPlaceholderText("Min");
 		const maxInput = screen.getByPlaceholderText("Max");
