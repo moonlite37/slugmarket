@@ -1,5 +1,6 @@
 import { JSX, useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Loading } from './Loading';
 
 export default function AuthenticatedRoute(): JSX.Element | null {
   const [checking, setChecking] = useState(true);
@@ -15,6 +16,6 @@ export default function AuthenticatedRoute(): JSX.Element | null {
       .finally(() => setChecking(false));
   }, [location.pathname, navigate]);
 
-  if (checking) return <div>Checking Credentials</div>;
+  if (checking) return <Loading />;
   return <Outlet />;
 };
