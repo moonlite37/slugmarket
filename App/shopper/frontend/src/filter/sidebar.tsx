@@ -1,6 +1,5 @@
 import { useContext } from "react";
 
-import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -25,83 +24,71 @@ export default function FilterSidebar() {
 	};
 
 	return (
-		<Drawer
-			variant="permanent"
+		<Box
 			sx={{
-				width: "20%",
-				flexShrink: 0,
-				"& .MuiDrawer-paper": {
-					width: "20%",
-					boxSizing: "border-box",
-				},
+				p: 3,
+				display: "flex",
+				flexDirection: "column",
+				height: "100%",
 			}}
 		>
+			<Typography variant="h6" gutterBottom>
+				Filters
+			</Typography>
+
+			<Divider sx={{ mb: 3 }} />
+
+			<Typography
+				variant="subtitle2"
+				color="text.secondary"
+				gutterBottom
+			>
+				Price
+			</Typography>
+
 			<Box
 				sx={{
-					p: 3,
 					display: "flex",
-					flexDirection: "column",
-					height: "100%",
+					gap: 1.5,
+					alignItems: "flex-start",
+					mt: 1,
 				}}
 			>
-				<Typography variant="h6" gutterBottom>
-					Filters
-				</Typography>
-
-				<Divider sx={{ mb: 3 }} />
-
-				<Typography
-					variant="subtitle2"
-					color="text.secondary"
-					gutterBottom
-				>
-					Price
-				</Typography>
-
-				<Box
-					sx={{
-						display: "flex",
-						gap: 1.5,
-						alignItems: "flex-start",
-						mt: 1,
+				<TextField
+					placeholder="Min"
+					type="number"
+					size="small"
+					value={minPrice ?? ""}
+					onChange={(e) => {
+						const value =
+							e.target.value === ""
+								? undefined
+								: Number(e.target.value);
+						setMinPrice(value);
 					}}
-				>
-					<TextField
-						placeholder="Min"
-						type="number"
-						size="small"
-						value={minPrice ?? ""}
-						onChange={(e) => {
-							const value =
-								e.target.value === ""
-									? undefined
-									: Number(e.target.value);
-							setMinPrice(value);
-						}}
-                        onBlur={() => validate(minPrice, maxPrice)}
-					/>
+					onBlur={() => validate(minPrice, maxPrice)}
+				/>
 
-					<Typography sx={{ mt: 1.2, color: "text.disabled" }}>
-						—
-					</Typography>
+				<Typography sx={{ mt: 1.2, color: "text.disabled" }}>
+					—
+				</Typography>
 
-					<TextField
-						placeholder="Max"
-						type="number"
-						size="small"
-						value={maxPrice ?? ""}
-						onChange={(e) => {
-							const value =
-								e.target.value === ""
-									? undefined
-									: Number(e.target.value);
+				<TextField
+					placeholder="Max"
+					type="number"
+					size="small"
+					value={maxPrice ?? ""}
+					onChange={(e) => {
+						const value =
+							e.target.value === ""
+								? undefined
+								: Number(e.target.value);
 
-							setMaxPrice(value);
-						}}
-                        onBlur={() => validate(minPrice, maxPrice)}
-					/>
-				</Box>
+						setMaxPrice(value);
+					}}
+					onBlur={() => validate(minPrice, maxPrice)}
+				/>
 			</Box>
-		</Drawer>
+		</Box>
 	);
 }
