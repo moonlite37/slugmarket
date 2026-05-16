@@ -2,7 +2,7 @@ services:
   app:
     container_name: app
     env_file: .env
-    image: cte-linux-amd64
+    build: .
     depends_on:
       - postgres
     ports:
@@ -14,9 +14,13 @@ services:
       - "127.0.0.1:4000:4000"
   postgres:
     container_name: database
-    image: cte-postgres
+    image: postgres:alpine
     environment:
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./Service/AuthService/sql/databases.sql:/docker-entrypoint-initdb.d/1.auth.databases.sql
+      - ./Service/ListingService/sql/databases.sql:/docker-entrypoint-initdb.d/2.listing.databases.sql
+      - ./Service/OrderService/sql/databases.sql:/docker-entrypoint-initdb.d/3.order.databases.sql
