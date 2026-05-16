@@ -2,7 +2,7 @@ services:
   app:
     container_name: app
     env_file: .env
-    build: .
+    image: cte-linux-amd64
     depends_on:
       - postgres
     ports:
@@ -14,13 +14,37 @@ services:
       - "127.0.0.1:4000:4000"
   postgres:
     container_name: database
-    image: postgres:alpine
+    image: cte-postgres
     environment:
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - ./Service/AuthService/sql/databases.sql:/docker-entrypoint-initdb.d/1.auth.databases.sql
-      - ./Service/ListingService/sql/databases.sql:/docker-entrypoint-initdb.d/2.listing.databases.sql
-      - ./Service/OrderService/sql/databases.sql:/docker-entrypoint-initdb.d/3.order.databases.sql
+
+# THIS ONE BELOW RUNS OFF npm run compose || THE ONE ABOVE RUNS OFF THE TAR IMAGE
+# services:
+#   app:
+#     container_name: app
+#     env_file: .env
+#     build: .
+#     depends_on:
+#       - postgres
+#     ports:
+#       - "127.0.0.1:3000:3000"
+#       - "127.0.0.1:5173:5173"
+#       - "127.0.0.1:5174:5174"
+#       - "127.0.0.1:3013:3013"
+#       - "127.0.0.1:3012:3012"
+#       - "127.0.0.1:4000:4000"
+#   postgres:
+#     container_name: database
+#     image: postgres:alpine
+#     environment:
+#       POSTGRES_PORT: ${POSTGRES_PORT}
+#       POSTGRES_DB: ${POSTGRES_DB}
+#       POSTGRES_USER: ${POSTGRES_USER}
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#     volumes:
+#       - ./Service/AuthService/sql/databases.sql:/docker-entrypoint-initdb.d/1.auth.databases.sql
+#       - ./Service/ListingService/sql/databases.sql:/docker-entrypoint-initdb.d/2.listing.databases.sql
+#       - ./Service/OrderService/sql/databases.sql:/docker-entrypoint-initdb.d/3.order.databases.sql
