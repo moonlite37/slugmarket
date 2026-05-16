@@ -25,7 +25,7 @@ export class AuthController extends Controller {
 			return;
 		}
 		const authToken = await new AuthService().oauthLoginCallback(authCode);
-		this.setHeader('Set-Cookie', `authToken=${authToken}; HttpOnly; Path=/seller; SameSite=Lax`);
+		this.setHeader('Set-Cookie', `authToken=${authToken}; HttpOnly; Secure; Path=/seller; SameSite=Lax Max-Age=3600`);
 		this.setStatus(302);
 		this.setHeader('Location', process.env.SELLER_FRONTEND_URL as string);
 	}
