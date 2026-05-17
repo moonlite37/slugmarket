@@ -7,7 +7,6 @@ import { http, HttpResponse } from 'msw';
 const authServer = setupServer(
 	http.get('http://127.0.0.1:3010/api/v0/check', ({request}) => {
 		const cookie = request.headers.get('authorization') ?? '';
-		console.log(cookie);
 		if (!cookie) {
 			return new HttpResponse(null, { status: 401 });
 		}
@@ -22,10 +21,17 @@ const authServer = setupServer(
 			roles: ['seller','corporate'],
 		});
 	}),
+	http.post('http://127.0.0.1:3011/api/v0/listing', ({request}) => {
+		return HttpResponse.json({
+			...request.body,
+		});
+	}),
 );
 
 beforeAll(() => {
-	authServer.listen();
+	authServer.listen({
+		onUnhandledRequest: 'bypass',
+	});
 });
 afterEach(() => {
 	authServer.resetHandlers();
@@ -58,4 +64,30 @@ describe('Generate Key', () => {
 	});
 });
 
+const newListing = {
+	title: 'Test Widget',
+	description: 'A test widget for sale',
+	price: 9.99,
+	stock: 10,
+	categories: ['test'],
+};
 
+
+describe('Create post with API', () => {
+	it('Rejects invalid key', async () => {
+		await supertest(server).post('/api/v0/listing')
+			.set('Authorization', 'failing_api_key')
+			.send(newListing)
+			.expect(401);
+	});
+	it('Correct status on good creation', async () => {
+		const res = (await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid'));
+		const key = res.text;
+		console.log(key);
+		await supertest(server).post('/api/v0/listing')
+			.set('Authorization', key)
+			.send(newListing)
+			.expect(201);
+	});
+});

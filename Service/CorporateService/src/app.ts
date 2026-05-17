@@ -27,6 +27,7 @@ app.use('/api/v0', router);
 
 /*
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next: NextFunction) => {
+	console.log(err)
 	res.status(err.status || 500).json({
 		message: err.message,
 		errors: err.errors,
@@ -36,5 +37,6 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next: NextFunction) 
 };
 app.use(errorHandler);
 */
+
 
 export default app;

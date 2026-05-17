@@ -21,7 +21,6 @@ export async function expressAuthentication(
 	}
 	const data = await res.json();
 	const perms = data.roles;
-	console.log(perms);
 	if(perms.includes('corporate')){
 		return data;
 	}
