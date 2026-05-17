@@ -1,7 +1,7 @@
 image: node:lts
 
 variables:
-  PIPELINE: "true"
+  PIPELINE: 'true'
   POSTGRES_HOST: postgres
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
@@ -14,55 +14,46 @@ stages:
 
 quality:
   stage: quality
-  parallel:
-    matrix:
-      - PROJECT_PATH: Service/AuthService
-      - PROJECT_PATH: Service/ListingService
-      - PROJECT_PATH: Service/OrderService
-      - PROJECT_PATH: Service/CorporateService
-      - PROJECT_PATH: App/Admin
-      - PROJECT_PATH: App/seller/backend
-      - PROJECT_PATH: App/seller/frontend
-      - PROJECT_PATH: App/shopper/backend
-      - PROJECT_PATH: App/shopper/frontend
   script:
-    - cd $PROJECT_PATH
-    - npm install
-    - npm run lint
-    - npm run cpd
+    - |
+      for dir in Service/*/ App/Admin/ App/seller/backend/ App/seller/frontend/ App/shopper/backend/ App/shopper/frontend/; do
+        [ -f "$dir/package.json" ] || continue
+        cd $dir
+        npm install
+        npm run lint
+        npm run cpd
+        cd $CI_PROJECT_DIR
+      done
 
 app-test:
   stage: test
-  parallel:
-    matrix:
-      - PROJECT_PATH: App/Admin
-      - PROJECT_PATH: App/seller/frontend
-      - PROJECT_PATH: App/shopper/frontend
-      - PROJECT_PATH: App/seller/backend
-      - PROJECT_PATH: App/shopper/backend
   script:
-    - cd $PROJECT_PATH
-    - npm install
-    - npm test
+    - |
+      for dir in App/Admin/ App/seller/frontend/ App/shopper/frontend/ App/seller/backend/ App/shopper/backend/; do
+        [ -f "$dir/package.json" ] || continue
+        cd $dir
+        npm install
+        npm test
+        cd $CI_PROJECT_DIR
+      done
 
 microservice-test:
   stage: test
   services:
     - postgres
-  parallel:
-    matrix:
-      - PROJECT_PATH: Service/AuthService
-      - PROJECT_PATH: Service/ListingService
-      - PROJECT_PATH: Service/OrderService
-      - PROJECT_PATH: Service/CorporateService
   before_script:
     - apt-get update -y
     - apt-get install -y postgresql-client
-    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f $PROJECT_PATH/sql/databases.sql
   script:
-    - cd $PROJECT_PATH
-    - npm install
-    - npm test
+    - |
+      for dir in Service/*/; do
+        [ -f "$dir/package.json" ] || continue
+        PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f ${dir}sql/databases.sql
+        cd $dir
+        npm install
+        npm test
+        cd $CI_PROJECT_DIR
+      done
 
 build:
   stage: build
@@ -72,11 +63,10 @@ build:
   services:
     - docker:24.0.5-dind
   variables:
-    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_CERTDIR: '/certs'
   before_script:
     - apk add nodejs npm
   script:
     - echo "$ENV_BASE64" | base64 -d > .env
     - npm run package
     - ls -lh cte-linux-amd64.tar
-
