@@ -18,6 +18,8 @@ quality:
     matrix:
       - PROJECT_PATH: Service/AuthService
       - PROJECT_PATH: Service/ListingService
+      - PROJECT_PATH: Service/OrderService
+      - PROJECT_PATH: Service/CorporateService
       - PROJECT_PATH: App/Admin
       - PROJECT_PATH: App/seller/backend
       - PROJECT_PATH: App/seller/frontend
