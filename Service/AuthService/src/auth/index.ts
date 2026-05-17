@@ -10,5 +10,5 @@ export interface Authenticated {
 
 export interface SessionUser {
   id: string
-  role: string
+  roles: string[]
 }

@@ -1,7 +1,7 @@
 import { Route, Controller, Post, Body, Response, Get, Query, Request } from 'tsoa';
 import * as express from 'express';
 
-import { Credentials, Authenticated, SessionUser } from '.';
+import { Authenticated, SessionUser, Credentials} from '.';
 import { AuthService } from './service';
 
 @Route('')
@@ -9,9 +9,9 @@ export class AuthController extends Controller {
   @Post('login')
   @Response('401', 'Unauthorized')
 	public async login(
-    @Body() credentials: Credentials,
+    @Body() body: Credentials,
 	): Promise<Authenticated | undefined> {
-		const user = await new AuthService().login(credentials);
+		const user = await new AuthService().login(body);
 		if (!user) {
 			this.setStatus(401);
 			return undefined;
@@ -27,9 +27,10 @@ export class AuthController extends Controller {
   @Response('401', 'Unauthorized')
   public async check(
 	@Request() req: express.Request,
+	@Query() scopes?: string[],
   ): Promise<SessionUser | undefined> {
   	try {
-  		return await new AuthService().check(req.headers.authorization);
+  		return await new AuthService().check(req.headers.authorization, scopes);
   	} catch {
   		this.setStatus(401);
   		return undefined;

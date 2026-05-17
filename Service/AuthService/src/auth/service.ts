@@ -11,13 +11,14 @@ import { OAuth2Client } from 'google-auth-library';
 interface UserRow {
   id: string;
   name: string;
+  roles: string[];
 }
 
 const TEXT_ENCODED_SECRET = new TextEncoder().encode(process.env.SECRET);
 const JWE_ALGORITHM = 'A256CBC-HS512';
 
-export const encryptJwe = async (id: string, role: string): Promise<string> => {
-	return await new EncryptJWT({ id, role })
+export const encryptJwe = async (id: string, roles: string[]): Promise<string> => {
+	return await new EncryptJWT({ id, roles })
 		.setProtectedHeader({ alg: 'dir', enc: JWE_ALGORITHM })
 		.setIssuedAt()
 		.setExpirationTime('2h')
@@ -52,7 +53,7 @@ export class AuthService {
 		}
 		return {
 			name: result[0].name,
-			authToken: await encryptJwe(result[0].id, 'admin'),
+			authToken: await encryptJwe(result[0].id, result[0].roles),
 		};
 	}
 
@@ -84,19 +85,51 @@ export class AuthService {
 
 		const query = `
 			INSERT INTO "user" (data)
-			VALUES (jsonb_build_object('name', $1::text, 'email', $2::text, 'sub', $3::text))
-			ON CONFLICT ((data->>'sub')) DO UPDATE
-				SET data = EXCLUDED.data
-			RETURNING id, data->>'name' AS name;
+				VALUES (
+					jsonb_build_object(
+						'name', $1::text,
+						'email', $2::text,
+						'sub', $3::text,
+						'roles', COALESCE($4::jsonb, '[]'::jsonb)
+					)
+				)
+
+				ON CONFLICT ((data->>'sub')) DO UPDATE
+				SET data = jsonb_set(
+					"user".data,
+					'{roles}',
+					(
+						SELECT jsonb_agg(DISTINCT role)
+						FROM (
+							SELECT jsonb_array_elements(
+								COALESCE("user".data->'roles', '[]'::jsonb)
+							) AS role
+							UNION
+							SELECT jsonb_array_elements(
+								COALESCE(EXCLUDED.data->'roles', '[]'::jsonb)
+							) AS role
+						) r
+					)
+				)
+				RETURNING
+					id,
+					data->>'name' AS name,
+					data->'roles' AS roles;
 		`;
 
-		const result = await pool.query<UserRow>(query, [name, email, sub]);
+		const result = await pool.query<UserRow>(query, [
+			name,
+			email,
+			sub,
+			JSON.stringify([app]),
+		]);
+		
 		return {
 			name: result.rows[0].name,
-			authToken: await encryptJwe(result.rows[0].id, app),
+			authToken: await encryptJwe(result.rows[0].id, result.rows[0].roles),
 		};
 	}
-	public async check(authHeader?: string): Promise<SessionUser> {
+	public async check(authHeader?: string, scopes?: string[] | []): Promise<SessionUser> {
 		if (!authHeader) {
 			throw new Error('Unauthorized');
 		}
@@ -104,6 +137,16 @@ export class AuthService {
 		const { payload } = await jwtDecrypt(token, TEXT_ENCODED_SECRET, {
 			contentEncryptionAlgorithms: [JWE_ALGORITHM],
 		});
-		return { id: payload.id as string, role: payload.role as string };
+		const roles = payload.roles as string[];
+		console.log(scopes, roles);
+		for(const perm of scopes ?? []){
+			if(!roles.includes(perm)){
+				throw new Error('Unauthorized');
+			}
+		}
+		return {
+			id: payload.id as string,
+			roles,
+		};
 	}
 }
