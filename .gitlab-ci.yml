@@ -51,6 +51,8 @@ microservice-test:
     matrix:
       - PROJECT_PATH: Service/AuthService
       - PROJECT_PATH: Service/ListingService
+      - PROJECT_PATH: Service/OrderService
+      - PROJECT_PATH: Service/CorporateService
   before_script:
     - apt-get update -y
     - apt-get install -y postgresql-client
