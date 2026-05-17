@@ -17,6 +17,7 @@ VALUES (
   jsonb_build_object(
     'name', 'John Pork',
     'email', 'johnpork@email.com',
+    'roles','["admin"]',
     'password', crypt('johnpork', gen_salt('bf'))
   )
 );

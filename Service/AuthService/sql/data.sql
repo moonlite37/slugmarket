@@ -13,7 +13,7 @@ VALUES (
   jsonb_build_object(
     'name', 'Apple',
     'email', 'apple@icloud.com',
-    'roles','["corporate", "seller"]'
+    'roles','["corporate", "seller"]',
     'password', crypt('tim cook', gen_salt('bf'))
   )
 );
