@@ -1,0 +1,11 @@
+
+CREATE DATABASE corporate;
+\connect corporate
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+DROP TABLE IF EXISTS api_key CASCADE;
+CREATE TABLE api_key (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  account UUID,
+  data JSONB NOT NULL
+);
