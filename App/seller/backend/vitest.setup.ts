@@ -26,7 +26,7 @@ export const server = setupServer(
     },
   ),
   http.get('http://127.0.0.1:3010/api/v0/check', () => {
-    return HttpResponse.json({ id: 'mock-id', role: 'seller' });
+    return HttpResponse.json({ id: 'mock-id', roles: ['seller'] });
   }),
   http.post('http://127.0.0.1:3011/api/v0/listing', async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>;
