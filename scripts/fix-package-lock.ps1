@@ -5,6 +5,7 @@
 $packages = @(
     "Service/AuthService",
     "Service/ListingService",
+    "Service/CorporateService",
     "App/Admin",
     "App/seller/backend",
     "App/seller/frontend",

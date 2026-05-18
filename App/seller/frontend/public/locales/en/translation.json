@@ -12,5 +12,10 @@
   "Title": "Title",
   "Description": "Description",
   "Price": "Price",
-  "Stock": "Stock"
+  "Stock": "Stock",
+  "API Keys": "API Keys",
+  "Generate API Key": "Generate API Key",
+  "Generating...": "Generating...",
+  "API Key: {{key}}": "API Key: {{key}}",
+  "You are not authorized to generate an API key": "You are not authorized to generate an API key"
 }

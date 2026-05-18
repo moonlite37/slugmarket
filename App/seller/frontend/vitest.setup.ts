@@ -8,6 +8,7 @@ import es from './public/locales/es/translation.json';
 export const server = setupServer(
   http.get('/seller/locales/en/translation.json', () => HttpResponse.json(en)),
   http.get('/seller/locales/es/translation.json', () => HttpResponse.json(es)),
+  http.post('/seller/api/v0/corp/generate', () => new HttpResponse('mock-api-key', { status: 200 })),
   http.get('http://localhost:3000/seller/api/v0/oauthlogin', () => {
     return HttpResponse.json({ url: 'mock-url' });
   }),
