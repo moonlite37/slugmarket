@@ -41,7 +41,7 @@ export class AuthService {
 	): Promise<Authenticated | undefined> {
 		const { rows: result } = await pool.query<UserRow>({
 			text: `
-				SELECT id, data->>'name' AS name
+				SELECT id, data->>'name' AS name, ARRAY(SELECT jsonb_array_elements_text(data->'roles')) AS roles
 				FROM "user"
 				WHERE data->>'email' = $1
 				AND data->>'password' = crypt($2, data->>'password')

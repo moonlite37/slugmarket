@@ -105,7 +105,7 @@ export class ApiService {
 			}),
 		});
 		const data = await res.json();
-		return data.data.ordersBySeller;
+		return data?.data?.ordersBySeller ?? [];
 	}
 
 	public async updateOrderStatus(key: string | undefined, id: string, status: string) {
@@ -122,6 +122,6 @@ export class ApiService {
 			}),
 		});
 		const data = await res.json();
-		return data.data.updateOrderStatus;
+		return data?.data?.updateOrderStatus;
 	}
 }

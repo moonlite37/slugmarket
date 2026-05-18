@@ -16,9 +16,9 @@ import { api_key, Listing, NewListing, UpdateListingBody, Order, UpdateOrderBody
 import { ApiService } from './service';
 
 @Route('')
-@Security('jwt', ['corporate'])
 export class CorporateController extends Controller {
 	@Post('generate')
+	@Security('jwt', ['corporate'])
 	@Response('201', 'Created')
 	public async createAPIKey(@Request() request: ExpressRequest): Promise<api_key> {
 		const currentId = request.user.id;

@@ -26,7 +26,7 @@ RegisterRoutes(router);
 app.use('/api/v0', router);
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next: NextFunction) => {
-	res.status(err.status).json({
+	res.status(err.status || 500).json({
 		message: err.message,
 	});
 	_next();
