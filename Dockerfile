@@ -25,10 +25,12 @@ COPY App/Admin/next.config.ts App/Admin/tsconfig.json App/Admin/next-env.d.ts ./
 COPY App/seller/backend/src ./App/seller/backend/src
 COPY App/seller/backend/tsoa.json App/seller/backend/tsconfig.json ./App/seller/backend/
 COPY App/seller/frontend/src ./App/seller/frontend/src
+COPY App/seller/frontend/public ./App/seller/frontend/public
 COPY App/seller/frontend/index.html App/seller/frontend/tsconfig.json App/seller/frontend/vite.config.ts ./App/seller/frontend/
 COPY App/shopper/backend/src ./App/shopper/backend/src
 COPY App/shopper/backend/tsoa.json App/shopper/backend/tsconfig.json ./App/shopper/backend/
 COPY App/shopper/frontend/src ./App/shopper/frontend/src
+COPY App/shopper/frontend/public ./App/shopper/frontend/public
 COPY App/shopper/frontend/index.html App/shopper/frontend/tsconfig.json App/shopper/frontend/vite.config.ts ./App/shopper/frontend/
 
 EXPOSE 3000 5173 5174 3013 3012 4000
