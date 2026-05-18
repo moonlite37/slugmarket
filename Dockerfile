@@ -14,6 +14,7 @@ COPY App/seller/backend/package.json App/seller/backend/package-lock.json ./App/
 COPY App/seller/frontend/package.json App/seller/frontend/package-lock.json ./App/seller/frontend/
 COPY App/shopper/backend/package.json App/shopper/backend/package-lock.json ./App/shopper/backend/
 COPY App/shopper/frontend/package.json App/shopper/frontend/package-lock.json ./App/shopper/frontend/
+COPY App/corporate/backend/package.json App/corporate/backend/package-lock.json ./App/corporate/backend/
 
 COPY Service/AuthService/src ./Service/AuthService/src
 COPY Service/AuthService/tsoa.json Service/AuthService/tsconfig.json ./Service/AuthService/
@@ -35,8 +36,10 @@ COPY App/shopper/backend/tsoa.json App/shopper/backend/tsconfig.json ./App/shopp
 COPY App/shopper/frontend/src ./App/shopper/frontend/src
 COPY App/shopper/frontend/public ./App/shopper/frontend/public
 COPY App/shopper/frontend/index.html App/shopper/frontend/tsconfig.json App/shopper/frontend/vite.config.ts ./App/shopper/frontend/
+COPY App/corporate/backend/src ./App/corporate/backend/src
+COPY App/corporate/backend/tsoa.json App/corporate/backend/tsconfig.json ./App/corporate/backend/
 
-EXPOSE 3000 5173 5174 3013 3012 4000 3040
+EXPOSE 3000 5173 5174 3013 3012 4000 3015
 
 RUN npm run cis
 

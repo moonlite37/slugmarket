@@ -13,6 +13,7 @@ services:
       - "127.0.0.1:3012:3012"
       - "127.0.0.1:4000:4000"
       - "127.0.0.1:3040:3040"
+      - "127.0.0.1:3040:3015"
   postgres:
     container_name: database
     image: cte-postgres
