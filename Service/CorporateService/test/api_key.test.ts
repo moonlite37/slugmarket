@@ -26,6 +26,17 @@ const authServer = setupServer(
 			...request.body,
 		});
 	}),
+	http.get('http://127.0.0.1:3011/api/v0/listing', () => {
+		return HttpResponse.json([{
+
+		}]);
+	}),
+	http.delete('http://127.0.0.1:3011/api/v0/listing/exists', () => {
+		return HttpResponse.text('', {status: 204});
+	}),
+	http.delete('http://127.0.0.1:3011/api/v0/listing/noexists', () => {
+		return HttpResponse.text('', {status: 404});
+	}),
 );
 
 beforeAll(() => {
@@ -73,7 +84,7 @@ const newListing = {
 };
 
 
-describe('Create post with API', () => {
+describe('Create listing with API', () => {
 	it('Rejects invalid key', async () => {
 		await supertest(server).post('/api/v0/listing')
 			.set('Authorization', 'failing_api_key')
@@ -84,10 +95,51 @@ describe('Create post with API', () => {
 		const res = (await supertest(server).post('/api/v0/generate')
 			.set('Authorization', 'valid'));
 		const key = res.text;
-		console.log(key);
 		await supertest(server).post('/api/v0/listing')
 			.set('Authorization', key)
 			.send(newListing)
 			.expect(201);
+	});
+});
+
+
+describe('Get listing with API', () => {
+	it('Correct status on good auth', async () => {
+		const res = (await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid'));
+		const key = res.text;
+		await supertest(server).get('/api/v0/listing')
+			.set('Authorization', key)
+			.expect(200);
+	});
+	it('Correct status on bad auth', async () => {
+		await supertest(server).get('/api/v0/listing')
+			.set('Authorization', 'poopity scoop')
+			.expect(401);
+	});
+});
+
+
+describe('Delete listing with API', () => {
+	it('Correct status on good auth', async () => {
+		const res = (await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid'));
+		const key = res.text;
+		await supertest(server).delete('/api/v0/listing/exists')
+			.set('Authorization', key)
+			.expect(204);
+	});
+	it('Correct status on not found', async () => {
+		const res = (await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid'));
+		const key = res.text;
+		await supertest(server).delete('/api/v0/listing/noexists')
+			.set('Authorization', key)
+			.expect(404);
+	});
+	it('Correct status on bad auth', async () => {
+		await supertest(server).delete('/api/v0/listing/exists')
+			.set('Authorization', 'poopity scoop')
+			.expect(401);
 	});
 });

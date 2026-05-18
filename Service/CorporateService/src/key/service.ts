@@ -28,11 +28,45 @@ export class ApiService{
 		await pool.query(q, [id, key]);
 		return key;
 	}
-	public async createListing(key: string | undefined, body: NewListing){
-		const pq = 'SELECT account FROM api_key WHERE data->>\'key\' = crypt($1, data->>\'key\')';
+
+	public async check(key: string | undefined){
+		const pq = 'SELECT account FROM api_key WHERE data->>\'key\' = crypt($1::text, data->>\'key\')';
 		const account = (await pool.query(pq, [key])).rows[0];
 		if (!account){
 			return undefined;
+		}
+		return account;
+	}
+    
+	public async getListing(key: string | undefined){
+		const account = await this.check(key);
+		if(!account){
+			return;
+		}
+		const res = await fetch(`${LISTING_MICROSERVICE}/listing?author=${account}`, {
+			method: 'GET',
+		});
+		return res.json();
+	}
+
+	public async deleteListing(key: string | undefined, id: string){
+		const account = await this.check(key);
+		if(!account){
+			throw new Error('Unauthorized');
+		}
+		const res = await fetch(`${LISTING_MICROSERVICE}/listing/${id}`, {
+			method: 'DELETE',
+		});
+		if(res.status !== 204){
+			return false;
+		}
+		return true;
+	}
+
+	public async createListing(key: string | undefined, body: NewListing){
+		const account = await this.check(key);
+		if(!account){
+			return;
 		}
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing`, {
 			method: 'POST',
