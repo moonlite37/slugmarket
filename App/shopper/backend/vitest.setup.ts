@@ -39,7 +39,7 @@ export const server = setupServer(
     },
   ),
   http.get('http://127.0.0.1:3010/api/v0/check', () => {
-    return HttpResponse.json({ id: 'mock-id', role: 'shopper' });
+    return HttpResponse.json({ id: 'mock-id', roles: ['shopper'] });
   }),
   http.get('http://127.0.0.1:3011/api/v0/listing', () => {
     return HttpResponse.json([listing]);

@@ -56,7 +56,7 @@ describe('auth middleware', () => {
 	it('returns 401 when role is not seller', async () => {
 		server.use(
 			http.get('http://127.0.0.1:3010/api/v0/check', () => {
-				return HttpResponse.json({ id: 'mock-id', role: 'shopper' });
+				return HttpResponse.json({ id: 'mock-id', roles: ['shopper'] });
 			}),
 		);
 		const res = await request.get('/api/v0/protected')
