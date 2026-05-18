@@ -3,8 +3,8 @@ import express, {
 	Router,
 	Response as ExResponse, 
 	Request as ExRequest, 
-	ErrorRequestHandler,
-	NextFunction,
+	//ErrorRequestHandler,
+	//NextFunction,
 } from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
@@ -25,12 +25,15 @@ const router = Router();
 RegisterRoutes(router);
 app.use('/api/v0', router);
 
+/*
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next: NextFunction) => {
+	console.log(err)
 	res.status(err.status || 500).json({
 		message: err.message,
 	});
 	_next();
 };
 app.use(errorHandler);
+*/
 
 export default app;
