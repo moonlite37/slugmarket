@@ -1,6 +1,7 @@
 import { beforeAll, afterEach, afterAll } from 'vitest';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
+import { error } from 'node:console';
 
 export const server = setupServer(
   http.get('http://127.0.0.1:3010/api/v0/oauthlogin', ({ request }) => {
@@ -44,6 +45,13 @@ export const server = setupServer(
     return HttpResponse.json([
       { id: 'mock-1', title: 'My Widget', description: 'A widget', price: 10, stock: 5, categories: ['test'], author: 'mock-id', created: '2026-05-10' },
     ]);
+  }),
+  http.post('http://127.0.0.1:3040/api/v0/generate', ({ request }) => {
+    const auth = request.headers.get('authorization');
+    if (auth === 'valid') {
+      return new HttpResponse('api key', { status: 201 });
+    }
+    return new HttpResponse(null, { status: 401 });
   }),
   http.post('http://127.0.0.1:4000/graphql', async () => {
     return HttpResponse.json({

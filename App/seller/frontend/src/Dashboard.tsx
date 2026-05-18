@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Box, Typography, Stack, Card, CardContent, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import CreateKey from './CreateKey';
 
 interface Listing {
 	id: string;
@@ -29,6 +30,7 @@ export default function Dashboard() {
 	}, []);
 
 	return (
+		<>
 		<Box sx={{ p: 3 }}>
 			<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
 				<Typography variant="h5">{t('My Listings')}</Typography>
@@ -52,5 +54,7 @@ export default function Dashboard() {
 				</Stack>
 			)}
 		</Box>
+		<CreateKey/>
+		</>
 	);
 }
