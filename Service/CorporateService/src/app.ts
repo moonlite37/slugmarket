@@ -25,18 +25,12 @@ const router = Router();
 RegisterRoutes(router);
 app.use('/api/v0', router);
 
-/*
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next: NextFunction) => {
-	console.log(err)
-	res.status(err.status || 500).json({
+	res.status(err.status).json({
 		message: err.message,
-		errors: err.errors,
-		status: err.status,
 	});
 	_next();
 };
 app.use(errorHandler);
-*/
-
 
 export default app;

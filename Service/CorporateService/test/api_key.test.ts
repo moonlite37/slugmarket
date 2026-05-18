@@ -1,4 +1,4 @@
-import { describe, it, beforeAll, afterAll,  afterEach } from 'vitest';
+import { describe, it, beforeAll, afterAll, afterEach } from 'vitest';
 import supertest from 'supertest';
 import { server } from './setup';
 import { setupServer } from 'msw/node';
@@ -14,35 +14,50 @@ const authServer = setupServer(
 			return HttpResponse.json({
 				id: '00000000-0000-0000-0000-000000000001',
 				roles: ['seller', 'shopper'],
-		    });
+			});
 		}
 		return HttpResponse.json({
 			id: '00000000-0000-0000-0000-000000000001',
-			roles: ['seller','corporate'],
+			roles: ['seller', 'corporate'],
 		});
 	}),
-	http.post('http://127.0.0.1:3011/api/v0/listing', ({request}) => {
-		return HttpResponse.json({
-			...request.body,
-		});
+	http.post('http://127.0.0.1:3011/api/v0/listing', () => {
+		return HttpResponse.json({ id: 'mock-id', title: 'Test Widget' });
 	}),
 	http.get('http://127.0.0.1:3011/api/v0/listing', () => {
-		return HttpResponse.json([{
-
-		}]);
+		return HttpResponse.json([{ id: 'mock-1', title: 'Mock Listing' }]);
+	}),
+	http.put('http://127.0.0.1:3011/api/v0/listing/exists', async ({request}) => {
+		const body = await request.json();
+		return HttpResponse.json({ id: 'exists', ...body as object });
+	}),
+	http.put('http://127.0.0.1:3011/api/v0/listing/noexists', () => {
+		return new HttpResponse(null, { status: 404 });
 	}),
 	http.delete('http://127.0.0.1:3011/api/v0/listing/exists', () => {
-		return HttpResponse.text('', {status: 204});
+		return HttpResponse.text('', { status: 204 });
 	}),
 	http.delete('http://127.0.0.1:3011/api/v0/listing/noexists', () => {
-		return HttpResponse.text('', {status: 404});
+		return HttpResponse.text('', { status: 404 });
+	}),
+	http.post('http://127.0.0.1:4000/graphql', async ({request}) => {
+		const body = await request.json() as {query: string};
+		if (body.query.includes('ordersBySeller')) {
+			return HttpResponse.json({
+				data: { ordersBySeller: [{ id: 'o1', items: 'Widget', total: 10, status: 'pending' }] },
+			});
+		}
+		if (body.query.includes('updateOrderStatus')) {
+			return HttpResponse.json({
+				data: { updateOrderStatus: { id: 'o1', status: 'fulfilled' } },
+			});
+		}
+		return HttpResponse.json({ data: {} });
 	}),
 );
 
 beforeAll(() => {
-	authServer.listen({
-		onUnhandledRequest: 'bypass',
-	});
+	authServer.listen({ onUnhandledRequest: 'bypass' });
 });
 afterEach(() => {
 	authServer.resetHandlers();
@@ -83,7 +98,6 @@ const newListing = {
 	categories: ['test'],
 };
 
-
 describe('Create listing with API', () => {
 	it('Rejects invalid key', async () => {
 		await supertest(server).post('/api/v0/listing')
@@ -92,8 +106,8 @@ describe('Create listing with API', () => {
 			.expect(401);
 	});
 	it('Correct status on good creation', async () => {
-		const res = (await supertest(server).post('/api/v0/generate')
-			.set('Authorization', 'valid'));
+		const res = await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid');
 		const key = res.text;
 		await supertest(server).post('/api/v0/listing')
 			.set('Authorization', key)
@@ -102,11 +116,10 @@ describe('Create listing with API', () => {
 	});
 });
 
-
 describe('Get listing with API', () => {
 	it('Correct status on good auth', async () => {
-		const res = (await supertest(server).post('/api/v0/generate')
-			.set('Authorization', 'valid'));
+		const res = await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid');
 		const key = res.text;
 		await supertest(server).get('/api/v0/listing')
 			.set('Authorization', key)
@@ -119,19 +132,18 @@ describe('Get listing with API', () => {
 	});
 });
 
-
 describe('Delete listing with API', () => {
 	it('Correct status on good auth', async () => {
-		const res = (await supertest(server).post('/api/v0/generate')
-			.set('Authorization', 'valid'));
+		const res = await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid');
 		const key = res.text;
 		await supertest(server).delete('/api/v0/listing/exists')
 			.set('Authorization', key)
 			.expect(204);
 	});
 	it('Correct status on not found', async () => {
-		const res = (await supertest(server).post('/api/v0/generate')
-			.set('Authorization', 'valid'));
+		const res = await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid');
 		const key = res.text;
 		await supertest(server).delete('/api/v0/listing/noexists')
 			.set('Authorization', key)
@@ -141,5 +153,73 @@ describe('Delete listing with API', () => {
 		await supertest(server).delete('/api/v0/listing/exists')
 			.set('Authorization', 'poopity scoop')
 			.expect(401);
+	});
+});
+
+describe('Update listing with API', () => {
+	it('Updates a listing with valid key', async () => {
+		const res = await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid');
+		const key = res.text;
+		await supertest(server).put('/api/v0/listing/exists')
+			.set('Authorization', key)
+			.send({ title: 'Updated Title', price: 99 })
+			.expect(200);
+	});
+	it('Returns 404 for non-existent listing', async () => {
+		const res = await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid');
+		const key = res.text;
+		await supertest(server).put('/api/v0/listing/noexists')
+			.set('Authorization', key)
+			.send({ title: 'Nope' })
+			.expect(404);
+	});
+	it('Rejects update with invalid key', async () => {
+		await supertest(server).put('/api/v0/listing/exists')
+			.set('Authorization', 'poopity scoop')
+			.send({ title: 'Nope' })
+			.expect(401);
+	});
+});
+
+describe('Get orders with API', () => {
+	it('Gets orders with valid key', async () => {
+		const res = await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid');
+		const key = res.text;
+		await supertest(server).get('/api/v0/order')
+			.set('Authorization', key)
+			.expect(200);
+	});
+	it('Rejects with invalid key', async () => {
+		await supertest(server).get('/api/v0/order')
+			.set('Authorization', 'poopity scoop')
+			.expect(401);
+	});
+});
+
+describe('Update order status with API', () => {
+	it('Updates order with valid key', async () => {
+		const res = await supertest(server).post('/api/v0/generate')
+			.set('Authorization', 'valid');
+		const key = res.text;
+		await supertest(server).put('/api/v0/order/o1')
+			.set('Authorization', key)
+			.send({ status: 'fulfilled' })
+			.expect(200);
+	});
+	it('Rejects with invalid key', async () => {
+		await supertest(server).put('/api/v0/order/o1')
+			.set('Authorization', 'poopity scoop')
+			.send({ status: 'fulfilled' })
+			.expect(401);
+	});
+});
+
+describe('Error handling', () => {
+	it('Returns 404 on invalid route', async () => {
+		await supertest(server).get('/api/v0/nonexistent')
+			.expect(404);
 	});
 });

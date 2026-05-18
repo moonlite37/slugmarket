@@ -26,3 +26,11 @@ export interface NewListing {
 export interface CreateListingBody extends NewListing {
   authorId: string
 }
+export interface UpdateListingBody {
+  title?: string
+  description?: string
+  price?: number
+  stock?: number
+  categories?: string[]
+  images?: string[]
+}

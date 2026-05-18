@@ -2,7 +2,7 @@ import { Listing, NewListing } from '.';
 import {pool} from '../db';
 
 export class ListingService {
-	public async getListing(author?: string , minPrice?: number , maxPrice?: number): Promise<Listing[]> {
+	public async getListing(author?: string, minPrice?: number, maxPrice?: number): Promise<Listing[]> {
 		console.log(author, minPrice, maxPrice);
 		const q = `
 			SELECT * FROM listing
@@ -68,5 +68,29 @@ export class ListingService {
 			[id],
 		);
 		return rowCount as number > 0;
+	}
+
+	public async updateListing(id: string, updates: {title?: string, description?: string, price?: number, stock?: number, categories?: string[], images?: string[]}): Promise<Listing | null> {
+		const patch: Record<string, unknown> = {};
+		if (updates.title !== undefined) patch.title = updates.title;
+		if (updates.description !== undefined) patch.description = updates.description;
+		if (updates.price !== undefined) patch.price = updates.price;
+		if (updates.stock !== undefined) patch.stock = updates.stock;
+		if (updates.categories !== undefined) patch.categories = updates.categories;
+		if (updates.images !== undefined) patch.images = updates.images;
+
+		const { rows, rowCount } = await pool.query(
+			`UPDATE listing SET data = data || $2::jsonb
+			 WHERE id = $1
+			 RETURNING id, author, data`,
+			[id, JSON.stringify(patch)],
+		);
+		if (!rowCount) return null;
+		const r = rows[0];
+		return {
+			id: r.id,
+			author: r.author,
+			...r.data,
+		};
 	}
 }

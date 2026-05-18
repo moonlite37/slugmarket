@@ -3,6 +3,7 @@ import {
 	Controller,
 	Get,
 	Post,
+	Put,
 	Delete,
 	Body,
 	Path,
@@ -10,7 +11,7 @@ import {
 	Response,
 	SuccessResponse,
 } from 'tsoa';
-import { Listing, CreateListingBody } from '.';
+import { Listing, CreateListingBody, UpdateListingBody } from '.';
 import { ListingService } from './service';
 
 @Route('')
@@ -48,5 +49,19 @@ export class ListingController extends Controller {
 			return;
 		}
 		this.setStatus(204);
+	}
+
+	@Put('listing/{id}')
+	@Response('404', 'Not Found')
+	public async updateListing(
+		@Path() id: string,
+		@Body() body: UpdateListingBody,
+	): Promise<Listing | undefined> {
+		const res = await new ListingService().updateListing(id, body);
+		if (!res) {
+			this.setStatus(404);
+			return undefined;
+		}
+		return res;
 	}
 }
