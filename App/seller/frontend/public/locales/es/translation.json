@@ -12,5 +12,10 @@
   "Title": "Título",
   "Description": "Descripción",
   "Price": "Precio",
-  "Stock": "Existencias"
+  "Stock": "Existencias",
+  "API Keys": "Claves API",
+  "Generate API Key": "Generar clave API",
+  "Generating...": "Generando...",
+  "API Key: {{key}}": "Clave API: {{key}}",
+  "You are not authorized to generate an API key": "No está autorizado para generar una clave API"
 }

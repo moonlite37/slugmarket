@@ -9,6 +9,7 @@ import Login from '@/Login';
 import LocaleSwitcher from '@/LocaleSwitcher';
 import Dashboard from '@/Dashboard';
 import CreateListing from '@/CreateListing';
+import CreateKey from '@/CreateKey';
 
 afterEach(async () => {
   await i18n.changeLanguage('en');
@@ -117,5 +118,43 @@ describe('CreateListing Spanish', async () => {
   it('Create Listing button', async () => {
     await renderCreateListingInSpanish();
     await waitFor(() => screen.getByRole('button', { name: /^Crear anuncio$/i }));
+  });
+});
+
+const renderCreateKeyInSpanish = async () => {
+  const user = userEvent.setup();
+  render(
+    <>
+      <LocaleSwitcher />
+      <CreateKey />
+    </>,
+  );
+  await user.selectOptions(screen.getByRole('combobox'), 'es');
+};
+
+describe('CreateKey Spanish', async () => {
+  it('API Keys heading', async () => {
+    await renderCreateKeyInSpanish();
+    await waitFor(() => screen.getByText(/^Claves API$/i));
+  });
+
+  it('Generate API Key button', async () => {
+    await renderCreateKeyInSpanish();
+    await waitFor(() => screen.getByRole('button', { name: /^Generar clave API$/i }));
+  });
+
+  it('shows API key after generation', async () => {
+    await renderCreateKeyInSpanish();
+    await userEvent.click(screen.getByRole('button', { name: /^Generar clave API$/i }));
+    await waitFor(() => screen.getByText(/^Clave API: mock-api-key$/i));
+  });
+
+  it('shows unauthorized error', async () => {
+    server.use(
+      http.post('/seller/api/v0/corp/generate', () => new HttpResponse(null, { status: 403 })),
+    );
+    await renderCreateKeyInSpanish();
+    await userEvent.click(screen.getByRole('button', { name: /^Generar clave API$/i }));
+    await waitFor(() => screen.getByText(/^No está autorizado para generar una clave API$/i));
   });
 });
