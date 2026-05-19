@@ -8,10 +8,9 @@
 		"schemes": ["http"],
 		"basePath": "/api/v0",
 		"securityDefinitions": {
-			"cookie": {
-				"type": "apiKey",
-				"in": "cookie",
-				"name": "authToken"
+			"bearer": {
+				"type": "http",
+				"scheme": "bearer"
 			}
 		}
 	},
