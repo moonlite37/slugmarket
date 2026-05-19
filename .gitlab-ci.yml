@@ -8,52 +8,52 @@ variables:
   POSTGRES_DB: postgres
 
 stages:
-  # - quality
-  # - test
+  - quality
+  - test
   - build
 
-# quality:
-#   stage: quality
-#   script:
-#     - |
-#       for dir in Service/*/ App/Admin/ App/seller/backend/ App/seller/frontend/ App/shopper/backend/ App/shopper/frontend/; do
-#         [ -f "$dir/package.json" ] || continue
-#         cd $dir
-#         npm install
-#         npm run lint
-#         npm run cpd
-#         cd $CI_PROJECT_DIR
-#       done
+quality:
+  stage: quality
+  script:
+    - |
+      for dir in Service/*/ App/Admin/ App/seller/backend/ App/seller/frontend/ App/shopper/backend/ App/shopper/frontend/; do
+        [ -f "$dir/package.json" ] || continue
+        cd $dir
+        npm install
+        npm run lint
+        npm run cpd
+        cd $CI_PROJECT_DIR
+      done
 
-# app-test:
-#   stage: test
-#   script:
-#     - |
-#       for dir in App/Admin/ App/seller/frontend/ App/shopper/frontend/ App/seller/backend/ App/shopper/backend/; do
-#         [ -f "$dir/package.json" ] || continue
-#         cd $dir
-#         npm install
-#         npm test
-#         cd $CI_PROJECT_DIR
-#       done
+app-test:
+  stage: test
+  script:
+    - |
+      for dir in App/Admin/ App/seller/frontend/ App/shopper/frontend/ App/seller/backend/ App/shopper/backend/; do
+        [ -f "$dir/package.json" ] || continue
+        cd $dir
+        npm install
+        npm test
+        cd $CI_PROJECT_DIR
+      done
 
-# microservice-test:
-#   stage: test
-#   services:
-#     - postgres
-#   before_script:
-#     - apt-get update -y
-#     - apt-get install -y postgresql-client
-#   script:
-#     - |
-#       for dir in Service/*/; do
-#         [ -f "$dir/package.json" ] || continue
-#         PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f ${dir}sql/databases.sql
-#         cd $dir
-#         npm install
-#         npm test
-#         cd $CI_PROJECT_DIR
-#       done
+microservice-test:
+  stage: test
+  services:
+    - postgres
+  before_script:
+    - apt-get update -y
+    - apt-get install -y postgresql-client
+  script:
+    - |
+      for dir in Service/*/; do
+        [ -f "$dir/package.json" ] || continue
+        PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f ${dir}sql/databases.sql
+        cd $dir
+        npm install
+        npm test
+        cd $CI_PROJECT_DIR
+      done
 
 build:
   stage: build
