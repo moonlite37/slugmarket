@@ -9,7 +9,8 @@ export async function expressAuthentication(
 	scopes?: string[],
 ): Promise<SessionUser> {
 	console.log(securityName, scopes);
-	const authToken = request.cookies.authToken;
+	const authHeader = request.headers.authorization;
+	const authToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : undefined;
 	if (!authToken) {
 		throw new Error('No AuthToken');
 	}

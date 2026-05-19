@@ -4,18 +4,18 @@ import { request } from './setup';
 import { server } from '../vitest.setup';
 
 describe('POST /generate', () => {
-	it('returns 401 when no cookie', async () => {
+	it('returns 401 when no Authorization header', async () => {
 		const res = await request.post('/api/v0/generate');
 		expect(res.status).toBe(401);
 	});
 
-	it('returns 201 and sets apiKey cookie with valid auth', async () => {
+	it('returns 201 with apiKey in body with valid auth', async () => {
 		const res = await request
 			.post('/api/v0/generate')
-			.set('Cookie', 'authToken=mock-token');
+			.set('Authorization', 'Bearer mock-token');
 		expect(res.status).toBe(201);
 		expect(res.text).toBe('mock-api-key');
-		expect(res.headers['set-cookie'][0]).toContain('apiKey=mock-api-key');
+		expect(res.headers['set-cookie']).toBeUndefined();
 	});
 
 	it('returns 401 when CorporateService rejects the token', async () => {
@@ -26,7 +26,7 @@ describe('POST /generate', () => {
 		);
 		const res = await request
 			.post('/api/v0/generate')
-			.set('Cookie', 'authToken=mock-token');
+			.set('Authorization', 'Bearer mock-token');
 		expect(res.status).toBe(401);
 	});
 
@@ -38,7 +38,7 @@ describe('POST /generate', () => {
 		);
 		const res = await request
 			.post('/api/v0/generate')
-			.set('Cookie', 'authToken=mock-token');
+			.set('Authorization', 'Bearer mock-token');
 		expect(res.status).toBe(500);
 	});
 });

@@ -10,12 +10,12 @@ describe('docs', () => {
 });
 
 describe('POST /login', () => {
-	it('sets cookie and returns 200 with valid corporate credentials', async () => {
+	it('returns token in body and 200 with valid corporate credentials', async () => {
 		const res = await request
 			.post('/api/v0/login')
 			.send({ email: 'corp@test.com', password: 'password' });
 		expect(res.status).toBe(200);
-		expect(res.headers['set-cookie'][0]).toContain('authToken=mock-token');
+		expect(res.body.token).toBe('mock-token');
 	});
 
 	it('returns 401 with wrong credentials', async () => {
@@ -51,15 +51,16 @@ describe('POST /login', () => {
 });
 
 describe('auth middleware', () => {
-	it('returns 401 when no cookie', async () => {
-		const res = await request.get('/api/v0/protected');
+	it('returns 401 when no Authorization header', async () => {
+		const res = await request.get('/api/v0/listing');
 		expect(res.status).toBe(401);
 	});
 
-	it('allows access with valid corporate cookie', async () => {
+	it('allows access with valid Authorization header', async () => {
 		const res = await request
-			.get('/api/v0/protected')
-			.set('Cookie', 'authToken=mock-token');
+			.get('/api/v0/listing')
+			.set('Authorization', 'Bearer mock-token')
+			.set('X-API-Key', 'mock-api-key');
 		expect(res.status).toBe(200);
 	});
 
@@ -70,8 +71,9 @@ describe('auth middleware', () => {
 			}),
 		);
 		const res = await request
-			.get('/api/v0/protected')
-			.set('Cookie', 'authToken=mock-token');
+			.get('/api/v0/listing')
+			.set('Authorization', 'Bearer mock-token')
+			.set('X-API-Key', 'mock-api-key');
 		expect(res.status).toBe(401);
 	});
 
@@ -82,8 +84,9 @@ describe('auth middleware', () => {
 			}),
 		);
 		const res = await request
-			.get('/api/v0/protected')
-			.set('Cookie', 'authToken=mock-token');
+			.get('/api/v0/listing')
+			.set('Authorization', 'Bearer mock-token')
+			.set('X-API-Key', 'mock-api-key');
 		expect(res.status).toBe(401);
 	});
 });
