@@ -6,11 +6,13 @@ $packages = @(
     "Service/AuthService",
     "Service/ListingService",
     "Service/CorporateService",
+    "Service/OrderService",
     "App/Admin",
     "App/seller/backend",
     "App/seller/frontend",
     "App/shopper/backend",
-    "App/shopper/frontend"
+    "App/shopper/frontend",
+    "App/corporate/backend"
 )
 
 foreach ($dir in $packages) {
