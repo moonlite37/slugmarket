@@ -7,6 +7,7 @@ COPY .env ./
 
 COPY Service/AuthService/package.json Service/AuthService/package-lock.json ./Service/AuthService/
 COPY Service/ListingService/package.json Service/ListingService/package-lock.json ./Service/ListingService/
+COPY Service/CartService/package.json Service/CartService/package-lock.json ./Service/CartService/
 COPY Service/PaymentService/package.json Service/PaymentService/package-lock.json ./Service/PaymentService/
 COPY Service/OrderService/package.json Service/OrderService/package-lock.json ./Service/OrderService/
 COPY Service/CorporateService/package.json Service/CorporateService/package-lock.json ./Service/CorporateService/
@@ -23,6 +24,8 @@ COPY Service/ListingService/src ./Service/ListingService/src
 COPY Service/ListingService/tsoa.json Service/ListingService/tsconfig.json ./Service/ListingService/
 COPY Service/PaymentService/src ./Service/PaymentService/src
 COPY Service/PaymentService/tsoa.json Service/PaymentService/tsconfig.json ./Service/PaymentService/
+COPY Service/CartService/src ./Service/CartService/src
+COPY Service/CartService/tsoa.json Service/CartService/tsconfig.json ./Service/CartService/
 COPY Service/OrderService/src ./Service/OrderService/src
 COPY Service/OrderService/tsconfig.json ./Service/OrderService/
 COPY Service/CorporateService/src ./Service/CorporateService/src
