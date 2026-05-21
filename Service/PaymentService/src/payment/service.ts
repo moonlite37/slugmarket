@@ -1,5 +1,9 @@
 import Stripe from 'stripe';
-import {CheckoutRequest, CheckoutResponse} from '.';
+import {
+	CheckoutRequest,
+	CheckoutResponse,
+	WebhookRequest,
+} from '.';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -27,5 +31,9 @@ export class PaymentService {
 		});
 
 		return {url: session.url ?? ''};
+	}
+
+	public async webhook(request: WebhookRequest): Promise<void> {
+		void request;
 	}
 }

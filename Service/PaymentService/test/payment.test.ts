@@ -61,6 +61,22 @@ describe('Payment checkout', () => {
 	});
 });
 
+describe('Payment webhook', () => {
+	it('returns 204 for completed checkout session', async () => {
+		const res = await request
+			.post('/api/v0/webhook')
+			.send({
+				type: 'checkout.session.completed',
+				data: {
+					object: {
+						id: 'cs_test_123',
+					},
+				},
+			});
+		expect(res.status).toBe(204);
+	});
+});
+
 describe('docs', () => {
 	it('GET /api/v0/docs/', async () => {
 		await request.get('/api/v0/docs/').expect(200);

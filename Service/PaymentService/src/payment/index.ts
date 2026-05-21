@@ -8,3 +8,14 @@ export interface CheckoutRequest {
 export interface CheckoutResponse {
 	url: string;
 }
+
+export interface WebhookSession {
+	id: string;
+}
+
+export interface WebhookRequest {
+	type: string;
+	data: {
+		object: WebhookSession;
+	};
+}
