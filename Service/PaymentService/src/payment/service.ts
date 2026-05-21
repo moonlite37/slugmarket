@@ -36,7 +36,8 @@ export class PaymentService {
 	}
 
 	public async webhook(request: WebhookRequest): Promise<void> {
-		await this.updateOrderStatus(request.data.object.metadata.orderId, 'paid');
+		const status = request.type === 'checkout.session.completed' ? 'paid' : 'failed';
+		await this.updateOrderStatus(request.data.object.metadata.orderId, status);
 	}
 
 	private async updateOrderStatus(orderId: string, status: string): Promise<void> {

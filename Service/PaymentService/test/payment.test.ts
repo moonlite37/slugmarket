@@ -74,11 +74,11 @@ describe('Payment webhook', () => {
 		vi.stubGlobal('fetch', updateOrderStatus);
 	});
 
-	const completedCheckoutSession = () => {
+	const checkoutSession = (type: string) => {
 		return request
 			.post('/api/v0/webhook')
 			.send({
-				type: 'checkout.session.completed',
+				type,
 				data: {
 					object: {
 						id: 'cs_test_123',
@@ -89,6 +89,9 @@ describe('Payment webhook', () => {
 				},
 			});
 	};
+
+	const completedCheckoutSession = () => checkoutSession('checkout.session.completed');
+	const failedCheckoutSession = () => checkoutSession('checkout.session.expired');
 
 	it('returns 204 for completed checkout session', async () => {
 		const res = await completedCheckoutSession();
@@ -101,6 +104,15 @@ describe('Payment webhook', () => {
 		expect(body.variables).toEqual({
 			id: orderId,
 			status: 'paid',
+		});
+	});
+
+	it('updates order status for failed checkout session', async () => {
+		await failedCheckoutSession();
+		const body = JSON.parse(updateOrderStatus.mock.calls[0][1].body);
+		expect(body.variables).toEqual({
+			id: orderId,
+			status: 'failed',
 		});
 	});
 });
