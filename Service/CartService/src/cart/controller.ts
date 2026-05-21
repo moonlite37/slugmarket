@@ -1,4 +1,4 @@
-import {Controller, Post, Route, Body, Response} from 'tsoa';
+import {Controller, Get, Post, Route, Body, Query, Response} from 'tsoa';
 import {CartService} from './service';
 
 interface CartItem {
@@ -17,6 +17,15 @@ interface AddItemBody {
 
 @Route('cart')
 export class CartController extends Controller {
+
+	@Get()
+	public async getCart(
+		@Query() sessionId?: string,
+		@Query() userId?: string,
+	): Promise<CartItem[]> {
+		const cart = await new CartService().getCart(sessionId, userId);
+		return cart?.items ?? [];
+	}
 
 	@Post('item')
 	@Response('201', 'Created')

@@ -1,16 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import { request } from './setup';
-
-const sessionId = '00000000-0000-0000-0000-000000000001';
-const userId = '00000000-0000-0000-0000-000000000002';
-
-const item = {
-	listing_id: '00000000-0000-0000-0000-000000000010',
-	name: 'Blue Hoodie',
-	price: 29.99,
-	quantity: 1,
-	imageUrl: 'hoodie.jpg',
-};
+import {describe, expect, it} from 'vitest';
+import {request} from './setup';
+import {sessionId, userId, item} from './data';
 
 describe('docs', () => {
 	it('GET /api/v0/docs/ returns 200', async () => {

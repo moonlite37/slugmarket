@@ -9,6 +9,14 @@ interface CartItem {
 }
 
 export class CartService {
+	public async getCart(sessionId?: string, userId?: string) {
+		const result = await pool.query(
+			'SELECT * FROM cart WHERE ($1::uuid IS NOT NULL AND user_id = $1) OR session_id = $2 LIMIT 1',
+			[userId ?? null, sessionId],
+		);
+		return result.rows[0] ?? null;
+	}
+
 	public async addItem(sessionId: string, userId: string | undefined, item: CartItem): Promise<void> {
 		await pool.query(
 			`INSERT INTO cart (session_id, user_id, items)
