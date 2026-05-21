@@ -20,7 +20,10 @@ vi.mock('stripe', () => {
 });
 
 describe('Payment checkout', () => {
+	const orderId = 'order_123';
+
 	beforeEach(() => {
+		createCheckoutSession.mockClear();
 		createCheckoutSession.mockResolvedValue({
 			id: 'cs_test_123',
 			url: 'https://checkout.stripe.com/c/pay/cs_test_123',
@@ -31,6 +34,7 @@ describe('Payment checkout', () => {
 		return request
 			.post('/api/v0/checkout')
 			.send({
+				orderId,
 				name: 'Pork Chop',
 				quantity: 1,
 				unitAmount: 1250,

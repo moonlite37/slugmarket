@@ -19,6 +19,9 @@ export class PaymentService {
 					quantity: request.quantity,
 				},
 			],
+			metadata: {
+				orderId: request.orderId,
+			},
 			success_url: 'http://localhost:3000/success',
 			cancel_url: 'http://localhost:3000/cancel',
 		});
