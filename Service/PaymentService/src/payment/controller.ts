@@ -1,9 +1,13 @@
-import {Controller, Get, Route} from 'tsoa';
+import {Body, Controller, Post, Route} from 'tsoa';
+import {CheckoutRequest, CheckoutResponse} from '.';
+import {PaymentService} from './service';
 
-@Route('payment')
+@Route('')
 export class PaymentController extends Controller {
-	@Get('health')
-	public async health(): Promise<{status: string}> {
-		return {status: 'ok'};
+	@Post('checkout')
+	public async checkout(
+		@Body() body: CheckoutRequest,
+	): Promise<CheckoutResponse> {
+		return new PaymentService().checkout(body);
 	}
 }
