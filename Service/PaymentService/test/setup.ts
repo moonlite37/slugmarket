@@ -3,7 +3,6 @@ import supertest from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 
 import * as http from 'http';
-import {shutdown} from '../src/db';
 import app from '../src/app';
 
 let server: http.Server<
@@ -19,7 +18,6 @@ beforeAll(() => {
 	request = supertest(server);
 });
 
-afterAll(async () => {
-	await shutdown();
+afterAll(() => {
 	server.close();
 });

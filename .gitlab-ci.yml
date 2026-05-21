@@ -48,7 +48,7 @@ microservice-test:
     - |
       for dir in Service/*/; do
         [ -f "$dir/package.json" ] || continue
-        PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f ${dir}sql/databases.sql
+        [ ! -f "${dir}sql/databases.sql" ] || PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U postgres -f ${dir}sql/databases.sql
         cd $dir
         npm install
         npm test
