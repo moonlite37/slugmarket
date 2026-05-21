@@ -15,7 +15,6 @@ services:
       - ./ListingService/sql/databases.sql:/docker-entrypoint-initdb.d/2.listing.databases.sql
       - ./OrderService/sql/databases.sql:/docker-entrypoint-initdb.d/3.order.databases.sql
       - ./CorporateService/sql/databases.sql:/docker-entrypoint-initdb.d/4.corporate.databases.sql
-      - ./PaymentService/sql/databases.sql:/docker-entrypoint-initdb.d/5.payment.databases.sql
       - ./CartService/sql/databases.sql:/docker-entrypoint-initdb.d/6.cart.databases.sql
 volumes:
   postgres-data:
