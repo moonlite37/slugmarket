@@ -5,6 +5,10 @@ const {createCheckoutSession} = vi.hoisted(() => ({
 	createCheckoutSession: vi.fn(),
 }));
 
+const {updateOrderStatus} = vi.hoisted(() => ({
+	updateOrderStatus: vi.fn(),
+}));
+
 vi.mock('stripe', () => {
 	return {
 		default: vi.fn().mockImplementation(function () {
@@ -62,18 +66,42 @@ describe('Payment checkout', () => {
 });
 
 describe('Payment webhook', () => {
-	it('returns 204 for completed checkout session', async () => {
-		const res = await request
+	const orderId = 'order_123';
+
+	beforeEach(() => {
+		updateOrderStatus.mockClear();
+		updateOrderStatus.mockResolvedValue(new Response('{}'));
+		vi.stubGlobal('fetch', updateOrderStatus);
+	});
+
+	const completedCheckoutSession = () => {
+		return request
 			.post('/api/v0/webhook')
 			.send({
 				type: 'checkout.session.completed',
 				data: {
 					object: {
 						id: 'cs_test_123',
+						metadata: {
+							orderId,
+						},
 					},
 				},
 			});
+	};
+
+	it('returns 204 for completed checkout session', async () => {
+		const res = await completedCheckoutSession();
 		expect(res.status).toBe(204);
+	});
+
+	it('updates order status for completed checkout session', async () => {
+		await completedCheckoutSession();
+		const body = JSON.parse(updateOrderStatus.mock.calls[0][1].body);
+		expect(body.variables).toEqual({
+			id: orderId,
+			status: 'paid',
+		});
 	});
 });
 

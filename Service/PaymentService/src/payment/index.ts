@@ -11,6 +11,9 @@ export interface CheckoutResponse {
 
 export interface WebhookSession {
 	id: string;
+	metadata: {
+		orderId: string;
+	};
 }
 
 export interface WebhookRequest {

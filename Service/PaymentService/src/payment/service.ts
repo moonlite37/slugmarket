@@ -6,6 +6,8 @@ import {
 } from '.';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+const ORDER_GRAPHQL_URL = process.env.ORDER_GRAPHQL_URL ?? 'http://localhost:4000/graphql';
+const UPDATE_ORDER_STATUS_MUTATION = 'mutation UpdateOrderStatus($id: String!, $status: String!) { updateOrderStatus(id: $id, status: $status) { id status } }';
 
 export class PaymentService {
 	public async checkout(request: CheckoutRequest): Promise<CheckoutResponse> {
@@ -34,6 +36,22 @@ export class PaymentService {
 	}
 
 	public async webhook(request: WebhookRequest): Promise<void> {
-		void request;
+		await this.updateOrderStatus(request.data.object.metadata.orderId, 'paid');
+	}
+
+	private async updateOrderStatus(orderId: string, status: string): Promise<void> {
+		await fetch(ORDER_GRAPHQL_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				query: UPDATE_ORDER_STATUS_MUTATION,
+				variables: {
+					id: orderId,
+					status,
+				},
+			}),
+		});
 	}
 }
