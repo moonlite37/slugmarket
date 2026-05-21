@@ -28,8 +28,9 @@ export class PaymentService {
 			metadata: {
 				orderId: request.orderId,
 			},
-			success_url: 'http://localhost:3000/success',
-			cancel_url: 'http://localhost:3000/cancel',
+			// TODO decide where to redirect
+			success_url: `https://slugmarket.shop/shopper/order/${request.orderId}`,
+			cancel_url: 'https://slugmarket.shop/shopper/',
 		});
 
 		return {url: session.url ?? ''};
