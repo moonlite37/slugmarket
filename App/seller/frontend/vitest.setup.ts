@@ -12,6 +12,19 @@ export const server = setupServer(
   http.get('http://localhost:3000/seller/api/v0/oauthlogin', () => {
     return HttpResponse.json({ url: 'mock-url' });
   }),
+  http.get('http://localhost:3000/seller/api/v0/order', () => {
+    return HttpResponse.json([
+      {
+        id: 'order-1',
+        shopper: 'shopper-id',
+        seller: 'seller-id',
+        items: [{ listingId: 'l1', title: 'Test Widget', price: 9.99, quantity: 3 }],
+        total: 29.97,
+        status: 'pending',
+        created: '2026-05-20',
+      },
+    ]);
+  }),
   http.post('http://localhost:3000/seller/api/v0/listing', async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>;
     return HttpResponse.json(

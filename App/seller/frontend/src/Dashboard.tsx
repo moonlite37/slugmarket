@@ -3,6 +3,7 @@ import { Box, Typography, Stack, Card, CardContent, Button } from '@mui/material
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CreateKey from './CreateKey';
+import OrdersView from './OrdersView';
 
 interface Listing {
 	id: string;
@@ -44,17 +45,18 @@ export default function Dashboard() {
 				<Stack spacing={2}>
 					{listings.map((listing) => (
 						<Card key={listing.id} variant="outlined">
-							<CardContent>
-								<Typography variant="h6">{t('Listing Title', { listingTitle: listing.title })}</Typography>
-								<Typography color="text.secondary">{listing.description}</Typography>
-								<Typography>${listing.price} · {t('{{stock}} in stock', { stock: listing.stock })}</Typography>
-							</CardContent>
+						 <CardContent>
+						 <Typography variant="h6">{t('Listing Title', { listingTitle: listing.title })}</Typography>
+						 <Typography color="text.secondary">{listing.description}</Typography>
+						 <Typography>${listing.price} · {t('{{stock}} in stock', { stock: listing.stock })}</Typography>
+						 </CardContent>
 						</Card>
 					))}
 				</Stack>
 			)}
 		</Box>
-		<CreateKey/>
+		<OrdersView />
+		<CreateKey />
 		</>
 	);
 }
