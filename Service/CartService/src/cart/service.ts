@@ -9,40 +9,38 @@ interface CartItem {
 }
 
 export class CartService {
-	public async getCart(sessionId?: string, userId?: string) {
+	public async getCart(userId: string) {
 		const result = await pool.query(
-			'SELECT * FROM cart WHERE ($1::uuid IS NOT NULL AND user_id = $1) OR session_id = $2 LIMIT 1',
-			[userId ?? null, sessionId],
+			'SELECT * FROM cart WHERE user_id = $1',
+			[userId],
 		);
 		return result.rows[0] ?? null;
 	}
 
-	public async addItem(sessionId: string, userId: string | undefined, item: CartItem): Promise<void> {
+	public async addItem(userId: string, item: CartItem): Promise<void> {
 		await pool.query(
-			`INSERT INTO cart (session_id, user_id, items)
-			 VALUES ($1, $2, $3::jsonb)
-			 ON CONFLICT (session_id)
-			 DO UPDATE SET
-			 	user_id = COALESCE($2, cart.user_id),
-			 	items = (
-					SELECT CASE
-						WHEN EXISTS (
-							SELECT 1 FROM jsonb_array_elements(cart.items) el
-							WHERE el->>'listing_id' = $4
+			`INSERT INTO cart (user_id, items)
+			 VALUES ($1, $2::jsonb)
+			 ON CONFLICT (user_id)
+			 DO UPDATE SET items = (
+				SELECT CASE
+					WHEN EXISTS (
+						SELECT 1 FROM jsonb_array_elements(cart.items) el
+						WHERE el->>'listing_id' = $3
+					)
+					THEN (
+						SELECT jsonb_agg(
+							CASE WHEN el->>'listing_id' = $3
+								THEN el || jsonb_build_object('quantity', (el->>'quantity')::int + $4)
+								ELSE el
+							END
 						)
-						THEN (
-							SELECT jsonb_agg(
-								CASE WHEN el->>'listing_id' = $4
-									THEN el || jsonb_build_object('quantity', (el->>'quantity')::int + $5)
-									ELSE el
-								END
-							)
-							FROM jsonb_array_elements(cart.items) el
-						)
-						ELSE cart.items || $3::jsonb
-					END
-				)`,
-			[sessionId, userId ?? null, JSON.stringify([item]), item.listing_id, item.quantity],
+						FROM jsonb_array_elements(cart.items) el
+					)
+					ELSE cart.items || $2::jsonb
+				END
+			 )`,
+			[userId, JSON.stringify([item]), item.listing_id, item.quantity],
 		);
 	}
 }

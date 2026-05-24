@@ -115,6 +115,48 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"CartItem": {
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"imageUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"listing_id",
+					"name",
+					"price",
+					"quantity",
+					"imageUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddItemBody": {
+				"properties": {
+					"item": {
+						"$ref": "#/components/schemas/CartItem"
+					}
+				},
+				"required": [
+					"item"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -219,6 +261,58 @@
 						}
 					}
 				]
+			}
+		},
+		"/cart": {
+			"get": {
+				"operationId": "GetCart",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/CartItem"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"cookie": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/cart/item": {
+			"post": {
+				"operationId": "AddItem",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [
+					{
+						"cookie": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddItemBody"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/oauthlogin": {

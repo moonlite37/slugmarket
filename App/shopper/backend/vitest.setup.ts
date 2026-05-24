@@ -44,6 +44,18 @@ export const server = setupServer(
   http.get('http://127.0.0.1:3011/api/v0/listing', () => {
     return HttpResponse.json([listing]);
   }),
+  http.get('http://127.0.0.1:3017/api/v0/cart', () => {
+    return HttpResponse.json([{
+      listing_id: '00000000-0000-0000-0000-000000000010',
+      name: 'Blue Hoodie',
+      price: 29.99,
+      quantity: 1,
+      imageUrl: 'hoodie.jpg',
+    }]);
+  }),
+  http.post('http://127.0.0.1:3017/api/v0/cart/item', () => {
+    return new HttpResponse(null, {status: 201});
+  }),
   http.post('http://127.0.0.1:4000/graphql', async ({ request }) => {
     const body = await request.json() as { query: string };
     if (body.query.includes('createOrder')) {
