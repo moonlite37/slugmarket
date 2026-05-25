@@ -67,7 +67,6 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true},
             "price": {"dataType":"double","required":true},
             "quantity": {"dataType":"double","required":true},
-            "imageUrl": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -211,6 +210,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getCart',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCartController_deleteItem: Record<string, TsoaRoute.ParameterSchema> = {
+                listingId: {"in":"path","name":"listingId","required":true,"dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.delete('/cart/item/:listingId',
+            authenticateMiddleware([{"cookie":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(CartController)),
+            ...(fetchMiddlewares<RequestHandler>(CartController.prototype.deleteItem)),
+
+            async function CartController_deleteItem(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCartController_deleteItem, request, response });
+
+                const controller = new CartController();
+
+              await templateService.apiHandler({
+                methodName: 'deleteItem',
                 controller,
                 response,
                 next,

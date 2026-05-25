@@ -4,14 +4,14 @@ import type { CartItem } from '../cart';
 
 export interface CartContextValue {
 	items: CartItem[];
-	addToCart: (item: CartItem) => void;
-	removeFromCart: (id: string) => void;
+	addToCart: (item: CartItem) => Promise<void>;
+	removeFromCart: (id: string) => Promise<void>;
 }
 
 export const CartContext = createContext<CartContextValue>({
 	items: [],
 	/* v8 ignore next */
-	addToCart: () => {},
+	addToCart: async () => {},
 	/* v8 ignore next */
-	removeFromCart: () => {},
+	removeFromCart: async () => {},
 });

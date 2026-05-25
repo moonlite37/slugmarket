@@ -43,9 +43,9 @@ const renderCartInSpanishWithItems = async () => {
   render(
     <CartContext.Provider
       value={{
-        items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }],
-        addToCart: () => {},
-        removeFromCart: () => {},
+        items: [{ listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1 }],
+        addToCart: async () => {},
+        removeFromCart: async () => {},
       }}
     >
       <LocaleSwitcher />

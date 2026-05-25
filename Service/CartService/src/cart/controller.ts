@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Route, Body, Query, Response} from 'tsoa';
+import {Controller, Get, Post, Delete, Route, Body, Query, Path, Response} from 'tsoa';
 import {CartService} from './service';
 
 interface CartItem {
@@ -6,7 +6,6 @@ interface CartItem {
 	name: string;
 	price: number;
 	quantity: number;
-	imageUrl: string;
 }
 
 interface AddItemBody {
@@ -20,6 +19,16 @@ export class CartController extends Controller {
 	public async getCart(@Query() userId: string): Promise<CartItem[]> {
 		const cart = await new CartService().getCart(userId);
 		return cart?.items ?? [];
+	}
+
+	@Delete('item/{listingId}')
+	@Response('204', 'No Content')
+	public async deleteItem(
+		@Query() userId: string,
+		@Path() listingId: string,
+	): Promise<void> {
+		await new CartService().deleteItem(userId, listingId);
+		this.setStatus(204);
 	}
 
 	@Post('item')

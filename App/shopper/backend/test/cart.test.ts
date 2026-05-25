@@ -6,7 +6,6 @@ const item = {
 	name: 'Blue Hoodie',
 	price: 29.99,
 	quantity: 1,
-	imageUrl: 'hoodie.jpg',
 };
 
 describe('GET /api/v0/cart', () => {
@@ -20,6 +19,20 @@ describe('GET /api/v0/cart', () => {
 
 	it('returns 401 without a cookie', async () => {
 		const res = await request.get('/api/v0/cart');
+		expect(res.status).toBe(401);
+	});
+});
+
+describe('DELETE /api/v0/cart/item/:listingId', () => {
+	it('removes an item for a logged-in user', async () => {
+		const res = await request
+			.delete('/api/v0/cart/item/00000000-0000-0000-0000-000000000010')
+			.set('Cookie', 'authToken=mock-token');
+		expect(res.status).toBe(204);
+	});
+
+	it('returns 401 without a cookie', async () => {
+		const res = await request.delete('/api/v0/cart/item/00000000-0000-0000-0000-000000000010');
 		expect(res.status).toBe(401);
 	});
 });

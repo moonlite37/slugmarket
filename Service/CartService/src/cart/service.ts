@@ -5,7 +5,6 @@ interface CartItem {
 	name: string;
 	price: number;
 	quantity: number;
-	imageUrl: string;
 }
 
 export class CartService {
@@ -15,6 +14,18 @@ export class CartService {
 			[userId],
 		);
 		return result.rows[0] ?? null;
+	}
+
+	public async deleteItem(userId: string, listingId: string): Promise<void> {
+		await pool.query(
+			`UPDATE cart SET items = COALESCE(
+				(SELECT jsonb_agg(el)
+				FROM jsonb_array_elements(items) el
+				WHERE el->>'listing_id' != $2),
+				'[]'::jsonb
+			) WHERE user_id = $1`,
+			[userId, listingId],
+		);
 	}
 
 	public async addItem(userId: string, item: CartItem): Promise<void> {

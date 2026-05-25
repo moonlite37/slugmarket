@@ -13,11 +13,11 @@ import { mockListings } from './mocks';
 
 describe('cart item', () => {
 	it('renders item', () => {
-		render(<CartItem id={'pork-chop'} name={'Pork Chop'} price={10.99} />)
+		render(<CartItem listing_id={'pork-chop'} name={'Pork Chop'} price={10.99} quantity={1} />)
 		expect(screen.getByText('Pork Chop')).toBeInTheDocument()
 	})
 	it('renders price', () => {
-		render(<CartItem id={'pork-chop'} name={'Pork Chop'} price={10.99} />)
+		render(<CartItem listing_id={'pork-chop'} name={'Pork Chop'} price={10.99} quantity={1} />)
 		expect(screen.getByText('$10.99')).toBeInTheDocument()
 	})
 })
@@ -33,7 +33,7 @@ describe('cart list', () => {
 	})
 	it('renders a item name', () => {
 		render(
-			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }], addToCart: () => { }, removeFromCart: () => { } }}>
+			<CartContext.Provider value={{ items: [{ listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1 }], addToCart: async () => {}, removeFromCart: async () => {} }}>
 				<Cart />
 			</CartContext.Provider>,
 		);
@@ -41,7 +41,7 @@ describe('cart list', () => {
 	});
 	it('renders a item price', () => {
 		render(
-			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }], addToCart: () => { }, removeFromCart: () => { } }}>
+			<CartContext.Provider value={{ items: [{ listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1 }], addToCart: async () => {}, removeFromCart: async () => {} }}>
 				<Cart />
 			</CartContext.Provider>,
 		);
@@ -49,7 +49,7 @@ describe('cart list', () => {
 	});
 	it('renders the total for two items', () => {
 		render(
-			<CartContext.Provider value={{ items: [{ id: 'pork-chop', name: 'Pork Chop', price: 10.99 }, { id: 'chicken', name: 'Iphone 7', price: 9.99 }], addToCart: () => { }, removeFromCart: () => { } }}>
+			<CartContext.Provider value={{ items: [{ listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1 }, { listing_id: 'chicken', name: 'Iphone 7', price: 9.99, quantity: 1 }], addToCart: async () => {}, removeFromCart: async () => {} }}>
 				<Cart />
 			</CartContext.Provider>,
 		);

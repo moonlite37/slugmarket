@@ -136,7 +136,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 					size="medium"
 					aria-label={`add ${title} to cart`}
 					disabled={!inStock}
-					onClick={() => addToCart({ id, name: title, price: displayPrice })}
+					onClick={() => addToCart({ listing_id: id, name: title, price: displayPrice, quantity: 1 })}
 					disableElevation
 					sx={{
 						borderRadius: 2,

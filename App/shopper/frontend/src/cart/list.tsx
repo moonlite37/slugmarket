@@ -8,7 +8,7 @@ import { CartContext } from '../context/cartContext';
 const Cart = () => {
 	const { t } = useTranslation();
 	const { items, removeFromCart } = useContext(CartContext);
-	const total = items.reduce((sum, item) => sum + item.price, 0);
+	const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
 	return (
 		<Box
@@ -39,7 +39,7 @@ const Cart = () => {
 				<>
 					<List disablePadding>
 						{items.map((item) => (
-							<CartItem key={item.id} id={item.id} name={item.name} price={item.price} onRemove={removeFromCart} />
+							<CartItem key={item.listing_id} listing_id={item.listing_id} name={item.name} price={item.price} quantity={item.quantity} onRemove={removeFromCart} />
 						))}
 					</List>
 					<Divider />

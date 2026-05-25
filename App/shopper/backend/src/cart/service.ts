@@ -5,13 +5,18 @@ export interface CartItem {
 	name: string;
 	price: number;
 	quantity: number;
-	imageUrl: string;
 }
 
 export class CartService {
 	public async getCart(userId: string): Promise<CartItem[]> {
 		const res = await fetch(`${CART_MICROSERVICE}/cart?userId=${userId}`);
 		return await res.json();
+	}
+
+	public async deleteItem(userId: string, listingId: string): Promise<void> {
+		await fetch(`${CART_MICROSERVICE}/cart/item/${listingId}?userId=${userId}`, {
+			method: 'DELETE',
+		});
 	}
 
 	public async addItem(userId: string, item: CartItem): Promise<void> {

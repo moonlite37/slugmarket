@@ -1,4 +1,4 @@
-import {Route, Controller, Get, Post, Body, Request, Security} from 'tsoa';
+import {Route, Controller, Get, Post, Delete, Body, Path, Request, Security} from 'tsoa';
 import * as express from 'express';
 import {CartService, CartItem} from './service';
 
@@ -12,6 +12,15 @@ export class CartController extends Controller {
 	@Security('cookie')
 	public async getCart(@Request() req: express.Request): Promise<CartItem[]> {
 		return new CartService().getCart(req.user?.id as string);
+	}
+
+	@Delete('item/{listingId}')
+	@Security('cookie')
+	public async deleteItem(
+		@Path() listingId: string,
+		@Request() req: express.Request,
+	): Promise<void> {
+		await new CartService().deleteItem(req.user?.id as string, listingId);
 	}
 
 	@Post('item')

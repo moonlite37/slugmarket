@@ -5,5 +5,4 @@ export const item = {
 	name: 'Blue Hoodie',
 	price: 29.99,
 	quantity: 1,
-	imageUrl: 'hoodie.jpg',
 };

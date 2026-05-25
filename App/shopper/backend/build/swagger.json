@@ -131,17 +131,13 @@
 					"quantity": {
 						"type": "number",
 						"format": "double"
-					},
-					"imageUrl": {
-						"type": "string"
 					}
 				},
 				"required": [
 					"listing_id",
 					"name",
 					"price",
-					"quantity",
-					"imageUrl"
+					"quantity"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -287,6 +283,31 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/cart/item/{listingId}": {
+			"delete": {
+				"operationId": "DeleteItem",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [
+					{
+						"cookie": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "listingId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/cart/item": {

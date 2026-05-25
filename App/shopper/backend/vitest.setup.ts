@@ -50,11 +50,13 @@ export const server = setupServer(
       name: 'Blue Hoodie',
       price: 29.99,
       quantity: 1,
-      imageUrl: 'hoodie.jpg',
     }]);
   }),
   http.post('http://127.0.0.1:3017/api/v0/cart/item', () => {
     return new HttpResponse(null, {status: 201});
+  }),
+  http.delete('http://127.0.0.1:3017/api/v0/cart/item/:listingId', () => {
+    return new HttpResponse(null, {status: 204});
   }),
   http.post('http://127.0.0.1:4000/graphql', async ({ request }) => {
     const body = await request.json() as { query: string };
