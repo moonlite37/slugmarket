@@ -1,17 +1,17 @@
-import {Controller, Get, Route} from 'tsoa';
+import {Controller, Post, Route, SuccessResponse, UploadedFile} from 'tsoa';
+import type {File} from '@tsoa/runtime';
 
-interface HealthResponse {
-	status: string;
-	service: string;
-}
+import type {ImageUploadResponse} from '.';
+import {ImageService} from './service';
 
 @Route('image')
 export class ImageController extends Controller {
-	@Get('health')
-	public async health(): Promise<HealthResponse> {
-		return {
-			status: 'ok',
-			service: 'ImageSerivce',
-		};
+	@Post()
+	@SuccessResponse('201', 'Created')
+	public async upload(
+		@UploadedFile('image') image: File,
+	): Promise<ImageUploadResponse> {
+		this.setStatus(201);
+		return await new ImageService().upload(image);
 	}
 }
