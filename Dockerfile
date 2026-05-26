@@ -11,6 +11,7 @@ COPY Service/CartService/package.json Service/CartService/package-lock.json ./Se
 COPY Service/PaymentService/package.json Service/PaymentService/package-lock.json ./Service/PaymentService/
 COPY Service/OrderService/package.json Service/OrderService/package-lock.json ./Service/OrderService/
 COPY Service/CorporateService/package.json Service/CorporateService/package-lock.json ./Service/CorporateService/
+COPY Service/NotificationService/package.json Service/NotificationService/package-lock.json ./Service/NotificationService/
 COPY App/Admin/package.json App/Admin/package-lock.json ./App/Admin/
 COPY App/seller/backend/package.json App/seller/backend/package-lock.json ./App/seller/backend/
 COPY App/seller/frontend/package.json App/seller/frontend/package-lock.json ./App/seller/frontend/
@@ -30,6 +31,8 @@ COPY Service/OrderService/src ./Service/OrderService/src
 COPY Service/OrderService/tsconfig.json ./Service/OrderService/
 COPY Service/CorporateService/src ./Service/CorporateService/src
 COPY Service/CorporateService/tsoa.json Service/CorporateService/tsconfig.json ./Service/CorporateService/
+COPY Service/NotificationService/src ./Service/NotificationService/src
+COPY Service/NotificationService/tsoa.json Service/NotificationService/tsconfig.json ./Service/NotificationService/
 COPY App/Admin/src ./App/Admin/src
 COPY App/Admin/next.config.ts App/Admin/tsconfig.json App/Admin/next-env.d.ts ./App/Admin/
 COPY App/seller/backend/src ./App/seller/backend/src
@@ -45,7 +48,7 @@ COPY App/shopper/frontend/index.html App/shopper/frontend/tsconfig.json App/shop
 COPY App/corporate/backend/src ./App/corporate/backend/src
 COPY App/corporate/backend/tsoa.json App/corporate/backend/tsconfig.json ./App/corporate/backend/
 
-EXPOSE 3000 5173 5174 3013 3012 4000 3015
+EXPOSE 3000 5173 5174 3013 3012 4000 3015 3040 3019
 
 RUN npm run cis
 
