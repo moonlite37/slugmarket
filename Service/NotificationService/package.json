@@ -1,0 +1,49 @@
+{
+  "name": "notificationservice",
+  "main": "build/src/server.js",
+  "type": "commonjs",
+  "nodemonConfig": {
+    "watch": ["src"],
+    "ext": "ts",
+    "exec": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "swagger-ui-express": "^5.0.1",
+    "tsoa": "^7.0.0-alpha.0"
+  },
+  "devDependencies": {
+    "@types/cors": "*",
+    "@types/express": "*",
+    "@types/swagger-ui-express": "*",
+    "@vitest/coverage-v8": "*",
+    "concurrently": "*",
+    "globals": "*",
+    "jscpd": "*",
+    "msw": "*",
+    "nodemon": "*",
+    "supertest": "*",
+    "@types/supertest": "*",
+    "tsx": "*",
+    "typescript": "*",
+    "typescript-eslint": "*",
+    "@eslint/js": "*",
+    "eslint": "*",
+    "vitest": "*"
+  },
+  "scripts": {
+    "cpd": "jscpd src test --silent",
+    "lint": "eslint test/**/*.[jt]s src/**/*.[jt]s --fix",
+    "prestart": "npm run build",
+    "start": "node build/src/server.js",
+    "prebuild": "npm run swagger",
+    "build": "tsc",
+    "swagger": "tsoa spec-and-routes",
+    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "predev": "npm run swagger",
+    "pretest": "(npm run swagger) && (npm run lint) && (npm run cpd)",
+    "test": "vitest run --no-file-parallelism --testTimeout=3000 --coverage"
+  }
+}
