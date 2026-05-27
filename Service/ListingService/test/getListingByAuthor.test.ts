@@ -15,7 +15,7 @@ describe('get listing by author', () => {
 				description: 'By author A',
 				price: 10,
 				stock: 5,
-				categories: ['test'],
+				categories: ['00000000-0000-0000-0000-000000000011'],
 			})
 			.expect(201);
 
@@ -27,7 +27,7 @@ describe('get listing by author', () => {
 				description: 'By author B',
 				price: 20,
 				stock: 3,
-				categories: ['test'],
+				categories: ['00000000-0000-0000-0000-000000000011'],
 			})
 			.expect(201);
 

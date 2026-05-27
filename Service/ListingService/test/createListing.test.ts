@@ -16,7 +16,7 @@ describe('create listing', () => {
 				description: 'A test widget for sale',
 				price: 9.99,
 				stock: 10,
-				categories: ['test'],
+				categories: ['00000000-0000-0000-0000-000000000011'],
 			});
 		expect(res.status).toBe(201);
 		expect(res.body.title).toBe('Test Widget');
@@ -33,7 +33,7 @@ describe('create listing', () => {
 				description: 'Should appear in list',
 				price: 5.00,
 				stock: 3,
-				categories: ['widgets'],
+				categories: ['00000000-0000-0000-0000-000000000011'],
 			})
 			.expect(201);
 
@@ -51,10 +51,24 @@ describe('create listing', () => {
 				description: 'Has photos',
 				price: 15.00,
 				stock: 2,
-				categories: ['photo'],
+				categories: ['00000000-0000-0000-0000-000000000011'],
 				images: ['img1.jpg', 'img2.jpg'],
 			});
 		expect(res.status).toBe(201);
 		expect(res.body.images).toContain('img1.jpg');
+	});
+	it('creates listing with no categories', async () => {
+		const res = await supertest(server)
+			.post('/api/v0/listing')
+			.send({
+				authorId: '00000000-0000-0000-0000-000000000002',
+				title: 'With Images',
+				description: 'Has photos',
+				price: 15.00,
+				stock: 2,
+				categories: [],
+				images: ['img1.jpg', 'img2.jpg'],
+			});
+		expect(res.status).toBe(201);
 	});
 });

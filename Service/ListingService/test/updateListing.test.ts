@@ -12,7 +12,7 @@ describe('update listing', () => {
 				description: 'Original description',
 				price: 10,
 				stock: 5,
-				categories: ['test'],
+				categories: ['00000000-0000-0000-0000-000000000011'],
 			})
 			.expect(201);
 
@@ -44,7 +44,7 @@ describe('update listing', () => {
 				description: 'Keep this',
 				price: 50,
 				stock: 10,
-				categories: ['partial'],
+				categories: ['00000000-0000-0000-0000-000000000011'],
 			})
 			.expect(201);
 
@@ -68,7 +68,7 @@ it('updates categories and images', async () => {
 			description: 'Testing categories and images update',
 			price: 25,
 			stock: 5,
-			categories: ['old'],
+			categories: ['00000000-0000-0000-0000-000000000011'],
 			images: ['old.jpg'],
 		})
 		.expect(201);
@@ -93,7 +93,7 @@ it('updates description only', async () => {
 			description: 'Old desc',
 			price: 10,
 			stock: 1,
-			categories: ['test'],
+			categories: ['00000000-0000-0000-0000-000000000011'],
 		})
 		.expect(201);
 

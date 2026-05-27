@@ -35,6 +35,10 @@ describe('listing', () => {
 		const res = await GetListing();
 		expect(res.body[0].price).toBeDefined();
 	});
+	it('has correct attributes(3)', async () => {
+		const res = await GetListing();
+		expect(res.body[0].categories).toBeDefined();
+	});
 });
 
 
