@@ -12,7 +12,7 @@ describe('delete listing', () => {
 				description: 'Will be removed',
 				price: 5,
 				stock: 1,
-				categories: ['test'],
+				categories: ['00000000-0000-0000-0000-000000000011'],
 			})
 			.expect(201);
 
