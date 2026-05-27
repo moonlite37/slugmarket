@@ -21,8 +21,10 @@ export class ListingController extends Controller {
 		@Query() author?: string,
 		@Query() minPrice?: number,
 		@Query() maxPrice?: number,
+		@Query() sort?: string,
+		@Query() search?: string,
 	): Promise<Listing[]> {
-		const res = await new ListingService().getListing(author, minPrice, maxPrice);
+		const res = await new ListingService().getListing(author, minPrice, maxPrice, sort, search);
 		return res;
 	}
 

@@ -6,29 +6,43 @@ export class ListingService {
 		author?: string,
 		minPrice?: number,
 		maxPrice?: number,
+		sort?: string,
+		search?: string,
 	): Promise<Listing[]> {
+		let orderClause = 'ORDER BY (l.data->>\'created\')::timestamp DESC';
+		if (sort === 'price_asc') {
+			orderClause = 'ORDER BY (l.data->>\'price\')::DECIMAL ASC';
+		} else if (sort === 'price_desc') {
+			orderClause = 'ORDER BY (l.data->>\'price\')::DECIMAL DESC';
+		} else if (sort === 'date_asc') {
+			orderClause = 'ORDER BY (l.data->>\'created\')::timestamp ASC';
+		}
+
 		const q = `
-		SELECT
-		l.id,
-		l.author,
-		l.data,
-		COALESCE(
-			json_agg(DISTINCT c.data->>'name')
-			FILTER (WHERE c.id IS NOT NULL),
-			'[]'
-		) AS categories
-		FROM listing l
-		LEFT JOIN listing_category lc
-		ON l.id = lc.listing
-		LEFT JOIN category c
-		ON c.id = lc.category
-		WHERE ($1::UUID IS NULL OR l.author = $1)
-		AND ($2::DECIMAL IS NULL OR (l.data->>'price')::DECIMAL >= $2)
-		AND ($3::DECIMAL IS NULL OR (l.data->>'price')::DECIMAL <= $3)
-		GROUP BY l.id
-		ORDER BY (l.data->>'created')::timestamp DESC;
-	`;
-		const rows = (await pool.query(q, [author, minPrice, maxPrice])).rows;
+			SELECT
+			l.id,
+			l.author,
+			l.data,
+			COALESCE(
+				json_agg(DISTINCT c.data->>'name')
+				FILTER (WHERE c.id IS NOT NULL),
+				'[]'
+			) AS categories
+			FROM listing l
+			LEFT JOIN listing_category lc
+			ON l.id = lc.listing
+			LEFT JOIN category c
+			ON c.id = lc.category
+			WHERE ($1::UUID IS NULL OR l.author = $1)
+			AND ($2::DECIMAL IS NULL OR (l.data->>'price')::DECIMAL >= $2)
+			AND ($3::DECIMAL IS NULL OR (l.data->>'price')::DECIMAL <= $3)
+			AND ($4::TEXT IS NULL OR
+				l.data->>'title' ILIKE '%' || $4 || '%' OR
+				l.data->>'description' ILIKE '%' || $4 || '%')
+			GROUP BY l.id
+			${orderClause};
+		`;
+		const rows = (await pool.query(q, [author, minPrice, maxPrice, search || null])).rows;
 		return rows.map((r) => ({
 			id: r.id,
 			author: r.author,
@@ -104,13 +118,13 @@ export class ListingService {
 	public async updateListing(
 		id: string,
 		updates: {
-      title?: string;
-      description?: string;
-      price?: number;
-      stock?: number;
-      categories?: string[];
-      images?: string[];
-    },
+			title?: string;
+			description?: string;
+			price?: number;
+			stock?: number;
+			categories?: string[];
+			images?: string[];
+		},
 	): Promise<Listing | null> {
 		const patch: Record<string, unknown> = {};
 		if (updates.title !== undefined) patch.title = updates.title;
