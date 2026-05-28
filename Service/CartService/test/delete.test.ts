@@ -7,6 +7,7 @@ const secondItem = {
 	name: 'Red Hoodie',
 	price: 39.99,
 	quantity: 1,
+	seller: '00000000-0000-0000-0000-000000000005',
 };
 
 describe('DELETE /api/v0/cart/item/:listingId', () => {

@@ -11,13 +11,16 @@ import { CartContextProvider } from '../src/context/CartContextProvider';
 import { server } from '../vitest.setup';
 import { mockListings } from './mocks';
 
+const porkChop = { listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1, seller: '00000000-0000-0000-0000-000000000001' };
+const singleItemContext = { items: [porkChop], addToCart: async () => {}, removeFromCart: async () => {} };
+
 describe('cart item', () => {
 	it('renders item', () => {
-		render(<CartItem listing_id={'pork-chop'} name={'Pork Chop'} price={10.99} quantity={1} />)
+		render(<CartItem {...porkChop} />)
 		expect(screen.getByText('Pork Chop')).toBeInTheDocument()
 	})
 	it('renders price', () => {
-		render(<CartItem listing_id={'pork-chop'} name={'Pork Chop'} price={10.99} quantity={1} />)
+		render(<CartItem {...porkChop} />)
 		expect(screen.getByText('$10.99')).toBeInTheDocument()
 	})
 })
@@ -33,7 +36,7 @@ describe('cart list', () => {
 	})
 	it('renders a item name', () => {
 		render(
-			<CartContext.Provider value={{ items: [{ listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1 }], addToCart: async () => {}, removeFromCart: async () => {} }}>
+			<CartContext.Provider value={singleItemContext}>
 				<Cart />
 			</CartContext.Provider>,
 		);
@@ -41,7 +44,7 @@ describe('cart list', () => {
 	});
 	it('renders a item price', () => {
 		render(
-			<CartContext.Provider value={{ items: [{ listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1 }], addToCart: async () => {}, removeFromCart: async () => {} }}>
+			<CartContext.Provider value={singleItemContext}>
 				<Cart />
 			</CartContext.Provider>,
 		);
@@ -49,7 +52,7 @@ describe('cart list', () => {
 	});
 	it('renders the total for two items', () => {
 		render(
-			<CartContext.Provider value={{ items: [{ listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1 }, { listing_id: 'chicken', name: 'Iphone 7', price: 9.99, quantity: 1 }], addToCart: async () => {}, removeFromCart: async () => {} }}>
+			<CartContext.Provider value={{ items: [porkChop, { listing_id: 'chicken', name: 'Iphone 7', price: 9.99, quantity: 1, seller: '00000000-0000-0000-0000-000000000002' }], addToCart: async () => {}, removeFromCart: async () => {} }}>
 				<Cart />
 			</CartContext.Provider>,
 		);

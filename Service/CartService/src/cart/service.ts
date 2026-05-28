@@ -1,11 +1,5 @@
 import {pool} from '../db';
-
-interface CartItem {
-	listing_id: string;
-	name: string;
-	price: number;
-	quantity: number;
-}
+import {CartItem} from '.';
 
 export class CartService {
 	public async getCart(userId: string) {

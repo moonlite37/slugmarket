@@ -6,6 +6,7 @@ const item = {
 	name: 'Blue Hoodie',
 	price: 29.99,
 	quantity: 1,
+	seller: '00000000-0000-0000-0000-000000000005',
 };
 
 describe('GET /api/v0/cart', () => {
