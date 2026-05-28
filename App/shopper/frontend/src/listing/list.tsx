@@ -7,31 +7,24 @@ import { Listing } from './model';
 import { FilterContext } from '../context/FilterContext';
 
 export default function ListingList() {
-  const {minPrice, maxPrice} = useContext(FilterContext);
+	const {minPrice, maxPrice, sort, search} = useContext(FilterContext);
 	const [listings, setListings] = useState<Listing[]>([]);
 	useEffect(() => {
 		async function load() {
-			const data = await getListing(minPrice, maxPrice);
+			const data = await getListing(minPrice, maxPrice, sort, search);
 			setListings(data);
 		}
 		load();
-	}, [minPrice, maxPrice]);
+	}, [minPrice, maxPrice, sort, search]);
 	return (
-		<Box
-
-  sx={{
-    height: '100vh',
-    overflowY: 'auto',
-    p: 2,
-  }}
->
-  <Grid container spacing={2}>
-    {listings.map((l) => (
-      <Grid key={l.id} >
-        <ListingCard listing={l} />
-      </Grid>
-    ))}
-  </Grid>
-</Box>
+		<Box sx={{ height: '100vh', overflowY: 'auto', p: 2 }}>
+			<Grid container spacing={2}>
+				{listings.map((l) => (
+					<Grid key={l.id}>
+						<ListingCard listing={l} />
+					</Grid>
+				))}
+			</Grid>
+		</Box>
 	);
 }
