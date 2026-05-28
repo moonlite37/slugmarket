@@ -1,9 +1,14 @@
+import dotenv from 'dotenv';
+import path from 'path';
 import Stripe from 'stripe';
 import {
 	CheckoutRequest,
 	CheckoutResponse,
 	WebhookRequest,
 } from '.';
+
+dotenv.config({path: path.resolve(process.cwd(), '../../.env')});
+dotenv.config({path: path.resolve(process.cwd(), '.env')});
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const ORDER_GRAPHQL_URL = process.env.ORDER_GRAPHQL_URL ?? 'http://localhost:4000/graphql';
