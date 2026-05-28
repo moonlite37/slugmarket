@@ -39,8 +39,9 @@ const Cart = () => {
 				<>
 					<List disablePadding>
 						{items.map((item) => (
-							<CartItem key={item.listing_id} listing_id={item.listing_id} name={item.name} price={item.price} quantity={item.quantity} onRemove={removeFromCart} />
+							<CartItem key={item.listing_id} listing_id={item.listing_id} name={item.name} price={item.price} quantity={item.quantity} seller={item.seller} onRemove={removeFromCart} />
 						))}
+						
 					</List>
 					<Divider />
 					<Box

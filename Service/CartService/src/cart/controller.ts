@@ -1,12 +1,6 @@
 import {Controller, Get, Post, Delete, Route, Body, Query, Path, Response} from 'tsoa';
 import {CartService} from './service';
-
-interface CartItem {
-	listing_id: string;
-	name: string;
-	price: number;
-	quantity: number;
-}
+import {CartItem} from '.';
 
 interface AddItemBody {
 	userId: string;
