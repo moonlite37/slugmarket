@@ -53,7 +53,12 @@ export const server = setupServer(
 	}),
 	http.get('/shopper/api/v0/protected', () => new HttpResponse(null, {status: 401})),
 	http.get('/shopper/api/v0/cart', () => HttpResponse.json([])),
+	http.get('/shopper/api/v0/listing/:id', ({ params }) => {
+		const match = listings.find((l) => l.id === params.id);
+		return match ? HttpResponse.json(match) : new HttpResponse(null, {status: 404});
+	}),
 	http.post('/shopper/api/v0/cart/item', () => new HttpResponse(null, {status: 201})),
+	http.post('/shopper/api/v0/cart/sync', () => HttpResponse.json([])),
 	http.delete('/shopper/api/v0/cart/item/:id', () => new HttpResponse(null, {status: 204})),
 );
 

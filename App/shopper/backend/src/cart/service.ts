@@ -1,3 +1,5 @@
+import { ListingService } from '../listing/service';
+
 const CART_MICROSERVICE = 'http://127.0.0.1:3017/api/v0';
 
 export interface CartItem {
@@ -26,5 +28,36 @@ export class CartService {
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({userId, item}),
 		});
+	}
+
+	public async syncCart(userId: string): Promise<CartItem[]> {
+		const cartItems = await this.getCart(userId);
+		const listings = await Promise.all(
+			cartItems.map((item) => new ListingService().getListingById(item.listing_id)),
+		);
+
+		const synced: CartItem[] = [];
+
+		for (let i = 0; i < cartItems.length; i++) {
+			const item = cartItems[i];
+			const listing = listings[i];
+
+			if (!listing || listing.stock === 0) {
+				await this.deleteItem(userId, item.listing_id);
+				continue;
+			}
+
+			const newPrice = listing.discountPrice ?? listing.price;
+			const newQuantity = Math.min(item.quantity, listing.stock);
+
+			if (newPrice !== item.price || newQuantity !== item.quantity) {
+				await this.deleteItem(userId, item.listing_id);
+				await this.addItem(userId, { ...item, price: newPrice, quantity: newQuantity });
+			}
+
+			synced.push({ ...item, price: newPrice, quantity: newQuantity });
+		}
+
+		return synced;
 	}
 }

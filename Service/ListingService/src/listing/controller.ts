@@ -16,6 +16,17 @@ import { ListingService } from './service';
 
 @Route('')
 export class ListingController extends Controller {
+	@Get('listing/{id}')
+	@Response('404', 'Not Found')
+	public async getListingById(@Path() id: string): Promise<Listing | undefined> {
+		const listing = await new ListingService().getListingById(id);
+		if (!listing) {
+			this.setStatus(404);
+			return undefined;
+		}
+		return listing;
+	}
+
 	@Get('listing')
 	public async getListing(
 		@Query() author?: string,

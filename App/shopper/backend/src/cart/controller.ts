@@ -32,4 +32,10 @@ export class CartController extends Controller {
 		await new CartService().addItem(req.user?.id as string, body.item);
 		this.setStatus(201);
 	}
+
+	@Post('sync')
+	@Security('cookie')
+	public async syncCart(@Request() req: express.Request): Promise<CartItem[]> {
+		return new CartService().syncCart(req.user?.id as string);
+	}
 }

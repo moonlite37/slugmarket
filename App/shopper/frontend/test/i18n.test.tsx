@@ -1,6 +1,7 @@
 import { it, describe, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 import i18n from '@/utils/i18n';
 import Login from '@/Login';
 import LocaleSwitcher from '@/LocaleSwitcher';
@@ -30,10 +31,12 @@ const renderLoginInSpanish = async () => {
 const renderCartInSpanish = async () => {
   const user = userEvent.setup();
   render(
-    <CartContextProvider>
-      <LocaleSwitcher />
-      <Cart />
-    </CartContextProvider>,
+    <MemoryRouter>
+      <CartContextProvider>
+        <LocaleSwitcher />
+        <Cart />
+      </CartContextProvider>
+    </MemoryRouter>,
   );
   await user.selectOptions(screen.getAllByRole('combobox')[0], 'es');
 };
@@ -41,16 +44,20 @@ const renderCartInSpanish = async () => {
 const renderCartInSpanishWithItems = async () => {
   const user = userEvent.setup();
   render(
-    <CartContext.Provider
-      value={{
-        items: [{ listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1 }],
-        addToCart: async () => {},
-        removeFromCart: async () => {},
-      }}
-    >
-      <LocaleSwitcher />
-      <Cart />
-    </CartContext.Provider>,
+    <MemoryRouter>
+      <CartContext.Provider
+        value={{
+          items: [{ listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1, seller: '' }],
+          loggedIn: false,
+          addToCart: async () => {},
+          removeFromCart: async () => {},
+          syncCart: async () => {},
+        }}
+      >
+        <LocaleSwitcher />
+        <Cart />
+      </CartContext.Provider>
+    </MemoryRouter>,
   );
   await user.selectOptions(screen.getAllByRole('combobox')[0], 'es');
 };

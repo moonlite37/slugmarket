@@ -2,6 +2,24 @@ import { Listing, NewListing } from '.';
 import { pool } from '../db';
 
 export class ListingService {
+	public async getListingById(id: string): Promise<Listing | null> {
+		const q = `
+			SELECT l.id, l.author, l.data,
+			COALESCE(
+				json_agg(DISTINCT c.data->>'name') FILTER (WHERE c.id IS NOT NULL), '[]'
+			) AS categories
+			FROM listing l
+			LEFT JOIN listing_category lc ON l.id = lc.listing
+			LEFT JOIN category c ON c.id = lc.category
+			WHERE l.id = $1
+			GROUP BY l.id
+		`;
+		const rows = (await pool.query(q, [id])).rows;
+		if (rows.length === 0) return null;
+		const r = rows[0];
+		return { id: r.id, author: r.author, categories: r.categories, ...r.data };
+	}
+
 	public async getListing(
 		author?: string,
 		minPrice?: number,

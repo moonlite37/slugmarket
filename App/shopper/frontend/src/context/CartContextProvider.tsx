@@ -1,4 +1,4 @@
-import { type ReactNode, useState, useEffect } from 'react';
+import { type ReactNode, useState, useEffect, useCallback } from 'react';
 
 import { CartContext } from './cartContext';
 import type { CartItem } from '../cart';
@@ -43,6 +43,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
                   name: item.name,
                   price: item.price,
                   quantity: item.quantity,
+                  seller: item.seller,
                 },
               }),
             });
@@ -77,6 +78,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
             name: item.name,
             price: item.price,
             quantity: item.quantity,
+            seller: item.seller,
           },
         }),
       });
@@ -119,8 +121,32 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     setItems((current) => current.filter((item) => item.listing_id !== listing_id));
   };
 
+  const syncCart = useCallback(async (): Promise<void> => {
+    if (loggedIn) {
+      const res = await fetch('/shopper/api/v0/cart/sync', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      const synced = await res.json();
+      setItems(synced);
+    } else {
+      const guestCart: CartItem[] = JSON.parse(localStorage.getItem('cart') ?? '[]');
+      const synced: CartItem[] = [];
+      for (const item of guestCart) {
+        const res = await fetch(`/shopper/api/v0/listing/${item.listing_id}`);
+        const listing = await res.json();
+        if (!listing || listing.stock === 0) continue;
+        const newPrice = listing.discountPrice ?? listing.price;
+        const newQuantity = Math.min(item.quantity, listing.stock);
+        synced.push({ ...item, price: newPrice, quantity: newQuantity });
+      }
+      localStorage.setItem('cart', JSON.stringify(synced));
+      setItems(synced);
+    }
+  }, [loggedIn]);
+
   return (
-    <CartContext.Provider value={{ items, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ items, loggedIn, addToCart, removeFromCart, syncCart }}>
       {children}
     </CartContext.Provider>
   );

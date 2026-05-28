@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import { Box, Divider, List, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Box, Button, Divider, List, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 import CartItem from './card';
@@ -7,7 +8,17 @@ import { CartContext } from '../context/cartContext';
 
 const Cart = () => {
 	const { t } = useTranslation();
-	const { items, removeFromCart } = useContext(CartContext);
+	const navigate = useNavigate();
+	const { items, loggedIn, removeFromCart, syncCart } = useContext(CartContext);
+
+	const handleCheckout = async () => {
+		if (!loggedIn) {
+			navigate('/login');
+			return;
+		}
+		await syncCart();
+	};
+
 	const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
 	return (
@@ -41,7 +52,6 @@ const Cart = () => {
 						{items.map((item) => (
 							<CartItem key={item.listing_id} listing_id={item.listing_id} name={item.name} price={item.price} quantity={item.quantity} seller={item.seller} onRemove={removeFromCart} />
 						))}
-						
 					</List>
 					<Divider />
 					<Box
@@ -57,6 +67,11 @@ const Cart = () => {
 						<Typography sx={{ fontWeight: 700 }}>
 							${total.toFixed(2)}
 						</Typography>
+					</Box>
+					<Box sx={{ px: 3, pb: 2 }}>
+						<Button variant="contained" fullWidth onClick={handleCheckout}>
+							{t('Proceed to Checkout')}
+						</Button>
 					</Box>
 				</>
 			)}

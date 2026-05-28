@@ -1,9 +1,17 @@
+import { useEffect, useContext } from 'react';
 import { AppBar, Box, Toolbar, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import Cart from '@/cart/list';
+import { CartContext } from '@/context/cartContext';
 
 const CartPage = () => {
+	const { syncCart } = useContext(CartContext);
+
+	useEffect(() => {
+		syncCart();
+	}, [syncCart]);
+
 	return (
 		<Box>
 			<AppBar position="static" sx={{ mb: 2 }}>
