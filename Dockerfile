@@ -9,6 +9,7 @@ COPY Service/AuthService/package.json Service/AuthService/package-lock.json ./Se
 COPY Service/ListingService/package.json Service/ListingService/package-lock.json ./Service/ListingService/
 COPY Service/CartService/package.json Service/CartService/package-lock.json ./Service/CartService/
 COPY Service/PaymentService/package.json Service/PaymentService/package-lock.json ./Service/PaymentService/
+COPY Service/ImageSerivce/package.json Service/ImageSerivce/package-lock.json ./Service/ImageSerivce/
 COPY Service/OrderService/package.json Service/OrderService/package-lock.json ./Service/OrderService/
 COPY Service/CorporateService/package.json Service/CorporateService/package-lock.json ./Service/CorporateService/
 COPY Service/NotificationService/package.json Service/NotificationService/package-lock.json ./Service/NotificationService/
@@ -25,6 +26,8 @@ COPY Service/ListingService/src ./Service/ListingService/src
 COPY Service/ListingService/tsoa.json Service/ListingService/tsconfig.json ./Service/ListingService/
 COPY Service/PaymentService/src ./Service/PaymentService/src
 COPY Service/PaymentService/tsoa.json Service/PaymentService/tsconfig.json ./Service/PaymentService/
+COPY Service/ImageSerivce/src ./Service/ImageSerivce/src
+COPY Service/ImageSerivce/tsoa.json Service/ImageSerivce/tsconfig.json ./Service/ImageSerivce/
 COPY Service/CartService/src ./Service/CartService/src
 COPY Service/CartService/tsoa.json Service/CartService/tsconfig.json ./Service/CartService/
 COPY Service/OrderService/src ./Service/OrderService/src
@@ -48,7 +51,7 @@ COPY App/shopper/frontend/index.html App/shopper/frontend/tsconfig.json App/shop
 COPY App/corporate/backend/src ./App/corporate/backend/src
 COPY App/corporate/backend/tsoa.json App/corporate/backend/tsconfig.json ./App/corporate/backend/
 
-EXPOSE 3000 5173 5174 3013 3012 4000 3015 3040 3019
+EXPOSE 3000 5173 5174 3013 3012 4000 3015 3040 3018 3019
 
 RUN npm run cis
 

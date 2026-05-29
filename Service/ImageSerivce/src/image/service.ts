@@ -1,12 +1,24 @@
 import {PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
 import crypto from 'crypto';
+import dotenv from 'dotenv';
 import path from 'path';
 
 import type {File} from '@tsoa/runtime';
 import type {ImageUploadResponse} from '.';
 
+dotenv.config({path: path.resolve(process.cwd(), '../../.env')});
+
 const bucket = process.env.AWS_S3_BUCKET;
-const region = process.env.AWS_REGION;
+const region = process.env.AWS_REGION ?? process.env.AWS_DEFAULT_REGION;
+
+if (!bucket) {
+	throw new Error('Missing AWS_S3_BUCKET environment variable');
+}
+
+if (!region) {
+	throw new Error('Missing AWS_REGION environment variable');
+}
+
 const s3 = new S3Client({region});
 
 export class ImageService {
