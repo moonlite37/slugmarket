@@ -4,10 +4,10 @@ import { SessionUser } from '..';
 
 export async function expressAuthentication(
   request: Request,
-  securityName: string,
-  scopes?: string[],
+  // securityName: string,
+  // scopes?: string[],
 ): Promise<SessionUser> {
-  console.log(securityName, scopes);
+  // console.log(securityName, scopes);
   const authToken = request.cookies.authToken;
   if (!authToken) {
     throw new Error('No AuthToken');

@@ -8,6 +8,8 @@ export interface FilterContextValue {
 	setSearch: (val: string) => void
 	sort: string
 	setSort: (val: string) => void
+	category: string
+	setCategory: (val: string) => void
 }
 export const FilterContext = createContext<FilterContextValue>({
 	minPrice: undefined,
@@ -22,4 +24,7 @@ export const FilterContext = createContext<FilterContextValue>({
 	sort: '',
 	/* v8 ignore next */
 	setSort: () => {},
+	category: '',
+	/* v8 ignore next */
+	setCategory: () => {},
 });

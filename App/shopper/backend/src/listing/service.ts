@@ -6,7 +6,7 @@ export class ListingService {
 		return await res.json();
 	}
 
-	public async getListing(minPrice: number | undefined, maxPrice: number | undefined, sort?: string, search?: string): Promise<Listing[]> {
+	public async getListing(minPrice: number | undefined, maxPrice: number | undefined, sort?: string, search?: string, category?: string): Promise<Listing[]> {
 		const params = new URLSearchParams();
 		if (minPrice !== undefined) {
 			params.append('minPrice', String(minPrice));
@@ -19,6 +19,9 @@ export class ListingService {
 		}
 		if (search) {
 			params.append('search', search);
+		}
+		if (category) {
+			params.append('category', category);
 		}
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing?${params.toString()}`);
 		return await res.json();

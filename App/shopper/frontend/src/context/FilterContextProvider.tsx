@@ -10,6 +10,7 @@ export function FilterContextProvider({
 	const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
 	const [search, setSearch] = useState<string>('');
 	const [sort, setSort] = useState<string>('');
+	const [category, setCategory] = useState<string>('');
 	return (
 		<FilterContext.Provider
 			value={{
@@ -21,6 +22,8 @@ export function FilterContextProvider({
 				setSearch,
 				sort,
 				setSort,
+				category,
+				setCategory,
 			}}
 		>
 			{children}

@@ -16,6 +16,18 @@ describe('gets a listing', () => {
 		const res = await request.get('/api/v0/listing?minPrice=200&maxPrice=400');
 		expect(res.status).toBe(200);
 	});
+	it('Accepts search', async () => {
+		const res = await request.get('/api/v0/listing?search=something');
+		expect(res.status).toBe(200);
+	});
+	it('Accepts category', async () => {
+		const res = await request.get('/api/v0/listing?category=something');
+		expect(res.status).toBe(200);
+	});
+	it('Accepts sort', async () => {
+		const res = await request.get('/api/v0/listing?sort=something');
+		expect(res.status).toBe(200);
+	});
 });
 
 describe('gets a listing by id', () => {

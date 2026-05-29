@@ -16,6 +16,7 @@ export async function getListing(
 	maxPrice: number | undefined,
 	sort?: string,
 	search?: string,
+	category?: string,
 ) {
 	const params = new URLSearchParams();
 	if (minPrice !== undefined) {
@@ -29,6 +30,9 @@ export async function getListing(
 	}
 	if (search) {
 		params.append('search', search);
+	}
+	if (category) {
+		params.append('category', category);
 	}
 	const query = `/shopper/api/v0/listing?${params.toString()}`;
 	const res = await fetch(query);

@@ -53,6 +53,9 @@ export const server = setupServer(
 	}),
 	http.get('/shopper/api/v0/protected', () => new HttpResponse(null, {status: 401})),
 	http.get('/shopper/api/v0/cart', () => HttpResponse.json([])),
+	http.get('/shopper/api/v0/category', () => {
+		return HttpResponse.json([{id: 'dummy id', name: 'dummy category'}])
+	}),
 	http.get('/shopper/api/v0/listing/:id', ({ params }) => {
 		const match = listings.find((l) => l.id === params.id);
 		return match ? HttpResponse.json(match) : new HttpResponse(null, {status: 404});

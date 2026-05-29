@@ -13,12 +13,14 @@ export class ListingController extends Controller {
 		@Query() maxPrice?: number,
 		@Query() sort?: string,
 		@Query() search?: string,
+		@Query() category?: string,
 	) {
 		const listings = await new ListingService().getListing(
 			minPrice,
 			maxPrice,
 			sort,
 			search,
+			category,
 		);
 		return listings;
 	}
