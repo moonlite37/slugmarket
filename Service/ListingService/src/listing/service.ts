@@ -26,6 +26,7 @@ export class ListingService {
 		maxPrice?: number,
 		sort?: string,
 		search?: string,
+		category?: string,
 	): Promise<Listing[]> {
 		let orderClause = 'ORDER BY (l.data->>\'created\')::timestamp DESC';
 		if (sort === 'price_asc') {
@@ -57,10 +58,19 @@ export class ListingService {
 			AND ($4::TEXT IS NULL OR
 				l.data->>'title' ILIKE '%' || $4 || '%' OR
 				l.data->>'description' ILIKE '%' || $4 || '%')
+			AND (
+				$5::UUID IS NULL OR
+				EXISTS (
+					SELECT 1
+					FROM listing_category lc2
+					WHERE lc2.listing = l.id
+					AND lc2.category = $5::UUID
+				)
+			)
 			GROUP BY l.id
 			${orderClause};
 		`;
-		const rows = (await pool.query(q, [author, minPrice, maxPrice, search || null])).rows;
+		const rows = (await pool.query(q, [author, minPrice, maxPrice, search || null, category])).rows;
 		return rows.map((r) => ({
 			id: r.id,
 			author: r.author,
