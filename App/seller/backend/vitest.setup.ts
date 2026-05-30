@@ -1,7 +1,6 @@
 import { beforeAll, afterEach, afterAll } from 'vitest';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
-import { error } from 'node:console';
 
 export const server = setupServer(
   http.get('http://127.0.0.1:3010/api/v0/oauthlogin', ({ request }) => {
@@ -53,7 +52,18 @@ export const server = setupServer(
     }
     return new HttpResponse(null, { status: 401 });
   }),
-  http.post('http://127.0.0.1:4000/graphql', async () => {
+  http.post('http://127.0.0.1:4000/graphql', async ({ request }) => {
+    const body = await request.json() as { query: string; variables?: Record<string, string> };
+    if (body.query.includes('updateOrderStatus')) {
+      return HttpResponse.json({
+        data: {
+          updateOrderStatus: {
+            id: body.variables?.id ?? 'mock-order-id',
+            status: body.variables?.status ?? 'fulfilled',
+          },
+        },
+      });
+    }
     return HttpResponse.json({
       data: {
         ordersBySeller: [
@@ -71,7 +81,6 @@ export const server = setupServer(
     });
   }),
 );
-
 beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());

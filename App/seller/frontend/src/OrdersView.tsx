@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Stack, Card, CardContent, Chip } from '@mui/material';
+import { Box, Typography, Stack, Card, CardContent, Chip, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 interface OrderItem {
@@ -33,6 +33,28 @@ export default function OrdersView() {
 		void fetchOrders();
 	}, []);
 
+	const updateStatus = async (id: string, status: string) => {
+		const res = await fetch(`/seller/api/v0/order/${id}`, {
+			method: 'PUT',
+			credentials: 'include',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ status }),
+		});
+		if (res.ok) {
+			const updated = await res.json();
+			setOrders((prev) =>
+				prev.map((o) => (o.id === id ? { ...o, status: updated.status } : o)),
+			);
+		}
+	};
+
+	const chipColor = (status: string) => {
+		if (status === 'pending') return 'warning';
+		if (status === 'fulfilled') return 'success';
+		if (status === 'cancelled') return 'error';
+		return 'default';
+	};
+
 	return (
 		<Box sx={{ p: 3 }}>
 			<Typography variant="h5" sx={{ mb: 3 }}>{t('My Orders')}</Typography>
@@ -47,7 +69,7 @@ export default function OrdersView() {
 									<Typography variant="subtitle2" color="text.secondary">
 										{order.created}
 									</Typography>
-									<Chip label={order.status} size="small" color={order.status === 'pending' ? 'warning' : 'success'} />
+									<Chip label={order.status} size="small" color={chipColor(order.status)} />
 								</Box>
 								{order.items.map((item) => (
 									<Typography key={item.listingId}>
@@ -57,6 +79,26 @@ export default function OrdersView() {
 								<Typography variant="h6" sx={{ mt: 1 }}>
 									${order.total.toFixed(2)}
 								</Typography>
+								{order.status === 'pending' && (
+									<Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
+										<Button
+											variant="contained"
+											color="success"
+											size="small"
+											onClick={() => updateStatus(order.id, 'fulfilled')}
+										>
+											{t('Fulfill')}
+										</Button>
+										<Button
+											variant="outlined"
+											color="error"
+											size="small"
+											onClick={() => updateStatus(order.id, 'cancelled')}
+										>
+											{t('Cancel')}
+										</Button>
+									</Box>
+								)}
 							</CardContent>
 						</Card>
 					))}

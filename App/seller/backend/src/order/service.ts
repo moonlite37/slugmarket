@@ -37,4 +37,24 @@ export class OrderService {
 		const data = await res.json();
 		return data.data.ordersBySeller;
 	}
+
+	public async updateOrderStatus(id: string, status: string): Promise<{ id: string; status: string }> {
+		const res = await fetch(ORDER_SERVICE, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				query: `mutation UpdateOrderStatus($id: String!, $status: String!) {
+					updateOrderStatus(id: $id, status: $status) {
+						id status
+					}
+				}`,
+				variables: { id, status },
+			}),
+		});
+		if (!res.ok) {
+			throw new Error('Failed to update order status');
+		}
+		const data = await res.json();
+		return data.data.updateOrderStatus;
+	}
 }
