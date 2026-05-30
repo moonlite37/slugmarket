@@ -5,6 +5,7 @@ import ListingCard from '../src/listing/card';
 import ListingList from '../src/listing/list';
 import { server } from '../vitest.setup';
 import { listing, mockListings } from './mocks';
+import { FilterContext } from '@/context/FilterContext';
 
 describe('listing card', () => {
 	it('shows listing title', async () => {
@@ -46,5 +47,23 @@ describe('listing list', () => {
 		render(<ListingList />);
 		expect(await screen.findByText('Pork Chops')).toBeInTheDocument();
 		expect(await screen.findByText('Iphone 7')).toBeInTheDocument();
+	});
+	it('displays listing cards and accepts context', async () => {
+		server.use(mockListings());
+		render(<FilterContext.Provider value = {
+			{
+				minPrice: 2,
+				setMinPrice: () => {},
+				maxPrice: 100,
+				setMaxPrice: () => {},
+				search: 'something',
+				setSearch: () => {},
+				category: 'eee',
+				setCategory: () => {},
+				sort: 'ee',
+				setSort: () => {},
+
+			}}><ListingList /> </FilterContext.Provider>);
+		expect(await screen.findByText('Pork Chops')).toBeInTheDocument();
 	});
 });
