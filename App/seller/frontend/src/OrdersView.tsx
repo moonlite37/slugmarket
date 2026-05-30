@@ -50,9 +50,8 @@ export default function OrdersView() {
 
 	const chipColor = (status: string) => {
 		if (status === 'pending') return 'warning';
-		if (status === 'fulfilled') return 'success';
-		if (status === 'cancelled') return 'error';
-		return 'default';
+		else if (status === 'fulfilled') return 'success';
+		else return 'error';
 	};
 
 	return (

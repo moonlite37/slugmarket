@@ -1,10 +1,18 @@
 import { describe, it } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { UserEvent } from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { server } from '../vitest.setup';
 import { http, HttpResponse } from 'msw';
 import OrdersView from '@/OrdersView';
+
+async function fulfillOrder(user: UserEvent){
+	await waitFor(() => {
+		screen.getByText(/Fulfill/);
+	});
+	await user.click(screen.getByText(/Fulfill/));
+}
+
 
 describe('Seller OrdersView', () => {
 	it('renders My Orders heading', () => {
@@ -58,10 +66,7 @@ describe('Seller OrdersView', () => {
 				<OrdersView />
 			</MemoryRouter>,
 		);
-		await waitFor(() => {
-			screen.getByText(/Fulfill/);
-		});
-		await user.click(screen.getByText(/Fulfill/));
+		await fulfillOrder(user);
 		await waitFor(() => {
 			screen.getByText(/fulfilled/);
 		});
@@ -129,10 +134,7 @@ describe('OrdersView error handling', () => {
 				<OrdersView />
 			</MemoryRouter>,
 		);
-		await waitFor(() => {
-			screen.getByText(/Fulfill/);
-		});
-		await user.click(screen.getByText(/Fulfill/));
+		await fulfillOrder(user);
 		screen.getByText(/pending/);
 	});
 });
