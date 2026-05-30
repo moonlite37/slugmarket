@@ -65,4 +65,4 @@ build:
   script:
     - echo "$ENV_BASE64" | base64 -d > .env
     - npm run package
-    - ls -lh cte-linux-amd64.tar
+    - ls -lh cte-linux-amd64.tar.gz
