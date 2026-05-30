@@ -38,4 +38,11 @@ export class CartController extends Controller {
 	public async syncCart(@Request() req: express.Request): Promise<CartItem[]> {
 		return new CartService().syncCart(req.user?.id as string);
 	}
+
+	@Post('checkout')
+	@Security('cookie')
+	public async checkout(@Request() req: express.Request): Promise<{ url: string }> {
+		const url = await new CartService().checkout(req.user?.id as string);
+		return { url };
+	}
 }

@@ -42,6 +42,19 @@ describe('POST /api/v0/cart/sync', () => {
 		expect(res.body).toEqual([]);
 	});
 
+	it('returns item unchanged when price and quantity already match', async () => {
+		server.use(
+			http.get('http://127.0.0.1:3017/api/v0/cart', () =>
+				HttpResponse.json([{ ...cartItem, price: 19.99 }]),
+			),
+		);
+		const res = await request
+			.post('/api/v0/cart/sync')
+			.set('Cookie', 'authToken=mock-token');
+		expect(res.body[0].price).toBe(19.99);
+		expect(res.body[0].quantity).toBe(1);
+	});
+
 	it('caps quantity to available stock', async () => {
 		server.use(
 			http.get('http://127.0.0.1:3017/api/v0/cart', () =>

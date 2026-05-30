@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { http, HttpResponse } from 'msw';
 
 import CartItem from '../src/cart/card'
 import Cart from '../src/cart/list'
@@ -123,5 +124,27 @@ describe('checkout button', () => {
 		);
 		await userEvent.click(screen.getByText('Proceed to Checkout'));
 		expect(screen.getByText('Login Page')).toBeInTheDocument();
+	});
+
+	it('calls checkout and receives a Stripe URL when logged in', async () => {
+		let checkoutCalled = false;
+		server.use(
+			http.get('/shopper/api/v0/protected', () => new HttpResponse(null, { status: 200 })),
+			http.get('/shopper/api/v0/cart', () => HttpResponse.json([porkChop])),
+			http.post('/shopper/api/v0/cart/sync', () => HttpResponse.json([porkChop])),
+			http.post('/shopper/api/v0/cart/checkout', () => {
+				checkoutCalled = true;
+				return HttpResponse.json({ url: 'https://checkout.stripe.com/test' });
+			}),
+		);
+		render(
+			<MemoryRouter>
+				<CartContextProvider>
+					<Cart />
+				</CartContextProvider>
+			</MemoryRouter>,
+		);
+		await userEvent.click(await screen.findByText('Proceed to Checkout'));
+		expect(checkoutCalled).toBe(true);
 	});
 })

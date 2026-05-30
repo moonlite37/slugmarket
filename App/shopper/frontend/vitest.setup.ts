@@ -62,6 +62,7 @@ export const server = setupServer(
 	}),
 	http.post('/shopper/api/v0/cart/item', () => new HttpResponse(null, {status: 201})),
 	http.post('/shopper/api/v0/cart/sync', () => HttpResponse.json([])),
+	http.post('/shopper/api/v0/cart/checkout', () => HttpResponse.json({ url: '' })),
 	http.delete('/shopper/api/v0/cart/item/:id', () => new HttpResponse(null, {status: 204})),
 	http.get('/shopper/api/v0/order', () => {
 		return HttpResponse.json([
