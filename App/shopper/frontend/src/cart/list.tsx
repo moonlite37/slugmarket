@@ -17,6 +17,12 @@ const Cart = () => {
 			return;
 		}
 		await syncCart();
+		const res = await fetch('/shopper/api/v0/cart/checkout', {
+			method: 'POST',
+			credentials: 'include',
+		});
+		const { url } = await res.json();
+		window.location.href = url;
 	};
 
 	const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
