@@ -1,7 +1,7 @@
 {
   "name": "slug-market",
   "scripts": {
-    "package": "docker build . -t cte-linux-amd64 --platform linux/amd64 && docker build -f ./postgres/Dockerfile . -t cte-postgres --platform linux/amd64 && docker save -o cte-linux-amd64.tar cte-linux-amd64 cte-postgres",
+    "package": "docker build . -t cte-linux-amd64 --platform linux/amd64 && docker build -f ./postgres/Dockerfile . -t cte-postgres --platform linux/amd64 && docker save cte-linux-amd64 cte-postgres | gzip > cte-linux-amd64.tar.gz",
     "containerised": "npm run build && npm run compose",
     "compose": "docker compose up --build",
     "installs": "npm install && npm run install-auth && npm run install-listing && npm run install-payment && npm run install-image && npm run install-cart && npm run install-admin && npm run install-seller-backend && npm run install-seller-frontend && npm run install-shopper-backend && npm run install-shopper-frontend && npm run install-corporate && npm run install-corporate-backend && npm run install-order",
