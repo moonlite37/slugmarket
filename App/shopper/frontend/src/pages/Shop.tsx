@@ -2,6 +2,7 @@ import ListingList from '@/listing/list';
 import FilterSidebar from '@/filter/sidebar';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import HistoryIcon from '@mui/icons-material/History';
 import { AppBar, Drawer, Grid, IconButton, Toolbar, Typography } from '@mui/material';
 import { FilterContextProvider } from '@/context/FilterContextProvider';
 import { useState } from 'react';
@@ -34,11 +35,19 @@ function ShopPage() {
 						Slug Market
 					</Typography>
 					<IconButton
+						aria-label="order history"
+						component={Link}
+						to="/orders"
+						color="inherit"
+						sx={{ ml: 'auto' }}
+					>
+						<HistoryIcon />
+					</IconButton>
+					<IconButton
 						aria-label="view cart"
 						component={Link}
 						to="/cart"
 						color="inherit"
-						sx={{ ml: 'auto' }}
 					>
 						<ShoppingCartIcon />
 					</IconButton>

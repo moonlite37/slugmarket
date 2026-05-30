@@ -63,6 +63,28 @@ export const server = setupServer(
 	http.post('/shopper/api/v0/cart/item', () => new HttpResponse(null, {status: 201})),
 	http.post('/shopper/api/v0/cart/sync', () => HttpResponse.json([])),
 	http.delete('/shopper/api/v0/cart/item/:id', () => new HttpResponse(null, {status: 204})),
+	http.get('/shopper/api/v0/order', () => {
+		return HttpResponse.json([
+			{
+				id: 'order-1',
+				shopper: 'shopper-id',
+				seller: '00000000-0000-0000-0000-000000000001',
+				items: [{ listingId: 'l1', title: 'Pork Chops', price: 19.99, quantity: 2 }],
+				total: 39.98,
+				status: 'fulfilled',
+				created: '2026-05-20',
+			},
+			{
+				id: 'order-2',
+				shopper: 'shopper-id',
+				seller: '00000000-0000-0000-0000-000000000002',
+				items: [{ listingId: 'l2', title: 'Iphone 7', price: 799.99, quantity: 1 }],
+				total: 799.99,
+				status: 'pending',
+				created: '2026-05-25',
+			},
+		]);
+	}),
 );
 
 beforeAll(async () => {

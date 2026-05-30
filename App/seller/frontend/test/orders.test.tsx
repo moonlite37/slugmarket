@@ -115,3 +115,24 @@ describe('Seller OrdersView', () => {
 		});
 	});
 });
+
+describe('OrdersView error handling', () => {
+	it('handles update failure gracefully', async () => {
+		const user = userEvent.setup();
+		server.use(
+			http.put('http://localhost:3000/seller/api/v0/order/:id', () => {
+				return new HttpResponse(null, { status: 500 });
+			}),
+		);
+		render(
+			<MemoryRouter>
+				<OrdersView />
+			</MemoryRouter>,
+		);
+		await waitFor(() => {
+			screen.getByText(/Fulfill/);
+		});
+		await user.click(screen.getByText(/Fulfill/));
+		screen.getByText(/pending/);
+	});
+});
