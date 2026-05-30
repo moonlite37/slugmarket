@@ -22,7 +22,7 @@
     "ci-auth": "cd Service/AuthService && npm ci",
     "ci-listing": "cd Service/ListingService && npm ci",
     "ci-payment": "cd Service/PaymentService && npm ci",
-    "ci-image": "cd Service/ImageSerivce && npm ci",
+    "ci-image": "cd Service/ImageSerivce && npm install",
     "ci-cart": "cd Service/CartService && npm ci",
     "ci-order": "cd Service/OrderService && npm ci",
     "ci-corporate": "cd Service/CorporateService && npm ci",
