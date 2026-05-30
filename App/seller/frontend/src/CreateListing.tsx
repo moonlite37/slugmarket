@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Box, TextField, Button, Typography, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateListing() {
 	const { t } = useTranslation();
+	const navigate = useNavigate();
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [price, setPrice] = useState('');
@@ -25,6 +27,7 @@ export default function CreateListing() {
 		});
 		if (res.status === 201) {
 			setSubmitted(true);
+			navigate('/');
 		}
 	};
 

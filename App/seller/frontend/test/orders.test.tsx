@@ -72,6 +72,49 @@ describe('Seller OrdersView', () => {
 		});
 	});
 
+	it('leaves other orders unchanged when one order status updates', async () => {
+		const user = userEvent.setup();
+		server.use(
+			http.get('http://localhost:3000/seller/api/v0/order', () => {
+				return HttpResponse.json([
+					{
+						id: 'order-1',
+						shopper: 'shopper-id',
+						seller: 'seller-id',
+						items: [{ listingId: 'l1', title: 'Test Widget', price: 9.99, quantity: 3 }],
+						total: 29.97,
+						status: 'pending',
+						created: '2026-05-20',
+					},
+					{
+						id: 'order-2',
+						shopper: 'shopper-id',
+						seller: 'seller-id',
+						items: [{ listingId: 'l2', title: 'Other Widget', price: 5, quantity: 1 }],
+						total: 5,
+						status: 'pending',
+						created: '2026-05-21',
+					},
+				]);
+			}),
+		);
+		render(
+			<MemoryRouter>
+				<OrdersView />
+			</MemoryRouter>,
+		);
+
+		await waitFor(() => {
+			screen.getByText(/Other Widget/);
+		});
+		await user.click(screen.getAllByText(/Fulfill/)[0]);
+
+		await waitFor(() => {
+			screen.getByText(/fulfilled/);
+		});
+		screen.getByText(/pending/);
+	});
+
 	it('clicking cancel updates order status', async () => {
 		const user = userEvent.setup();
 		render(
