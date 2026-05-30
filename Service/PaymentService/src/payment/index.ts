@@ -1,8 +1,12 @@
-export interface CheckoutRequest {
+export interface CheckoutOrder {
 	orderId: string;
 	name: string;
 	quantity: number;
 	unitAmount: number;
+}
+
+export interface CheckoutRequest {
+	orders: CheckoutOrder[];
 }
 
 export interface CheckoutResponse {
@@ -12,7 +16,7 @@ export interface CheckoutResponse {
 export interface WebhookSession {
 	id: string;
 	metadata: {
-		orderId: string;
+		orderIds: string;
 	};
 }
 
