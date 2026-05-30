@@ -38,10 +38,7 @@ describe('Payment checkout', () => {
 		return request
 			.post('/api/v0/checkout')
 			.send({
-				orderId,
-				name: 'Pork Chop',
-				quantity: 1,
-				unitAmount: 1250,
+				orders: [{ orderId, name: 'Pork Chop', quantity: 1, unitAmount: 1250 }],
 			});
 	};
 
@@ -83,7 +80,7 @@ describe('Payment webhook', () => {
 					object: {
 						id: 'cs_test_123',
 						metadata: {
-							orderId,
+							orderIds: orderId,
 						},
 					},
 				},

@@ -17,24 +17,19 @@ const UPDATE_ORDER_STATUS_MUTATION = 'mutation UpdateOrderStatus($id: String!, $
 
 export class PaymentService {
 	public async checkout(request: CheckoutRequest): Promise<CheckoutResponse> {
+		const orderIds = request.orders.map((o) => o.orderId).join(',');
 		const session = await stripe.checkout.sessions.create({
 			mode: 'payment',
-			line_items: [
-				{
-					price_data: {
-						currency: 'usd',
-						product_data: {
-							name: request.name,
-						},
-						unit_amount: request.unitAmount,
-					},
-					quantity: request.quantity,
+			line_items: request.orders.map((o) => ({
+				price_data: {
+					currency: 'usd',
+					product_data: { name: o.name },
+					unit_amount: o.unitAmount,
 				},
-			],
-			metadata: {
-				orderId: request.orderId,
-			},
-			success_url: `https://slugmarket.shop/shopper/order/${request.orderId}`,
+				quantity: o.quantity,
+			})),
+			metadata: { orderIds },
+			success_url: 'https://slugmarket.shop/shopper/orders',
 			cancel_url: 'https://slugmarket.shop/shopper/',
 		});
 		return {url: session.url ?? ''};
@@ -42,9 +37,10 @@ export class PaymentService {
 
 	public async webhook(request: WebhookRequest): Promise<void> {
 		const status = request.type === 'checkout.session.completed' ? 'paid' : 'failed';
-		await this.updateOrderStatus(request.data.object.metadata.orderId, status);
+		const orderIds = request.data.object.metadata.orderIds.split(',');
+		await Promise.all(orderIds.map((id) => this.updateOrderStatus(id, status)));
 		if (status === 'paid') {
-			await this.sendOrderConfirmation(request.data.object.metadata.orderId);
+			await Promise.all(orderIds.map((id) => this.sendOrderConfirmation(id)));
 		}
 	}
 
