@@ -1,17 +1,14 @@
 image: node:lts
-
 variables:
   PIPELINE: 'true'
   POSTGRES_HOST: postgres
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: postgres
-
 stages:
   - quality
   - test
   - build
-
 quality:
   stage: quality
   script:
@@ -24,7 +21,6 @@ quality:
         npm run cpd
         cd $CI_PROJECT_DIR
       done
-
 app-test:
   stage: test
   script:
@@ -36,7 +32,6 @@ app-test:
         npm test
         cd $CI_PROJECT_DIR
       done
-
 microservice-test:
   stage: test
   services:
@@ -54,7 +49,6 @@ microservice-test:
         npm test
         cd $CI_PROJECT_DIR
       done
-
 build:
   stage: build
   image: docker:24.0.5-cli
@@ -66,6 +60,8 @@ build:
     DOCKER_TLS_CERTDIR: '/certs'
   before_script:
     - apk add nodejs npm
+    - docker system prune -af || true
+    - rm -f cte-linux-amd64.tar || true
   script:
     - echo "$ENV_BASE64" | base64 -d > .env
     - npm run package
