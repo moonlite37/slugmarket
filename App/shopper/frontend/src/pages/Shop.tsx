@@ -6,6 +6,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import { AppBar, Drawer, Grid, IconButton, Toolbar, Typography } from '@mui/material';
 import { FilterContextProvider } from '@/context/FilterContextProvider';
 import { useState } from 'react';
+import SignupBanner from '@/components/SignupBanner';
 import { Link } from 'react-router-dom';
 
 function ShopPage() {
@@ -14,6 +15,7 @@ function ShopPage() {
 	return (
 		<FilterContextProvider>
 			<Grid>
+				<SignupBanner />
 				<AppBar position="static" sx={{ mb: 2 }}>
 					<Toolbar sx={{ position: 'relative' }}>
 					<IconButton
