@@ -6,6 +6,8 @@ import ShopPage from './pages/Shop';
 import CartPage from './pages/Cart'
 import OrderHistory from './pages/OrderHistory'
 import ListingDetail from './pages/ListingDetail'
+import SuccessfulPayment from './pages/SuccessfulPayment'
+import FailedPayment from './pages/FailedPayment'
 import { CartContextProvider } from './context/CartContextProvider';
 import LocaleSwitcher from './LocaleSwitcher';
 
@@ -21,6 +23,8 @@ function App() {
 						<Route path="/cart" element={<CartPage />} />
 						<Route path="/orders" element={<OrderHistory />} />
 						<Route path="/listing/:id" element={<ListingDetail />} />
+						<Route path="/payment/success" element={<SuccessfulPayment />} />
+						<Route path="/payment/failed" element={<FailedPayment />} />
 						<Route path="/" element={<ShopPage />} />
 						<Route element={<AuthenticatedRoute />}></Route>
 					</Routes>
