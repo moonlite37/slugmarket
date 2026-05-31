@@ -38,3 +38,9 @@ export async function getListing(
 	const res = await fetch(query);
 	return res.json();
 }
+
+export async function getListingById(id: string): Promise<Listing | null> {
+	const res = await fetch(`/shopper/api/v0/listing/${id}`);
+	if (!res.ok) return null;
+	return res.json();
+}

@@ -104,3 +104,47 @@ describe('Shopper OrderHistory', () => {
 		screen.getByText(/Back to Shop/);
 	});
 });
+
+describe('OrderHistory cancelled', () => {
+	it('shows cancelled status chip', async () => {
+		server.use(
+			http.get('/shopper/api/v0/order', () => {
+				return HttpResponse.json([{
+					id: 'order-c',
+					shopper: 'shopper-id',
+					seller: 'seller-id',
+					items: [{ listingId: 'l1', title: 'Item', price: 10, quantity: 1 }],
+					total: 10,
+					status: 'cancelled',
+					created: '2026-05-01',
+				}]);
+			}),
+		);
+		render(
+			<MemoryRouter>
+				<OrderHistory />
+			</MemoryRouter>,
+		);
+		await waitFor(() => {
+			screen.getByText(/cancelled/);
+		});
+	});
+});
+
+describe('OrderHistory unknown status', () => {
+	it('shows default chip for unknown status', async () => {
+		server.use(
+			http.get('/shopper/api/v0/order', () => {
+				return HttpResponse.json([{
+					id: 'order-u', shopper: 'shopper-id', seller: 'seller-id',
+					items: [{ listingId: 'l1', title: 'Item', price: 10, quantity: 1 }],
+					total: 10, status: 'processing', created: '2026-05-01',
+				}]);
+			}),
+		);
+		render(<MemoryRouter><OrderHistory /></MemoryRouter>);
+		await waitFor(() => {
+			screen.getByText(/processing/);
+		});
+	});
+});

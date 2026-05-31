@@ -76,7 +76,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 					variant="h6"
 					sx={{ fontSize: 18, fontWeight: 600, mt: 0.5, mb: 0.5, lineHeight: 1.3 }}
 				>
-					{title}
+					<a href={`/listing/${id}`} style={{ textDecoration: "none", color: "inherit" }}>{title}</a>
 				</Typography>
 
 				{/* Description */}
