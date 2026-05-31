@@ -24,7 +24,7 @@ export default function PaymentResult({
 			<Typography color="text.secondary" sx={{ mb: 4 }}>
 				{t(message)}
 			</Typography>
-			<Stack direction="row" spacing={2} justifyContent="center">
+			<Stack direction="row" spacing={2} sx={{ justifyContent: 'center' }}>
 				<Button component={Link} to={primaryLink} variant="contained" sx={{ textTransform: 'none' }}>
 					{t(primaryLabel)}
 				</Button>
