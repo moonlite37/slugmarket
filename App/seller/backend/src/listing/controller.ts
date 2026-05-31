@@ -2,23 +2,17 @@ import {
 	Route,
 	Controller,
 	Get,
+	Put,
 	Post,
 	Body,
+	Path,
 	Request,
 	Security,
 	SuccessResponse,
 } from 'tsoa';
 import * as express from 'express';
+import { NewListing, UpdateListing } from '.';
 import { ListingService } from './service';
-
-interface NewListing {
-	title: string;
-	description: string;
-	price: number;
-	stock: number;
-	categories: string[];
-	images?: string[];
-}
 
 @Route('')
 export class ListingController extends Controller {
@@ -43,6 +37,16 @@ export class ListingController extends Controller {
 			req.user?.id as string,
 			listing,
 		);
+		return res;
+	}
+
+	@Put('listing/{id}')
+	@Security('cookie')
+	public async updateListing(
+		@Path() id: string,
+		@Body() listing: UpdateListing,
+	): Promise<unknown> {
+		const res = await new ListingService().updateListing(id, listing);
 		return res;
 	}
 }

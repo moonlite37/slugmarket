@@ -1,25 +1,6 @@
+import { Listing, NewListing, UpdateListing } from '.';
+
 const LISTING_MICROSERVICE = 'http://127.0.0.1:3011/api/v0';
-
-interface NewListing {
-	title: string;
-	description: string;
-	price: number;
-	stock: number;
-	categories: string[];
-	images?: string[];
-}
-
-interface Listing {
-	id: string;
-	title: string;
-	description: string;
-	price: number;
-	stock: number;
-	categories: string[];
-	images?: string[];
-	created: string;
-	author: string;
-}
 
 export class ListingService {
 	public async getListings(userId: string): Promise<Listing[]> {
@@ -40,6 +21,23 @@ export class ListingService {
 		});
 		if (res.status !== 201) {
 			throw new Error('Failed to create listing');
+		}
+		return res.json();
+	}
+
+	public async updateListing(
+		id: string,
+		listing: UpdateListing,
+	): Promise<Listing> {
+		const res = await fetch(`${LISTING_MICROSERVICE}/listing/${id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(listing),
+		});
+		if (!res.ok) {
+			throw new Error('Failed to update listing');
 		}
 		return res.json();
 	}
