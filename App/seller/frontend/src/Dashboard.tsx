@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Stack, Card, CardContent, Button } from '@mui/material';
+import { Box, Typography, Stack, Card, CardContent, Button, IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CreateKey from './CreateKey';
@@ -49,6 +50,11 @@ export default function Dashboard() {
 						 <Typography variant="h6">{t('Listing Title', { listingTitle: listing.title })}</Typography>
 						 <Typography color="text.secondary">{listing.description}</Typography>
 						 <Typography>${listing.price} · {t('{{stock}} in stock', { stock: listing.stock })}</Typography>
+						 <IconButton
+							aria-label={`update ${listing.title}`}
+						 >
+							<EditIcon />
+						 </IconButton>
 						 </CardContent>
 						</Card>
 					))}
