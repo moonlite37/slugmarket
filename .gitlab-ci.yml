@@ -23,6 +23,7 @@ quality:
       done
 app-test:
   stage: test
+  timeout: 30m
   script:
     - |
       for dir in App/Admin/ App/seller/frontend/ App/shopper/frontend/ App/seller/backend/ App/shopper/backend/; do
@@ -34,6 +35,7 @@ app-test:
       done
 microservice-test:
   stage: test
+  timeout: 30m
   services:
     - postgres
   before_script:
