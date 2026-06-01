@@ -14,3 +14,4 @@ export async function createListing(listing: NewListing) {
 		body: JSON.stringify(listing),
 	});
 }
+
