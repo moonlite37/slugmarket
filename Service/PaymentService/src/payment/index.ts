@@ -7,6 +7,7 @@ export interface CheckoutOrder {
 
 export interface CheckoutRequest {
 	orders: CheckoutOrder[];
+	email?: string;
 }
 
 export interface CheckoutResponse {
@@ -17,6 +18,7 @@ export interface WebhookSession {
 	id: string;
 	metadata: {
 		orderIds: string;
+		email?: string;
 	};
 }
 

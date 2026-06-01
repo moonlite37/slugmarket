@@ -63,7 +63,7 @@ export class CartService {
 		return synced;
 	}
 
-	public async checkout(userId: string): Promise<string> {
+	public async checkout(userId: string, email?: string): Promise<string> {
 		const cartItems = await this.getCart(userId);
 
 		const bySeller = new Map<string, CartItem[]>();
@@ -94,7 +94,7 @@ export class CartService {
 		const res = await fetch(`${PAYMENT_SERVICE}/checkout`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ orders: paymentOrders }),
+			body: JSON.stringify({ orders: paymentOrders, email }),
 		});
 		const { url } = await res.json();
 

@@ -42,7 +42,7 @@ export class CartController extends Controller {
 	@Post('checkout')
 	@Security('cookie')
 	public async checkout(@Request() req: express.Request): Promise<{ url: string }> {
-		const url = await new CartService().checkout(req.user?.id as string);
+		const url = await new CartService().checkout(req.user?.id as string, req.user?.email);
 		return { url };
 	}
 }

@@ -28,7 +28,7 @@ export class PaymentService {
 				},
 				quantity: o.quantity,
 			})),
-			metadata: { orderIds },
+			metadata: { orderIds, email: request.email ?? '' },
 			success_url: 'https://slugmarket.shop/shopper/payment/success',
 			cancel_url: 'https://slugmarket.shop/shopper/payment/failed',
 		});
@@ -40,7 +40,8 @@ export class PaymentService {
 		const orderIds = request.data.object.metadata.orderIds.split(',');
 		await Promise.all(orderIds.map((id) => this.updateOrderStatus(id, status)));
 		if (status === 'paid') {
-			await Promise.all(orderIds.map((id) => this.sendOrderConfirmation(id)));
+			const email = request.data.object.metadata.email;
+			await Promise.all(orderIds.map((id) => this.sendOrderConfirmation(id, email)));
 		}
 	}
 
@@ -55,12 +56,12 @@ export class PaymentService {
 		});
 	}
 
-	private async sendOrderConfirmation(orderId: string): Promise<void> {
+	private async sendOrderConfirmation(orderId: string, email?: string): Promise<void> {
 		await fetch(`${NOTIFICATION_URL}/email`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				to: 'order-notifications@slugmarket.shop',
+				to: email || 'order-notifications@slugmarket.shop',
 				subject: `Order ${orderId} Confirmed`,
 				text: `Your order ${orderId} has been paid and is being processed.`,
 			}),

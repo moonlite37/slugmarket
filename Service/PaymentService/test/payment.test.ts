@@ -93,6 +93,7 @@ describe('Payment webhook', () => {
 						id: 'cs_test_123',
 						metadata: {
 							orderIds: orderId,
+							email: 'shopper@test.com',
 						},
 					},
 				},

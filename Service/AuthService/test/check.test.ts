@@ -12,7 +12,7 @@ vi.mock('jose', () => {
 			},
 		),
 		jwtDecrypt: vi.fn().mockResolvedValue({
-			payload: { id: 'mock-user-id', roles: ['admin'] },
+			payload: { id: 'mock-user-id', roles: ['admin'], email: 'mock@test.com' },
 		}),
 	};
 });
@@ -34,21 +34,25 @@ describe('check', () => {
 		expect(res.body.id).toBe('mock-user-id');
 		expect(res.body.roles).toContain('admin');
 	});
+	it('returns email from token', async () => {
+		const res = await request
+			.get('/api/v0/check')
+			.set('Authorization', 'Bearer mocked-jwe');
+		expect(res.body.email).toBe('mock@test.com');
+	});
 	it('returns 401 with no auth header', async () => {
-	    const res = await request.get('/api/v0/check');
-	    expect(res.status).toBe(401);
+		const res = await request.get('/api/v0/check');
+		expect(res.status).toBe(401);
 	});
-
 	it('returns 401 with invalid token', async () => {
-	    const { jwtDecrypt } = await import('jose');
-	    (jwtDecrypt as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Invalid token'));
-	    const res = await request
-		    .get('/api/v0/check')
-		    .set('Authorization', 'Bearer garbage-token');
-	    expect(res.status).toBe(401);
+		const { jwtDecrypt } = await import('jose');
+		(jwtDecrypt as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Invalid token'));
+		const res = await request
+			.get('/api/v0/check')
+			.set('Authorization', 'Bearer garbage-token');
+		expect(res.status).toBe(401);
 	});
-
-	 it('returns 401 with incorrect permissions', async () => {
+	it('returns 401 with incorrect permissions', async () => {
 		const res = await request
 			.get('/api/v0/check?scopes=admin&scopes=corporate')
 			.set('Authorization', 'Bearer mocked-jwe');
