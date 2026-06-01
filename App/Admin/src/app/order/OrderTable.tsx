@@ -25,6 +25,8 @@ interface Order {
   id: string;
   shopper: string;
   seller: string;
+  shopperName?: string;
+  shopperEmail?: string;
   items: OrderItem[];
   total: number;
   status: string;
@@ -55,27 +57,33 @@ export default function OrderTable() {
 			<Table>
 				<TableHead>
 					<TableRow>
+						<TableCell>Order ID</TableCell>
+						<TableCell>Shopper</TableCell>
 						<TableCell>Items</TableCell>
 						<TableCell>Total</TableCell>
 						<TableCell>Status</TableCell>
+						<TableCell>Date</TableCell>
 						<TableCell>Actions</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
 					{orders.map((order) => (
 						<TableRow key={order.id}>
+							<TableCell>{order.id.slice(0, 8)}</TableCell>
+							<TableCell>{order.shopperName || order.shopper.slice(0, 8)}</TableCell>
 							<TableCell>
 								{order.items.map((item) => item.title).join(', ')}
 							</TableCell>
 							<TableCell>${order.total}</TableCell>
 							<TableCell>{order.status}</TableCell>
+							<TableCell>{order.created}</TableCell>
 							<TableCell>
 								{order.status === 'pending' && (
 									<Button
 										size="small"
 										onClick={() => { void handleStatusUpdate(order.id, 'fulfilled'); }}
 									>
-                    Fulfill
+                                                                                Fulfill
 									</Button>
 								)}
 								{order.status !== 'cancelled' && (
@@ -84,7 +92,7 @@ export default function OrderTable() {
 										color="error"
 										onClick={() => { void handleStatusUpdate(order.id, 'cancelled'); }}
 									>
-                    Cancel
+                                                                                Cancel
 									</Button>
 								)}
 							</TableCell>

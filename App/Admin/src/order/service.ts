@@ -10,7 +10,7 @@ export class OrderService {
 			headers: { 'Content-Type': 'application/json' },
 			cache: 'no-store',
 			body: JSON.stringify({
-				query: '{ allOrders { id shopper seller items { listingId title price quantity } total status created } }',
+				query: '{ allOrders { id shopper seller shopperName shopperEmail items { listingId title price quantity } total status created } }',
 			}),
 		});
 		if (!res.ok) {

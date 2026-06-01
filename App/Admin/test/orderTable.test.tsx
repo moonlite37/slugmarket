@@ -4,62 +4,96 @@ import userEvent from '@testing-library/user-event';
 import OrderTable from '../src/app/order/OrderTable';
 
 vi.mock('../src/app/order/actions', () => ({
-	getOrders: vi.fn().mockResolvedValue([
-		{ id: 'o1', shopper: 's1', seller: 'se1', items: [{ listingId: 'l1', title: 'Widget', price: 10, quantity: 1 }], total: 10, status: 'pending', created: '2026-05-13' },
-	]),
-	updateOrderStatus: vi.fn().mockResolvedValue(undefined),
+        getOrders: vi.fn().mockResolvedValue([
+                { id: 'o1-abcdef-1234', shopper: 's1-shopper-uuid', seller: 'se1', shopperName: 'Jane Doe', shopperEmail: 'jane@test.com', items: [{ listingId: 'l1', title: 'Widget', price: 10, quantity: 1 }], total: 10, status: 'pending', created: '2026-05-13' },
+        ]),
+        updateOrderStatus: vi.fn().mockResolvedValue(undefined),
 }));
 
 describe('OrderTable', () => {
-	it('renders order data', async () => {
-		render(<OrderTable />);
-		await waitFor(() => {
-			expect(screen.getByText('Widget')).toBeInTheDocument();
-		});
-		expect(screen.getByText('$10')).toBeInTheDocument();
-		expect(screen.getByText('pending')).toBeInTheDocument();
-	});
+        it('renders order data', async () => {
+                render(<OrderTable />);
+                await waitFor(() => {
+                        expect(screen.getByText('Widget')).toBeInTheDocument();
+                });
+                expect(screen.getByText('$10')).toBeInTheDocument();
+                expect(screen.getByText('pending')).toBeInTheDocument();
+        });
 
-	it('has fulfill and cancel buttons', async () => {
-		render(<OrderTable />);
-		await waitFor(() => {
-			expect(screen.getByText('Fulfill')).toBeInTheDocument();
-		});
-		expect(screen.getByText('Cancel')).toBeInTheDocument();
-	});
+        it('shows order ID', async () => {
+                render(<OrderTable />);
+                await waitFor(() => {
+                        expect(screen.getByText('o1-abcde')).toBeInTheDocument();
+                });
+        });
 
-	it('calls updateOrderStatus when fulfill clicked', async () => {
-		const { updateOrderStatus } = await import('../src/app/order/actions');
-		const user = userEvent.setup();
-		render(<OrderTable />);
-		await waitFor(() => {
-			expect(screen.getByText('Fulfill')).toBeInTheDocument();
-		});
-		await user.click(screen.getByText('Fulfill'));
-		await waitFor(() => {
-			expect(updateOrderStatus).toHaveBeenCalledWith('o1', 'fulfilled');
-		});
-	});
+        it('shows shopper name', async () => {
+                render(<OrderTable />);
+                await waitFor(() => {
+                        expect(screen.getByText('Jane Doe')).toBeInTheDocument();
+                });
+        });
 
-	it('calls updateOrderStatus when cancel clicked', async () => {
-		const { updateOrderStatus } = await import('../src/app/order/actions');
-		const user = userEvent.setup();
-		render(<OrderTable />);
-		await waitFor(() => {
-			expect(screen.getByText('Cancel')).toBeInTheDocument();
-		});
-		await user.click(screen.getByText('Cancel'));
-		await waitFor(() => {
-			expect(updateOrderStatus).toHaveBeenCalledWith('o1', 'cancelled');
-		});
-	});
+        it('shows order date', async () => {
+                render(<OrderTable />);
+                await waitFor(() => {
+                        expect(screen.getByText('2026-05-13')).toBeInTheDocument();
+                });
+        });
 
-	it('shows empty state when no orders', async () => {
+        it('has fulfill and cancel buttons', async () => {
+                render(<OrderTable />);
+                await waitFor(() => {
+                        expect(screen.getByText('Fulfill')).toBeInTheDocument();
+                });
+                expect(screen.getByText('Cancel')).toBeInTheDocument();
+        });
+
+        it('calls updateOrderStatus when fulfill clicked', async () => {
+                const { updateOrderStatus } = await import('../src/app/order/actions');
+                const user = userEvent.setup();
+                render(<OrderTable />);
+                await waitFor(() => {
+                        expect(screen.getByText('Fulfill')).toBeInTheDocument();
+                });
+                await user.click(screen.getByText('Fulfill'));
+                await waitFor(() => {
+                        expect(updateOrderStatus).toHaveBeenCalledWith('o1-abcdef-1234', 'fulfilled');
+                });
+        });
+
+        it('calls updateOrderStatus when cancel clicked', async () => {
+                const { updateOrderStatus } = await import('../src/app/order/actions');
+                const user = userEvent.setup();
+                render(<OrderTable />);
+                await waitFor(() => {
+                        expect(screen.getByText('Cancel')).toBeInTheDocument();
+                });
+                await user.click(screen.getByText('Cancel'));
+                await waitFor(() => {
+                        expect(updateOrderStatus).toHaveBeenCalledWith('o1-abcdef-1234', 'cancelled');
+                });
+        });
+
+        it('shows empty state when no orders', async () => {
+                const { getOrders } = await import('../src/app/order/actions');
+                (getOrders as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
+                render(<OrderTable />);
+                await waitFor(() => {
+                        expect(screen.getByText('No orders')).toBeInTheDocument();
+                });
+        });
+});
+
+describe('OrderTable fallback', () => {
+	it('shows truncated shopper UUID when name is missing', async () => {
 		const { getOrders } = await import('../src/app/order/actions');
-		(getOrders as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
+		(getOrders as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
+			{ id: 'o2-fallback-test', shopper: 'abcdefgh-1234-5678', seller: 'se1', items: [{ listingId: 'l1', title: 'NoName', price: 5, quantity: 1 }], total: 5, status: 'pending', created: '2026-06-01' },
+		]);
 		render(<OrderTable />);
 		await waitFor(() => {
-			expect(screen.getByText('No orders')).toBeInTheDocument();
+			expect(screen.getByText('abcdefgh')).toBeInTheDocument();
 		});
 	});
 });
