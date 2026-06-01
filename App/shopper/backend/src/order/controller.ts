@@ -34,7 +34,12 @@ export class OrderController extends Controller {
     @Request() req: express.Request,
   ): Promise<unknown> {
     this.setStatus(201);
-    return new OrderService().createOrder(req.user?.id as string, body);
+    return new OrderService().createOrder(
+      req.user?.id as string,
+      req.user?.name,
+      req.user?.email,
+      body,
+    );
   }
 
   @Get('')
