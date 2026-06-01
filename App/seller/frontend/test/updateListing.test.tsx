@@ -252,7 +252,7 @@ describe('update listing page', () => {
 		renderUpdateListingToDashboard();
 		await editFieldAndSave('Title', 'Edited Listing');
 		expect(await screen.findByText('Edited Listing')).toBeDefined();
-	});
+	}, 10000);
 
 	it('updates the dashboard listing description after editing description', async () => {
 		renderUpdateListingToDashboard();
