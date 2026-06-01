@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Stack, Button, TextField} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import ListingFormFields from '../utils/ListingFormFields';
-import { ListingFormContext } from './context';
 
 export default function CreateListing() {
 	const { t } = useTranslation();
@@ -39,20 +37,40 @@ export default function CreateListing() {
 			{submitted && (
 				<Typography color="success.main" sx={{ mb: 2 }}>{t('Listing created')}</Typography>
 			)}
-			<ListingFormContext.Provider value={{
-				title,
-				setTitle,
-				description,
-				setDescription,
-				price,
-				setPrice,
-				stock,
-				setStock,
-				handleSubmit,
-			}
-			}>
-			<ListingFormFields/>
-			</ListingFormContext.Provider>
+			<Stack spacing={2}>
+				<TextField
+					placeholder={t('Title')}
+					value={title}
+					onChange={(e) => setTitle(e.target.value)}
+				/>
+
+				<TextField
+					placeholder={t('Description')}
+					value={description}
+					onChange={(e) => setDescription(e.target.value)}
+				/>
+
+				<TextField
+					placeholder={t('Price')}
+					type="number"
+					value={price}
+					onChange={(e) => setPrice(e.target.value)}
+				/>
+
+				<TextField
+					placeholder={t('Stock')}
+					type="number"
+					value={stock}
+					onChange={(e) => setStock(e.target.value)}
+				/>
+				<Button
+								variant="contained"
+								onClick={handleSubmit}
+								disabled={!title || !description || !price || !stock}
+							>
+								{t('Create Listing')}
+							</Button>
+				</Stack>
 		</Box>
 	);
 }
