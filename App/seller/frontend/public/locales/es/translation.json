@@ -17,5 +17,6 @@
   "Generate API Key": "Generar clave API",
   "Generating...": "Generando...",
   "API Key: {{key}}": "Clave API: {{key}}",
-  "You are not authorized to generate an API key": "No está autorizado para generar una clave API"
+  "You are not authorized to generate an API key": "No está autorizado para generar una clave API",
+  "Save": "Guardar"
 }

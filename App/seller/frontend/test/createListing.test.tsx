@@ -45,14 +45,14 @@ describe('Create Listing Form', () => {
 
 	it('renders submit button', () => {
 		renderCreateListing();
-		expect(screen.getByRole('button', { name: /create listing/i })).toBeDefined();
+		expect(screen.getByRole('button', { name: /save/i })).toBeDefined();
 	});
 
 	it('submit button enabled when fields filled', async () => {
 		const user = userEvent.setup();
 		renderCreateListing();
 		await fillInOrder(user);
-		const button = screen.getByRole('button', { name: /create listing/i });
+		const button = screen.getByRole('button', { name: /save/i });
 		expect(button).toHaveProperty('disabled', false);
 	});
 
@@ -60,7 +60,7 @@ describe('Create Listing Form', () => {
 		const user = userEvent.setup();
 		renderCreateListing();
 		await fillInOrder(user);
-		await user.click(screen.getByRole('button', { name: /create listing/i }));
+		await user.click(screen.getByRole('button', { name: /save/i }));
 		await waitFor(() => {
 			screen.getByText('Listing created');
 		});
@@ -75,7 +75,7 @@ describe('Create Listing Form', () => {
 		const user = userEvent.setup();
 		renderCreateListing();
 		await fillInOrder(user);
-		await user.click(screen.getByRole('button', { name: /create listing/i }));
+		await user.click(screen.getByRole('button', { name: /save/i }));
 		expect(screen.queryByText('Listing created')).toBeNull();
 	});
 
@@ -102,7 +102,7 @@ describe('Create Listing Form', () => {
 		);
 
 		await fillInOrder(user);
-		await user.click(screen.getByRole('button', { name: /create listing/i }));
+		await user.click(screen.getByRole('button', { name: /save/i }));
 
 		await waitFor(() => {
 			screen.getByText('Seller dashboard');
