@@ -6,7 +6,7 @@ import { http, HttpResponse } from 'msw';
 import { server } from '../vitest.setup';
 
 import Dashboard from '@/Dashboard';
-import UpdateListing from '@/UpdateListing';
+import UpdateListing from '@/UpdateListing/page';
 
 const listing = {
 	id: 'mock-listing-id',
@@ -31,6 +31,14 @@ function mockListings() {
 	server.use(
 		http.get('http://localhost:3000/seller/api/v0/listing', () => {
 			return HttpResponse.json([listing]);
+		}),
+	);
+}
+
+function mockListing() {
+	server.use(
+		http.get('http://localhost:3000/seller/api/v0/listing/:id', () => {
+			return HttpResponse.json(listing);
 		}),
 	);
 }
@@ -71,6 +79,7 @@ function renderUpdateListing() {
 }
 
 function renderUpdateListingWithRoutes() {
+	mockListing();
 	render(
 		<MemoryRouter initialEntries={[updatePath]}>
 			<Routes>
@@ -89,6 +98,17 @@ function renderUpdateListingWithRoutes() {
 	);
 }
 
+function renderUpdateListingAtEditRoute() {
+	mockListing();
+	render(
+		<MemoryRouter initialEntries={[updatePath]}>
+			<Routes>
+				<Route path="/listing/:id/edit" element={<UpdateListing />} />
+			</Routes>
+		</MemoryRouter>,
+	);
+}
+
 describe('update listing page', () => {
 	it('has a save icon button with a save edits aria label', () => {
 		renderUpdateListing();
@@ -100,6 +120,34 @@ describe('update listing page', () => {
 		renderUpdateListingWithRoutes();
 		await user.click(screen.getByRole('button', { name: /save edits/i }));
 		expect(screen.getByText('/')).toBeDefined();
+	});
+
+	it('initially shows the listing title', async () => {
+		renderUpdateListingAtEditRoute();
+		expect(await screen.findByLabelText('Title')).toHaveProperty('value', listing.title);
+	});
+
+	it('initially shows the listing description', async () => {
+		renderUpdateListingAtEditRoute();
+		expect(await screen.findByLabelText('Description')).toHaveProperty('value', listing.description);
+	});
+
+	it('initially shows the listing price', async () => {
+		renderUpdateListingAtEditRoute();
+		expect(await screen.findByLabelText('Price')).toHaveProperty('value', String(listing.price));
+	});
+
+	it('initially shows the listing stock', async () => {
+		renderUpdateListingAtEditRoute();
+		expect(await screen.findByLabelText('Stock')).toHaveProperty('value', String(listing.stock));
+	});
+
+	it('initially shows the listing categories', async () => {
+		renderUpdateListingAtEditRoute();
+		expect(await screen.findByLabelText('Categories')).toHaveProperty(
+			'value',
+			listing.categories.join(', '),
+		);
 	});
 });
 
