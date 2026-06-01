@@ -1,6 +1,7 @@
 import EditIcon from '@mui/icons-material/Edit';
 import { Card, CardContent, IconButton, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import type { Listing } from './model';
 
 interface ListingCardProps {
@@ -18,7 +19,11 @@ export default function ListingCard({ listing }: ListingCardProps) {
 				<Typography>
 					${listing.price} · {t('{{stock}} in stock', { stock: listing.stock })}
 				</Typography>
-				<IconButton aria-label={`update ${listing.title}`}>
+				<IconButton
+					aria-label={`update ${listing.title}`}
+					component={Link}
+					to={`/listing/${listing.id}/edit`}
+				>
 					<EditIcon />
 				</IconButton>
 			</CardContent>
