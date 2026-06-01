@@ -60,6 +60,18 @@ describe('Payment checkout', () => {
 		const res = await checkout();
 		expect(res.body.url).toBe('');
 	});
+
+	it('checkout session uses payment success URL', async () => {
+		await checkout();
+		const args = createCheckoutSession.mock.calls[0][0];
+		expect(args.success_url).toContain('/payment/success');
+	});
+
+	it('checkout session uses payment failed URL', async () => {
+		await checkout();
+		const args = createCheckoutSession.mock.calls[0][0];
+		expect(args.cancel_url).toContain('/payment/failed');
+	});
 });
 
 describe('Payment webhook', () => {
@@ -111,6 +123,22 @@ describe('Payment webhook', () => {
 			id: orderId,
 			status: 'failed',
 		});
+	});
+
+	it('sends order confirmation email for completed checkout', async () => {
+		await completedCheckoutSession();
+		const emailCall = updateOrderStatus.mock.calls.find(
+			(call: [string]) => call[0].includes('/email'),
+		);
+		expect(emailCall).toBeDefined();
+	});
+
+	it('does not send email for failed checkout', async () => {
+		await failedCheckoutSession();
+		const emailCall = updateOrderStatus.mock.calls.find(
+			(call: [string]) => call[0].includes('/email'),
+		);
+		expect(emailCall).toBeUndefined();
 	});
 });
 

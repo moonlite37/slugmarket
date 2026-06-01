@@ -29,8 +29,8 @@ export class PaymentService {
 				quantity: o.quantity,
 			})),
 			metadata: { orderIds },
-			success_url: 'https://slugmarket.shop/shopper/orders',
-			cancel_url: 'https://slugmarket.shop/shopper/',
+			success_url: 'https://slugmarket.shop/shopper/payment/success',
+			cancel_url: 'https://slugmarket.shop/shopper/payment/failed',
 		});
 		return {url: session.url ?? ''};
 	}
