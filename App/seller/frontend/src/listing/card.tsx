@@ -19,6 +19,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 				<Typography>
 					${listing.price} · {t('{{stock}} in stock', { stock: listing.stock })}
 				</Typography>
+				<Typography color="text.secondary">{listing.categories.join(', ')}</Typography>
 				<IconButton
 					aria-label={`update ${listing.title}`}
 					component={Link}

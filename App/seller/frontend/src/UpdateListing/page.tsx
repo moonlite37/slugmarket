@@ -2,14 +2,14 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Box, IconButton, Stack, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getListing } from './model';
+import { getListing, updateListing } from './model';
 
 export default function UpdateListing() {
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
 	const [price, setPrice] = useState('');
+	const [description, setDescription] = useState('');
 	const [stock, setStock] = useState('');
 	const [categories, setCategories] = useState('');
 
@@ -26,6 +26,23 @@ export default function UpdateListing() {
 		};
 		void loadListing();
 	}, [id]);
+
+	const saveEdits = async () => {
+		if (!id) return;
+		const res = await updateListing(id, {
+			title,
+			description,
+			price: Number(price),
+			stock: Number(stock),
+			categories: categories
+				.split(',')
+				.map((category) => category.trim())
+				.filter(Boolean),
+		});
+		if (res.ok) {
+			navigate('/');
+		}
+	};
 
 	return (
 		<Box sx={{ p: 3, maxWidth: 500 }}>
@@ -69,9 +86,7 @@ export default function UpdateListing() {
 				/>
 				<IconButton
 					aria-label="save edits"
-					onClick={() => {
-						navigate('/');
-					}}
+					onClick={saveEdits}
 				>
 					<SaveIcon />
 				</IconButton>
