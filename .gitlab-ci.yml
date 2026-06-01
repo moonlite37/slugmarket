@@ -30,7 +30,8 @@ app-test:
         [ -f "$dir/package.json" ] || continue
         cd $dir
         npm install
-        npm test
+        [ ! -f "tsoa.json" ] || npx tsoa spec-and-routes
+        npx vitest run --no-file-parallelism --testTimeout=10000 --coverage
         cd $CI_PROJECT_DIR
       done
 microservice-test:
