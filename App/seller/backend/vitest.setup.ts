@@ -40,6 +40,12 @@ export const server = setupServer(
       { status: 201 },
     );
   }),
+  http.get('http://127.0.0.1:3011/api/v0/category', () => {
+    return HttpResponse.json([
+      { id: 'cat-1', name: 'Food' },
+      { id: 'cat-2', name: 'Tech' },
+    ]);
+  }),
   http.get('http://127.0.0.1:3011/api/v0/listing', () => {
     return HttpResponse.json([
       { id: 'mock-1', title: 'My Widget', description: 'A widget', price: 10, stock: 5, categories: ['test'], author: 'mock-id', created: '2026-05-10' },

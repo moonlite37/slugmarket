@@ -109,3 +109,19 @@ describe('Create Listing Form', () => {
 		});
 	});
 });
+
+describe('Category picker', () => {
+	it('renders category checkboxes', async () => {
+		renderCreateListing();
+		expect(await screen.findByLabelText('Food')).toBeDefined();
+		expect(await screen.findByLabelText('Tech')).toBeDefined();
+	});
+
+	it('can select a category', async () => {
+		const user = userEvent.setup();
+		renderCreateListing();
+		const foodCheckbox = await screen.findByLabelText('Food');
+		await user.click(foodCheckbox);
+		expect((foodCheckbox as HTMLInputElement).checked).toBe(true);
+	});
+});

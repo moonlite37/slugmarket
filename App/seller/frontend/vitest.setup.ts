@@ -29,6 +29,12 @@ export const server = setupServer(
     const body = (await request.json()) as Record<string, unknown>;
     return HttpResponse.json({ id: params.id, status: body.status });
   }),
+  http.get('http://localhost:3000/seller/api/v0/category', () => {
+    return HttpResponse.json([
+      { id: 'cat-food', name: 'Food' },
+      { id: 'cat-tech', name: 'Tech' },
+    ]);
+  }),
   http.post('http://localhost:3000/seller/api/v0/listing', async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>;
     return HttpResponse.json(
