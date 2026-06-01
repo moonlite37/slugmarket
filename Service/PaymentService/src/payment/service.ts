@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import {
 	CheckoutRequest,
 	CheckoutResponse,
+	StockItem,
 	WebhookRequest,
 } from '.';
 
@@ -13,6 +14,7 @@ dotenv.config({path: path.resolve(process.cwd(), '.env')});
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const ORDER_GRAPHQL_URL = process.env.ORDER_GRAPHQL_URL ?? 'http://localhost:4000/graphql';
 const NOTIFICATION_URL = process.env.NOTIFICATION_URL ?? 'http://127.0.0.1:3019/api/v0';
+const LISTING_URL = process.env.LISTING_URL ?? 'http://127.0.0.1:3011/api/v0';
 const UPDATE_ORDER_STATUS_MUTATION = 'mutation UpdateOrderStatus($id: String!, $status: String!) { updateOrderStatus(id: $id, status: $status) { id status } }';
 
 export class PaymentService {
@@ -28,7 +30,11 @@ export class PaymentService {
 				},
 				quantity: o.quantity,
 			})),
-			metadata: { orderIds, email: request.email ?? '' },
+			metadata: {
+				orderIds,
+				email: request.email ?? '',
+				stockItems: JSON.stringify(request.stockItems || []),
+			},
 			success_url: 'https://slugmarket.shop/shopper/payment/success',
 			cancel_url: 'https://slugmarket.shop/shopper/payment/failed',
 		});
@@ -42,6 +48,7 @@ export class PaymentService {
 		if (status === 'paid') {
 			const email = request.data.object.metadata.email;
 			await Promise.all(orderIds.map((id) => this.sendOrderConfirmation(id, email)));
+			await this.decreaseStock(request.data.object.metadata.stockItems);
 		}
 	}
 
@@ -66,5 +73,19 @@ export class PaymentService {
 				text: `Your order ${orderId} has been paid and is being processed.`,
 			}),
 		}).catch(() => { /* notification failure should not break payment flow */ });
+	}
+
+	private async decreaseStock(stockItemsJson?: string): Promise<void> {
+		const items: StockItem[] = JSON.parse(stockItemsJson || '[]');
+		for (const item of items) {
+			const res = await fetch(`${LISTING_URL}/listing/${item.listingId}`);
+			if (!res.ok) continue;
+			const listing = await res.json();
+			await fetch(`${LISTING_URL}/listing/${item.listingId}`, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ stock: Math.max(0, listing.stock - item.quantity) }),
+			}).catch(() => { /* stock update non-critical */ });
+		}
 	}
 }

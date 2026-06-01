@@ -5,8 +5,8 @@ const {createCheckoutSession} = vi.hoisted(() => ({
 	createCheckoutSession: vi.fn(),
 }));
 
-const {updateOrderStatus} = vi.hoisted(() => ({
-	updateOrderStatus: vi.fn(),
+const {mockFetch} = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
 }));
 
 vi.mock('stripe', () => {
@@ -72,15 +72,24 @@ describe('Payment checkout', () => {
 		const args = createCheckoutSession.mock.calls[0][0];
 		expect(args.cancel_url).toContain('/payment/failed');
 	});
+
+	it('stores stockItems in metadata', async () => {
+		await request.post('/api/v0/checkout').send({
+			orders: [{ orderId, name: 'Pork Chop', quantity: 2, unitAmount: 1250 }],
+			stockItems: [{ listingId: 'listing-1', quantity: 2 }],
+		});
+		const args = createCheckoutSession.mock.calls[0][0];
+		expect(JSON.parse(args.metadata.stockItems)).toEqual([{ listingId: 'listing-1', quantity: 2 }]);
+	});
 });
 
 describe('Payment webhook', () => {
 	const orderId = 'order_123';
 
 	beforeEach(() => {
-		updateOrderStatus.mockClear();
-		updateOrderStatus.mockResolvedValue(new Response('{}'));
-		vi.stubGlobal('fetch', updateOrderStatus);
+		mockFetch.mockClear();
+		mockFetch.mockResolvedValue(new Response(JSON.stringify({ stock: 10 })));
+		vi.stubGlobal('fetch', mockFetch);
 	});
 
 	const checkoutSession = (type: string) => {
@@ -94,6 +103,7 @@ describe('Payment webhook', () => {
 						metadata: {
 							orderIds: orderId,
 							email: 'shopper@test.com',
+							stockItems: JSON.stringify([{ listingId: 'listing-1', quantity: 2 }]),
 						},
 					},
 				},
@@ -110,7 +120,7 @@ describe('Payment webhook', () => {
 
 	it('updates order status for completed checkout session', async () => {
 		await completedCheckoutSession();
-		const body = JSON.parse(updateOrderStatus.mock.calls[0][1].body);
+		const body = JSON.parse(mockFetch.mock.calls[0][1].body);
 		expect(body.variables).toEqual({
 			id: orderId,
 			status: 'paid',
@@ -119,7 +129,7 @@ describe('Payment webhook', () => {
 
 	it('updates order status for failed checkout session', async () => {
 		await failedCheckoutSession();
-		const body = JSON.parse(updateOrderStatus.mock.calls[0][1].body);
+		const body = JSON.parse(mockFetch.mock.calls[0][1].body);
 		expect(body.variables).toEqual({
 			id: orderId,
 			status: 'failed',
@@ -128,7 +138,7 @@ describe('Payment webhook', () => {
 
 	it('sends order confirmation email for completed checkout', async () => {
 		await completedCheckoutSession();
-		const emailCall = updateOrderStatus.mock.calls.find(
+		const emailCall = mockFetch.mock.calls.find(
 			(call: unknown[]) => (call[0] as string).includes('/email'),
 		);
 		expect(emailCall).toBeDefined();
@@ -136,10 +146,28 @@ describe('Payment webhook', () => {
 
 	it('does not send email for failed checkout', async () => {
 		await failedCheckoutSession();
-		const emailCall = updateOrderStatus.mock.calls.find(
+		const emailCall = mockFetch.mock.calls.find(
 			(call: unknown[]) => (call[0] as string).includes('/email'),
 		);
 		expect(emailCall).toBeUndefined();
+	});
+
+	it('decreases stock on successful payment', async () => {
+		await completedCheckoutSession();
+		const putCall = mockFetch.mock.calls.find(
+			(call: unknown[]) => (call[1] as Record<string, string>)?.method === 'PUT',
+		);
+		const opts = (putCall as unknown[])[1] as Record<string, string>;
+		const body = JSON.parse(opts.body);
+		expect(body.stock).toBe(8);
+	});
+
+	it('does not decrease stock on failed payment', async () => {
+		await failedCheckoutSession();
+		const putCall = mockFetch.mock.calls.find(
+			(call: unknown[]) => (call[1] as Record<string, string>)?.method === 'PUT',
+		);
+		expect(putCall).toBeUndefined();
 	});
 });
 

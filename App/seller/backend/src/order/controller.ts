@@ -30,7 +30,8 @@ export class OrderController extends Controller {
 	public async updateOrderStatus(
 		@Path() id: string,
 		@Body() body: UpdateOrderBody,
+		@Request() req: express.Request,
 	): Promise<unknown> {
-		return new OrderService().updateOrderStatus(id, body.status);
+		return new OrderService().updateOrderStatus(id, body.status, req.user?.id as string);
 	}
 }

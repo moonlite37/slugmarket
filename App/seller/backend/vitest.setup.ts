@@ -51,6 +51,12 @@ export const server = setupServer(
       { id: 'mock-1', title: 'My Widget', description: 'A widget', price: 10, stock: 5, categories: ['test'], author: 'mock-id', created: '2026-05-10' },
     ]);
   }),
+  http.get('http://127.0.0.1:3011/api/v0/listing/:id', () => {
+    return HttpResponse.json({ id: 'mock-1', title: 'My Widget', description: 'A widget', price: 10, stock: 5, categories: ['test'], author: 'mock-id', created: '2026-05-10' });
+  }),
+  http.put('http://127.0.0.1:3011/api/v0/listing/:id', () => {
+    return HttpResponse.json({ id: 'mock-1', stock: 5 });
+  }),
   http.post('http://127.0.0.1:3040/api/v0/generate', ({ request }) => {
     const auth = request.headers.get('authorization');
     if (auth === 'valid') {
