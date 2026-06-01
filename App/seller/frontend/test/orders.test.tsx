@@ -1,4 +1,4 @@
-import { describe, it } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
@@ -179,5 +179,25 @@ describe('OrdersView error handling', () => {
 		);
 		await fulfillOrder(user);
 		screen.getByText(/pending/);
+	});
+});
+
+describe('Shopper info on orders', () => {
+	it('displays shopper name on order card', async () => {
+		render(
+			<MemoryRouter>
+				<OrdersView />
+			</MemoryRouter>,
+		);
+		expect(await screen.findByText(/Test Shopper/)).toBeDefined();
+	});
+
+	it('displays shopper email on order card', async () => {
+		render(
+			<MemoryRouter>
+				<OrdersView />
+			</MemoryRouter>,
+		);
+		expect(await screen.findByText(/shopper@test.com/)).toBeDefined();
 	});
 });

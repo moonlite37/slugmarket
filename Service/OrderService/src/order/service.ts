@@ -9,7 +9,9 @@ export class OrderService {
          'items', $3::jsonb,
          'total', $4::numeric,
          'status', 'pending',
-         'created', NOW()::text
+         'created', NOW()::text,
+         'shopperName', $5::text,
+         'shopperEmail', $6::text
        ))
        RETURNING id, shopper, seller, data`,
 			[
@@ -17,6 +19,8 @@ export class OrderService {
 				input.seller,
 				JSON.stringify(input.items),
 				input.total,
+				input.shopperName || '',
+				input.shopperEmail || '',
 			],
 		);
 		const r = rows[0];

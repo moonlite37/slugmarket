@@ -122,3 +122,59 @@ describe('allOrders', () => {
 		expect(orders.length).toBe(2);
 	});
 });
+
+describe('shopper info on orders', () => {
+	it('creates order with shopper name and email', async () => {
+		const res = await gql(`
+			mutation {
+				createOrder(input: {
+					shopper: "${SHOPPER_A}"
+					seller: "${SELLER_A}"
+					shopperName: "John Doe"
+					shopperEmail: "john@test.com"
+					items: [{
+						listingId: "00000000-0000-0000-0000-000000000099"
+						title: "Named Order"
+						price: 15.00
+						quantity: 1
+					}]
+					total: 15.00
+				}) {
+					id shopperName shopperEmail
+				}
+			}
+		`);
+		expect(res.status).toBe(200);
+		expect(res.body.data.createOrder.shopperName).toBe('John Doe');
+		expect(res.body.data.createOrder.shopperEmail).toBe('john@test.com');
+	});
+
+	it('seller can see shopper name on orders', async () => {
+		await gql(`
+			mutation {
+				createOrder(input: {
+					shopper: "${SHOPPER_A}"
+					seller: "${SELLER_A}"
+					shopperName: "Jane Smith"
+					shopperEmail: "jane@test.com"
+					items: [{
+						listingId: "00000000-0000-0000-0000-000000000099"
+						title: "Visible Order"
+						price: 10.00
+						quantity: 1
+					}]
+					total: 10.00
+				}) { id }
+			}
+		`);
+		const res = await gql(`{
+			ordersBySeller(sellerId: "${SELLER_A}") {
+				id shopperName shopperEmail
+			}
+		}`);
+		expect(res.status).toBe(200);
+		const order = res.body.data.ordersBySeller.find((o: { shopperName: string }) => o.shopperName === 'Jane Smith');
+		expect(order).toBeDefined();
+		expect(order.shopperEmail).toBe('jane@test.com');
+	});
+});

@@ -18,6 +18,8 @@ export const server = setupServer(
         id: 'order-1',
         shopper: 'shopper-id',
         seller: 'seller-id',
+        shopperName: 'Test Shopper',
+        shopperEmail: 'shopper@test.com',
         items: [{ listingId: 'l1', title: 'Test Widget', price: 9.99, quantity: 3 }],
         total: 29.97,
         status: 'pending',

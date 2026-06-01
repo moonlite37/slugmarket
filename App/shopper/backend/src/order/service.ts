@@ -11,6 +11,8 @@ interface Order {
   id: string;
   shopper: string;
   seller: string;
+  shopperName?: string;
+  shopperEmail?: string;
   items: OrderItem[];
   total: number;
   status: string;
@@ -24,22 +26,24 @@ interface CreateOrderInput {
 }
 
 export class OrderService {
-  public async createOrder(shopperId: string, input: CreateOrderInput): Promise<Order> {
+  public async createOrder(shopperId: string, shopperName?: string, shopperEmail?: string, input?: CreateOrderInput): Promise<Order> {
     const res = await fetch(ORDER_SERVICE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         query: `mutation CreateOrder($input: CreateOrderInput!) {
           createOrder(input: $input) {
-            id shopper seller items { listingId title price quantity } total status created
+            id shopper seller shopperName shopperEmail items { listingId title price quantity } total status created
           }
         }`,
         variables: {
           input: {
             shopper: shopperId,
-            seller: input.seller,
-            items: input.items,
-            total: input.total,
+            seller: input?.seller,
+            shopperName: shopperName || '',
+            shopperEmail: shopperEmail || '',
+            items: input?.items,
+            total: input?.total,
           },
         },
       }),
@@ -58,7 +62,7 @@ export class OrderService {
       body: JSON.stringify({
         query: `query OrdersByShopper($shopperId: String!) {
           ordersByShopper(shopperId: $shopperId) {
-            id shopper seller items { listingId title price quantity } total status created
+            id shopper seller shopperName shopperEmail items { listingId title price quantity } total status created
           }
         }`,
         variables: { shopperId },

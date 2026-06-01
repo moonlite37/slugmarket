@@ -26,7 +26,7 @@ export class OrderService {
 			body: JSON.stringify({
 				query: `query OrdersBySeller($sellerId: String!) {
 					ordersBySeller(sellerId: $sellerId) {
-						id shopper seller items { listingId title price quantity } total status created
+						id shopper seller shopperName shopperEmail items { listingId title price quantity } total status created
 					}
 				}`,
 				variables: { sellerId },

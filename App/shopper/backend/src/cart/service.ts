@@ -63,7 +63,7 @@ export class CartService {
 		return synced;
 	}
 
-	public async checkout(userId: string, email?: string): Promise<string> {
+	public async checkout(userId: string, email?: string, name?: string): Promise<string> {
 		const cartItems = await this.getCart(userId);
 
 		const bySeller = new Map<string, CartItem[]>();
@@ -76,7 +76,7 @@ export class CartService {
 		const paymentOrders: { orderId: string; name: string; quantity: number; unitAmount: number }[] = [];
 		for (const [seller, items] of bySeller) {
 			const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-			const order = await new OrderService().createOrder(userId, {
+			const order = await new OrderService().createOrder(userId, name, email, {
 				seller,
 				items: items.map((i) => ({ listingId: i.listing_id, title: i.name, price: i.price, quantity: i.quantity })),
 				total,

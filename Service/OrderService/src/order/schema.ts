@@ -26,6 +26,12 @@ export class Order {
   @Field(() => String)
   	seller!: string;
 
+  @Field(() => String, { nullable: true })
+  	shopperName?: string;
+
+  @Field(() => String, { nullable: true })
+  	shopperEmail?: string;
+
   @Field(() => [OrderItem])
   	items!: OrderItem[];
 
@@ -61,6 +67,12 @@ export class CreateOrderInput {
 
   @Field(() => String)
   	seller!: string;
+
+  @Field(() => String, { nullable: true })
+  	shopperName?: string;
+
+  @Field(() => String, { nullable: true })
+  	shopperEmail?: string;
 
   @Field(() => [OrderItemInput])
   	items!: OrderItemInput[];

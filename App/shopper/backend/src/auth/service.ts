@@ -19,8 +19,8 @@ export class AuthService {
 			headers: { Authorization: `Bearer ${authToken}` }
 		});
 		if (!res.ok) throw new Error('Unauthorized');
-		const { id, roles, email } = await res.json();
+		const { id, roles, email, name } = await res.json();
 		if (!roles.includes('shopper')) throw new Error('Unauthorized');
-		return { id, email };
+		return { id, email, name };
 	}
 }
