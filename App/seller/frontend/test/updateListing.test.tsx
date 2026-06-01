@@ -70,10 +70,36 @@ function renderUpdateListing() {
 	);
 }
 
+function renderUpdateListingWithRoutes() {
+	render(
+		<MemoryRouter initialEntries={[updatePath]}>
+			<Routes>
+				<Route
+					path="/listing/:id/edit"
+					element={
+						<>
+							<UpdateListing />
+							<LocationDisplay />
+						</>
+					}
+				/>
+				<Route path="/" element={<LocationDisplay />} />
+			</Routes>
+		</MemoryRouter>,
+	);
+}
+
 describe('update listing page', () => {
 	it('has a save icon button with a save edits aria label', () => {
 		renderUpdateListing();
 		expect(screen.getByRole('button', { name: /save edits/i })).toBeDefined();
+	});
+
+	it('routes back to the dashboard when clicking save', async () => {
+		const user = userEvent.setup();
+		renderUpdateListingWithRoutes();
+		await user.click(screen.getByRole('button', { name: /save edits/i }));
+		expect(screen.getByText('/')).toBeDefined();
 	});
 });
 
