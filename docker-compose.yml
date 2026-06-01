@@ -14,7 +14,7 @@ services:
       - "127.0.0.1:3018:3018" # Image service
       - "127.0.0.1:4000:4000" # Order service
       - "127.0.0.1:3040:3040" # Corporate backend
-      - "127.0.0.1:3015:3015" # Corporate service
+      - "127.0.0.1:3015:3015" # Corporate service 
   postgres:
     container_name: database
     image: cte-postgres
