@@ -25,6 +25,19 @@ export class ListingController extends Controller {
 		return res;
 	}
 
+	@Get('listing/:id')
+	@Security('cookie')
+	public async getListingById(
+		@Request() req: express.Request,
+		@Path() id: string,
+	): Promise<unknown> {
+		const res = await new ListingService().getListingById(req.user?.id as string, id);
+		if(!res){
+			this.setStatus(404);
+		}
+		return res;
+	}
+
 	@Post('listing')
 	@Security('cookie')
 	@SuccessResponse('201', 'Created')

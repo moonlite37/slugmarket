@@ -11,6 +11,13 @@ export class ListingService {
 		return res.json();
 	}
 
+	public async getListingById(userId: string, id:string): Promise<Listing[]> {
+		const res = await fetch(`${LISTING_MICROSERVICE}/listing?author=${userId}`);
+		const listings = await res.json()
+		const listing = listings.find((l:Listing) => l.id === id);
+		return listing;
+	}
+
 	public async createListing(userId: string, listing: NewListing): Promise<Listing> {
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing`, {
 			method: 'POST',

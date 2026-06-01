@@ -3,7 +3,7 @@ import { request } from './setup';
 import { server } from '../vitest.setup';
 import { http, HttpResponse } from 'msw';
 
-describe('seller dashboard listings', () => {
+describe('get listings', () => {
 	it('returns listings for authenticated seller', async () => {
 		const res = await request
 			.get('/api/v0/listing')
@@ -28,5 +28,22 @@ describe('seller dashboard listings', () => {
 			.get('/api/v0/listing')
 			.set('Cookie', 'authToken=mock-token');
 		expect(res.status).toBe(500);
+	});
+});
+
+describe('get listings by id', () => {
+	it('returns listings for authenticated seller', async () => {
+		const res = await request
+			.get('/api/v0/listing/mock-1')
+			.set('Cookie', 'authToken=mock-token');
+		expect(res.status).toBe(200);
+		expect(res.body.title).toBe('My Widget');
+	});
+
+	it('returns 404 on not found id', async () => {
+		const res = await request
+			.get('/api/v0/listing/eeeee')
+			.set('Cookie', 'authToken=mock-token');
+		expect(res.status).toBe(404);
 	});
 });
