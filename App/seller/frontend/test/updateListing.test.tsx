@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
@@ -220,7 +220,9 @@ describe('update listing page', () => {
 
 	it('initially shows the listing title', async () => {
 		renderUpdateListingAtEditRoute();
-		expect(await screen.findByLabelText('Title')).toHaveProperty('value', listing.title);
+		await waitFor(() => {
+		expect(screen.getByLabelText('Title')).toHaveProperty('value', listing.title);
+	});
 	});
 
 	it('initially shows the listing description', async () => {

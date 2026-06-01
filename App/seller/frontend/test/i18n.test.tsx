@@ -117,7 +117,7 @@ describe('CreateListing Spanish', async () => {
 
   it('Create Listing button', async () => {
     await renderCreateListingInSpanish();
-    await waitFor(() => screen.getByRole('button', { name: /^Crear anuncio$/i }));
+    await waitFor(() => screen.getByRole('button', { name: /^Guardar$/i }));
   });
 });
 
