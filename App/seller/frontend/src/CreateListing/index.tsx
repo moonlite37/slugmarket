@@ -68,7 +68,7 @@ export default function CreateListing() {
 								onClick={handleSubmit}
 								disabled={!title || !description || !price || !stock}
 							>
-								{t('Create Listing')}
+								{t('Save')}
 							</Button>
 				</Stack>
 		</Box>
