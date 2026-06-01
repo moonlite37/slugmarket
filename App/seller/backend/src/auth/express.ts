@@ -4,8 +4,10 @@ import { SessionUser } from '..';
 
 export async function expressAuthentication(
   request: Request,
-  _securityName: string,
-  _scopes?: string[],
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  securityName: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  scopes?: string[],
 ): Promise<SessionUser> {
   const authToken = request.cookies.authToken;
   if (!authToken) {
