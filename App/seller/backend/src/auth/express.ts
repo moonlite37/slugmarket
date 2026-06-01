@@ -4,8 +4,8 @@ import { SessionUser } from '..';
 
 export async function expressAuthentication(
   request: Request,
-  securityName: string,
-  scopes?: string[],
+  _securityName: string,
+  _scopes?: string[],
 ): Promise<SessionUser> {
   const authToken = request.cookies.authToken;
   if (!authToken) {
