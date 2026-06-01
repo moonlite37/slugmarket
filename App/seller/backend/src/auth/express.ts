@@ -7,7 +7,6 @@ export async function expressAuthentication(
   securityName: string,
   scopes?: string[],
 ): Promise<SessionUser> {
-  console.log(securityName, scopes);
   const authToken = request.cookies.authToken;
   if (!authToken) {
     throw new Error('No AuthToken');

@@ -138,7 +138,6 @@ export class AuthService {
 			contentEncryptionAlgorithms: [JWE_ALGORITHM],
 		});
 		const roles = payload.roles as string[];
-		console.log(scopes, roles);
 		for(const perm of scopes ?? []){
 			if(!roles.includes(perm)){
 				throw new Error('Unauthorized');

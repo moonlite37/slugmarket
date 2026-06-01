@@ -21,12 +21,13 @@ function App() {
 					<Routes>
 						<Route path="/login" element={<Login />} />
 						<Route path="/cart" element={<CartPage />} />
-						<Route path="/orders" element={<OrderHistory />} />
 						<Route path="/listing/:id" element={<ListingDetail />} />
 						<Route path="/payment/success" element={<SuccessfulPayment />} />
 						<Route path="/payment/failed" element={<FailedPayment />} />
 						<Route path="/" element={<ShopPage />} />
-						<Route element={<AuthenticatedRoute />}></Route>
+						<Route element={<AuthenticatedRoute />}>
+							<Route path="/orders" element={<OrderHistory />} />
+						</Route>
 					</Routes>
 				</CartContextProvider>
 			</BrowserRouter>

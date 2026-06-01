@@ -215,7 +215,7 @@ describe('update listing page', () => {
 		const user = userEvent.setup();
 		renderUpdateListingWithRoutes();
 		await user.click(screen.getByRole('button', { name: /save edits/i }));
-		expect(screen.getByText('/')).toBeDefined();
+		expect(await screen.findByText('/')).toBeDefined();
 	});
 
 	it('initially shows the listing title', async () => {
