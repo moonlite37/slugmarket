@@ -129,3 +129,34 @@ describe('POST /api/v0/cart/checkout', () => {
 		expect(deleteCount).toBe(1);
 	});
 });
+
+describe('checkout stock decrease', () => {
+	it('decreases listing stock after order', async () => {
+		let updatedStock: number | undefined;
+		server.use(
+			http.get('http://127.0.0.1:3017/api/v0/cart', () => {
+				return HttpResponse.json([
+					{ listing_id: 'item-1', name: 'Widget', price: 10, quantity: 2, seller: 'seller-1' },
+				]);
+			}),
+			http.get('http://127.0.0.1:3011/api/v0/listing/item-1', () => {
+				return HttpResponse.json({ id: 'item-1', stock: 10, price: 10 });
+			}),
+			http.put('http://127.0.0.1:3011/api/v0/listing/item-1', async ({ request }) => {
+				const body = await request.json() as Record<string, number>;
+				updatedStock = body.stock;
+				return HttpResponse.json({ id: 'item-1', stock: body.stock });
+			}),
+			http.post('http://127.0.0.1:3016/api/v0/checkout', () => {
+				return HttpResponse.json({ url: 'https://stripe.com/checkout' });
+			}),
+			http.delete('http://127.0.0.1:3017/api/v0/cart/item/item-1', () => {
+				return new HttpResponse(null, { status: 204 });
+			}),
+		);
+		const res = await request.post('/api/v0/cart/checkout')
+			.set('Cookie', 'authToken=mock-token');
+		expect(res.status).toBe(200);
+		expect(updatedStock).toBe(8);
+	});
+});

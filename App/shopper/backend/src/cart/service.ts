@@ -3,6 +3,7 @@ import { OrderService } from '../order/service';
 
 const CART_MICROSERVICE = 'http://127.0.0.1:3017/api/v0';
 const PAYMENT_SERVICE = 'http://127.0.0.1:3016/api/v0';
+const LISTING_MICROSERVICE = 'http://127.0.0.1:3011/api/v0';
 
 export interface CartItem {
 	listing_id: string;
@@ -97,6 +98,17 @@ export class CartService {
 			body: JSON.stringify({ orders: paymentOrders, email }),
 		});
 		const { url } = await res.json();
+
+		for (const item of cartItems) {
+			const listing = await new ListingService().getListingById(item.listing_id);
+			if (listing && listing.stock > 0) {
+				await fetch(`${LISTING_MICROSERVICE}/listing/${item.listing_id}`, {
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ stock: Math.max(0, listing.stock - item.quantity) }),
+				});
+			}
+		}
 
 		await Promise.all(cartItems.map((item) => this.deleteItem(userId, item.listing_id)));
 

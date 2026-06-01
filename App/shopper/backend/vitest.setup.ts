@@ -47,6 +47,9 @@ export const server = setupServer(
   http.get('http://127.0.0.1:3011/api/v0/listing/:id', () => {
     return HttpResponse.json(listing);
   }),
+  http.put('http://127.0.0.1:3011/api/v0/listing/:id', () => {
+    return HttpResponse.json(listing);
+  }),
   http.get('http://127.0.0.1:3011/api/v0/category', () => {
     return HttpResponse.json([{ name: 'some category' }]);
   }),
