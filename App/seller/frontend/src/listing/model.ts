@@ -4,6 +4,7 @@ export interface Listing {
 	description: string;
 	price: number;
 	stock: number;
+	categories: string[];
 	created: string;
 }
 

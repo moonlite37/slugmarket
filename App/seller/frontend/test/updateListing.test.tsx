@@ -19,8 +19,10 @@ const listing = {
 	created: '2026-05-31',
 };
 
+let currentListing = { ...listing };
 const updateLabel = `update ${listing.title}`;
 const updatePath = `/listing/${listing.id}/edit`;
+const wrongUpdatePath = '/listing/wrong-listing-id/edit';
 
 function LocationDisplay() {
 	const location = useLocation();
@@ -30,7 +32,7 @@ function LocationDisplay() {
 function mockListings() {
 	server.use(
 		http.get('http://localhost:3000/seller/api/v0/listing', () => {
-			return HttpResponse.json([listing]);
+			return HttpResponse.json([currentListing]);
 		}),
 	);
 }
@@ -38,7 +40,36 @@ function mockListings() {
 function mockListing() {
 	server.use(
 		http.get('http://localhost:3000/seller/api/v0/listing/:id', () => {
-			return HttpResponse.json(listing);
+			return HttpResponse.json(currentListing);
+		}),
+	);
+}
+
+function mockListingUpdate() {
+	server.use(
+		http.put('http://localhost:3000/seller/api/v0/listing/:id', async ({ request }) => {
+			const body = (await request.json()) as Partial<typeof listing>;
+			currentListing = {
+				...currentListing,
+				...body,
+			};
+			return HttpResponse.json(currentListing);
+		}),
+	);
+}
+
+function mockListingNotFound() {
+	server.use(
+		http.get('http://localhost:3000/seller/api/v0/listing/:id', () => {
+			return new HttpResponse(null, { status: 404 });
+		}),
+	);
+}
+
+function mockListingUpdateNotFound() {
+	server.use(
+		http.put('http://localhost:3000/seller/api/v0/listing/:id', () => {
+			return new HttpResponse(null, { status: 404 });
 		}),
 	);
 }
@@ -80,6 +111,7 @@ function renderUpdateListing() {
 
 function renderUpdateListingWithRoutes() {
 	mockListing();
+	mockListingUpdate();
 	render(
 		<MemoryRouter initialEntries={[updatePath]}>
 			<Routes>
@@ -109,7 +141,71 @@ function renderUpdateListingAtEditRoute() {
 	);
 }
 
+function renderUpdateListingToDashboard() {
+	mockListing();
+	mockListingUpdate();
+	mockListings();
+	render(
+		<MemoryRouter initialEntries={[updatePath]}>
+			<Routes>
+				<Route path="/listing/:id/edit" element={<UpdateListing />} />
+				<Route path="/" element={<Dashboard />} />
+			</Routes>
+		</MemoryRouter>,
+	);
+}
+
+async function editFieldAndSave(label: string, value: string) {
+	const user = userEvent.setup();
+	const field = await screen.findByLabelText(label);
+	await user.clear(field);
+	await user.type(field, value);
+	await user.click(screen.getByRole('button', { name: /save edits/i }));
+}
+
+function renderUpdateListingWithoutId() {
+	render(
+		<MemoryRouter initialEntries={['/listing/edit']}>
+			<Routes>
+				<Route
+					path="/listing/edit"
+					element={
+						<>
+							<UpdateListing />
+							<LocationDisplay />
+						</>
+					}
+				/>
+				<Route path="/" element={<LocationDisplay />} />
+			</Routes>
+		</MemoryRouter>,
+	);
+}
+
+function renderWrongUpdateListingRoute() {
+	render(
+		<MemoryRouter initialEntries={[wrongUpdatePath]}>
+			<Routes>
+				<Route
+					path="/listing/:id/edit"
+					element={
+						<>
+							<UpdateListing />
+							<LocationDisplay />
+						</>
+					}
+				/>
+				<Route path="/" element={<LocationDisplay />} />
+			</Routes>
+		</MemoryRouter>,
+	);
+}
+
 describe('update listing page', () => {
+	beforeEach(() => {
+		currentListing = { ...listing };
+	});
+
 	it('has a save icon button with a save edits aria label', () => {
 		renderUpdateListing();
 		expect(screen.getByRole('button', { name: /save edits/i })).toBeDefined();
@@ -149,10 +245,68 @@ describe('update listing page', () => {
 			listing.categories.join(', '),
 		);
 	});
+
+	it('updates the dashboard listing title after editing title', async () => {
+		renderUpdateListingToDashboard();
+		await editFieldAndSave('Title', 'Edited Listing');
+		expect(await screen.findByText('Edited Listing')).toBeDefined();
+	});
+
+	it('updates the dashboard listing description after editing description', async () => {
+		renderUpdateListingToDashboard();
+		await editFieldAndSave('Description', 'Edited description');
+		expect(await screen.findByText('Edited description')).toBeDefined();
+	});
+
+	it('updates the dashboard listing price after editing price', async () => {
+		renderUpdateListingToDashboard();
+		await editFieldAndSave('Price', '25');
+		expect(await screen.findByText(/\$25/)).toBeDefined();
+	});
+
+	it('updates the dashboard listing stock after editing stock', async () => {
+		renderUpdateListingToDashboard();
+		await editFieldAndSave('Stock', '12');
+		expect(await screen.findByText(/12 in stock/)).toBeDefined();
+	});
+
+	it('updates the dashboard listing categories after editing categories', async () => {
+		renderUpdateListingToDashboard();
+		await editFieldAndSave('Categories', 'updated, books');
+		expect(await screen.findByText('updated, books')).toBeDefined();
+	});
+
+	it('does not load listing values when no id is present', () => {
+		renderUpdateListingWithoutId();
+		expect(screen.getByLabelText('Title')).toHaveProperty('value', '');
+	});
+
+	it('stays on the update page when saving without an id', async () => {
+		const user = userEvent.setup();
+		renderUpdateListingWithoutId();
+		await user.click(screen.getByRole('button', { name: /save edits/i }));
+		expect(screen.getByText('/listing/edit')).toBeDefined();
+	});
+
+	it('keeps fields empty when listing get returns 404 for a wrong id', async () => {
+		mockListingNotFound();
+		renderWrongUpdateListingRoute();
+		expect(await screen.findByLabelText('Title')).toHaveProperty('value', '');
+	});
+
+	it('stays on the update page when save returns 404 for a wrong id', async () => {
+		const user = userEvent.setup();
+		mockListing();
+		mockListingUpdateNotFound();
+		renderWrongUpdateListingRoute();
+		await user.click(await screen.findByRole('button', { name: /save edits/i }));
+		expect(screen.getByText(wrongUpdatePath)).toBeDefined();
+	});
 });
 
 describe('update listing button', () => {
 	beforeEach(() => {
+		currentListing = { ...listing };
 		mockListings();
 	});
 
