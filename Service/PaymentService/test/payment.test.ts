@@ -129,7 +129,7 @@ describe('Payment webhook', () => {
 	it('sends order confirmation email for completed checkout', async () => {
 		await completedCheckoutSession();
 		const emailCall = updateOrderStatus.mock.calls.find(
-			(call: [string]) => call[0].includes('/email'),
+			(call: any[]) => call[0].includes('/email'),
 		);
 		expect(emailCall).toBeDefined();
 	});
@@ -137,7 +137,7 @@ describe('Payment webhook', () => {
 	it('does not send email for failed checkout', async () => {
 		await failedCheckoutSession();
 		const emailCall = updateOrderStatus.mock.calls.find(
-			(call: [string]) => call[0].includes('/email'),
+			(call: any[]) => call[0].includes('/email'),
 		);
 		expect(emailCall).toBeUndefined();
 	});
