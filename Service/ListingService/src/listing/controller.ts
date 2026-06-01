@@ -46,8 +46,8 @@ export class ListingController extends Controller {
 		@Body() body: CreateListingBody,
 	): Promise<Listing> {
 		this.setStatus(201);
-		const { authorId, ...listing } = body;
-		const res = await new ListingService().createListing(authorId, listing);
+		const { authorId, username, ...listing } = body;
+		const res = await new ListingService().createListing(authorId, listing, username);
 		return res;
 	}
 

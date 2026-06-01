@@ -9,7 +9,7 @@ export interface Listing {
   price: number;
   discountPrice?: number;
   stock: number;
-  catagories: string[];
+  categories: string[];
   
   images?: string[];
 }
@@ -25,6 +25,7 @@ export interface NewListing {
 
 export interface CreateListingBody extends NewListing {
   authorId: string
+  username?: string
 }
 export interface UpdateListingBody {
   title?: string

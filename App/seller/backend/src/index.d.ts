@@ -1,5 +1,6 @@
 export interface SessionUser {
   id: string
+  name?: string
 }
 
 declare global {

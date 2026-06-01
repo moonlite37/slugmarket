@@ -17,8 +17,8 @@ interface UserRow {
 const TEXT_ENCODED_SECRET = new TextEncoder().encode(process.env.SECRET);
 const JWE_ALGORITHM = 'A256CBC-HS512';
 
-export const encryptJwe = async (id: string, roles: string[], email?: string): Promise<string> => {
-	return await new EncryptJWT({ id, roles, email })
+export const encryptJwe = async (id: string, roles: string[], email?: string, name?: string): Promise<string> => {
+	return await new EncryptJWT({ id, roles, email, name })
 		.setProtectedHeader({ alg: 'dir', enc: JWE_ALGORITHM })
 		.setIssuedAt()
 		.setExpirationTime('2h')
@@ -53,7 +53,7 @@ export class AuthService {
 		}
 		return {
 			name: result[0].name,
-			authToken: await encryptJwe(result[0].id, result[0].roles, credentials.email),
+			authToken: await encryptJwe(result[0].id, result[0].roles, credentials.email, result[0].name),
 		};
 	}
 
@@ -126,7 +126,7 @@ export class AuthService {
 		
 		return {
 			name: result.rows[0].name,
-			authToken: await encryptJwe(result.rows[0].id, result.rows[0].roles, email as string),
+			authToken: await encryptJwe(result.rows[0].id, result.rows[0].roles, email as string, name as string),
 		};
 	}
 	public async check(authHeader?: string, scopes?: string[] | []): Promise<SessionUser> {
@@ -146,6 +146,7 @@ export class AuthService {
 		return {
 			id: payload.id as string,
 			email: payload.email as string,
+			name: payload.name as string,
 			roles,
 		};
 	}

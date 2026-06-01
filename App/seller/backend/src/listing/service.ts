@@ -11,20 +11,18 @@ export class ListingService {
 		return res.json();
 	}
 
-	public async getListingById(userId: string, id:string): Promise<Listing[]> {
+	public async getListingById(userId: string, id: string): Promise<Listing[]> {
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing?author=${userId}`);
-		const listings = await res.json()
-		const listing = listings.find((l:Listing) => l.id === id);
+		const listings = await res.json();
+		const listing = listings.find((l: Listing) => l.id === id);
 		return listing;
 	}
 
-	public async createListing(userId: string, listing: NewListing): Promise<Listing> {
+	public async createListing(userId: string, username: string, listing: NewListing): Promise<Listing> {
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ ...listing, authorId: userId }),
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ ...listing, authorId: userId, username }),
 		});
 		if (res.status !== 201) {
 			throw new Error('Failed to create listing');
@@ -32,15 +30,10 @@ export class ListingService {
 		return res.json();
 	}
 
-	public async updateListing(
-		id: string,
-		listing: UpdateListing,
-	): Promise<Listing> {
+	public async updateListing(id: string, listing: UpdateListing): Promise<Listing> {
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing/${id}`, {
 			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(listing),
 		});
 		if (!res.ok) {

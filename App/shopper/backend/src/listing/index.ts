@@ -9,7 +9,7 @@ export interface Listing {
   price: number;
   discountPrice?: number;
   stock: number;
-  catagories: string[];
+  categories: string[];
   
   images?: string[];
 }

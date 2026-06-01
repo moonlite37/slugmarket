@@ -21,8 +21,7 @@ export class ListingController extends Controller {
 	public async getListings(
 		@Request() req: express.Request,
 	): Promise<unknown> {
-		const res = await new ListingService().getListings(req.user?.id as string);
-		return res;
+		return new ListingService().getListings(req.user?.id as string);
 	}
 
 	@Get('listing/:id')
@@ -32,7 +31,7 @@ export class ListingController extends Controller {
 		@Path() id: string,
 	): Promise<unknown> {
 		const res = await new ListingService().getListingById(req.user?.id as string, id);
-		if(!res){
+		if (!res) {
 			this.setStatus(404);
 		}
 		return res;
@@ -46,11 +45,11 @@ export class ListingController extends Controller {
 		@Request() req: express.Request,
 	): Promise<unknown> {
 		this.setStatus(201);
-		const res = await new ListingService().createListing(
+		return new ListingService().createListing(
 			req.user?.id as string,
+			req.user?.name ?? '',
 			listing,
 		);
-		return res;
 	}
 
 	@Put('listing/{id}')
@@ -59,7 +58,6 @@ export class ListingController extends Controller {
 		@Path() id: string,
 		@Body() listing: UpdateListing,
 	): Promise<unknown> {
-		const res = await new ListingService().updateListing(id, listing);
-		return res;
+		return new ListingService().updateListing(id, listing);
 	}
 }

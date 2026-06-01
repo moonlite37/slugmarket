@@ -82,6 +82,7 @@ export class ListingService {
 	public async createListing(
 		authorId: string,
 		listing: NewListing,
+		username?: string,
 	): Promise<Listing> {
 		const { rows } = await pool.query(
 			`WITH new_listing AS (
@@ -92,6 +93,7 @@ export class ListingService {
 				'price', $4::numeric,
 				'stock', $5::int,
 				'images', $6::jsonb,
+				'username', $8::text,
 				'created', NOW()::text
 				))
 				RETURNING id, author,
@@ -119,19 +121,20 @@ export class ListingService {
 				listing.stock,
 				JSON.stringify(listing.images || []),
 				listing.categories,
+				username || '',
 			],
 		);
 		const r = rows[0];
 		return {
 			id: r.id,
 			author: r.author,
-			username: '',
+			username: username || '',
 			title: r.title,
 			description: r.description,
 			price: Number(r.price),
 			stock: Number(r.stock),
 			created: r.created,
-			catagories: listing.categories,
+			categories: listing.categories,
 			images: listing.images,
 		};
 	}

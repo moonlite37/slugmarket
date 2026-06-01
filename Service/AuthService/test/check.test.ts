@@ -12,7 +12,7 @@ vi.mock('jose', () => {
 			},
 		),
 		jwtDecrypt: vi.fn().mockResolvedValue({
-			payload: { id: 'mock-user-id', roles: ['admin'], email: 'mock@test.com' },
+			payload: { id: 'mock-user-id', roles: ['admin'], email: 'mock@test.com', name: 'Mock User' },
 		}),
 	};
 });
