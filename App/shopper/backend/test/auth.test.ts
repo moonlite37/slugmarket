@@ -15,6 +15,22 @@ describe('oauth login', () => {
 		expect(res.status).toBe(200);
 		expect(res.body.url).toBe('mock-url');
 	});
+
+	it('passes cart source to oauth service', async () => {
+		server.use(
+			http.get('http://127.0.0.1:3010/api/v0/oauthlogin', ({ request }) => {
+				const url = new URL(request.url);
+				expect(url.searchParams.get('app')).toBe('shopper');
+				expect(url.searchParams.get('source')).toBe('cart');
+				return new HttpResponse(null, {
+					status: 302,
+					headers: { Location: 'mock-url?state=cart' },
+				});
+			}),
+		);
+		const res = await request.get('/api/v0/oauthlogin?source=cart');
+		expect(res.body.url).toBe('mock-url?state=cart');
+	});
 });
 
 describe('oauth login callback', () => {
@@ -27,6 +43,11 @@ describe('oauth login callback', () => {
 		const res = await request.get('/api/v0/oauthlogin/callback?code=validcode');
 		expect(res.status).toBe(302);
 		expect(res.headers['set-cookie'][0]).toContain('authToken=mock-token');
+	});
+
+	it('redirects to cart when oauth state is cart', async () => {
+		const res = await request.get('/api/v0/oauthlogin/callback?code=validcode&state=cart');
+		expect(res.headers.location).toBe(`${process.env.SHOPPER_FRONTEND_URL}/cart`);
 	});
 });
 

@@ -40,8 +40,9 @@ export class AuthController extends Controller {
   @Get('oauthlogin')
   public async oauthLogin(
     @Query('app') app: 'seller' | 'shopper',
+    @Query('source') source?: string,
   ): Promise<void> {
-  	const url = await new AuthService().oauthLogin(app);
+  	const url = await new AuthService().oauthLogin(app, source);
   	this.setStatus(302);
   	this.setHeader('Location', url);
   }

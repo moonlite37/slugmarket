@@ -90,6 +90,12 @@ describe('oauth login', () => {
 		expect(res.headers.location).toContain('accounts.google.com');
 	});
 
+	it('includes cart source as oauth state for shopper', async () => {
+		const res = await request.get('/api/v0/oauthlogin?app=shopper&source=cart');
+		const location = new URL(res.headers.location);
+		expect(location.searchParams.get('state')).toBe('cart');
+	});
+
 	it('returns name for seller', async () => {
 		const res = await request.get('/api/v0/oauthlogin/callback?code=fakeCode&app=seller');
 		expect(res.body.name).toBe('Test User');

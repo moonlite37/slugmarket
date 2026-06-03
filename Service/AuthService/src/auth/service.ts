@@ -57,13 +57,14 @@ export class AuthService {
 		};
 	}
 
-	public async oauthLogin(app: 'seller' | 'shopper'): Promise<string> {
+	public async oauthLogin(app: 'seller' | 'shopper', source?: string): Promise<string> {
 		const redirectUri = app === 'shopper'
 			? process.env.GOOGLE_REDIRECT_URL_SHOPPER
 			: process.env.GOOGLE_REDIRECT_URL_SELLER;
 		return this.oAuth2Client.generateAuthUrl({
 			scope: ['openid', 'email', 'profile'],
 			redirect_uri: redirectUri,
+			state: source,
 		});
 	}
 

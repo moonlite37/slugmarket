@@ -3,8 +3,12 @@ import { SessionUser } from "..";
 const AUTH_MICROSERVICE = 'http://127.0.0.1:3010/api/v0';
 
 export class AuthService {
-	public async oauthLogin(): Promise<string> {
-		const res = await fetch(`${AUTH_MICROSERVICE}/oauthlogin?app=shopper`, { redirect: 'manual' });
+	public async oauthLogin(source?: string): Promise<string> {
+		const params = new URLSearchParams({ app: 'shopper' });
+		if (source) {
+			params.set('source', source);
+		}
+		const res = await fetch(`${AUTH_MICROSERVICE}/oauthlogin?${params.toString()}`, { redirect: 'manual' });
 		return res.headers.get('location') as string;
 	}
 
