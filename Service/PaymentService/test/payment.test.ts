@@ -73,6 +73,12 @@ describe('Payment checkout', () => {
 		expect(args.cancel_url).toContain('/payment/failed');
 	});
 
+	it('restricts payment methods to card only', async () => {
+		await checkout();
+		const args = createCheckoutSession.mock.calls[0][0];
+		expect(args.payment_method_types).toEqual(['card']);
+	});
+
 	it('prefills the Stripe email when an email is provided', async () => {
 		await request.post('/api/v0/checkout').send({
 			orders: [{ orderId, name: 'Pork Chop', quantity: 1, unitAmount: 1250 }],

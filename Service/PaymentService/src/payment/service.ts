@@ -22,6 +22,7 @@ export class PaymentService {
 		const orderIds = request.orders.map((o) => o.orderId).join(',');
 		const session = await stripe.checkout.sessions.create({
 			mode: 'payment',
+			payment_method_types: ['card'],
 			...(request.email ? { customer_email: request.email } : {}),
 			line_items: request.orders.map((o) => ({
 				price_data: {
