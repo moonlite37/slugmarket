@@ -14,7 +14,7 @@ import { server } from '../vitest.setup';
 import { mockListings } from './mocks';
 
 const porkChop = { listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1, seller: '00000000-0000-0000-0000-000000000001' };
-const singleItemContext = { items: [porkChop], loggedIn: false, addToCart: async () => {}, removeFromCart: async () => {}, syncCart: async () => {} };
+const singleItemContext = { items: [porkChop], loggedIn: false, addToCart: async () => {}, removeFromCart: async () => {}, syncCart: async () => {}, checkout: async () => {} };
 
 describe('cart item', () => {
 	it('renders item', () => {
@@ -61,7 +61,7 @@ describe('cart list', () => {
 	it('renders the total for two items', () => {
 		render(
 			<MemoryRouter>
-				<CartContext.Provider value={{ items: [porkChop, { listing_id: 'chicken', name: 'Iphone 7', price: 9.99, quantity: 1, seller: '00000000-0000-0000-0000-000000000002' }], loggedIn: false, addToCart: async () => {}, removeFromCart: async () => {}, syncCart: async () => {} }}>
+				<CartContext.Provider value={{ items: [porkChop, { listing_id: 'chicken', name: 'Iphone 7', price: 9.99, quantity: 1, seller: '00000000-0000-0000-0000-000000000002' }], loggedIn: false, addToCart: async () => {}, removeFromCart: async () => {}, syncCart: async () => {}, checkout: async () => {} }}>
 					<Cart />
 				</CartContext.Provider>
 			</MemoryRouter>,
@@ -124,6 +124,9 @@ describe('checkout button', () => {
 		);
 		await userEvent.click(screen.getByText('Proceed to Checkout'));
 		expect(screen.getByText('Login Page')).toBeInTheDocument();
+		// Remembers the intent so checkout can resume after login.
+		expect(sessionStorage.getItem('checkoutOnLogin')).toBe('true');
+		sessionStorage.clear();
 	});
 
 	it('calls checkout and receives a Stripe URL when logged in', async () => {

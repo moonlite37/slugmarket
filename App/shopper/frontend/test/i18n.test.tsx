@@ -52,6 +52,7 @@ const renderCartInSpanishWithItems = async () => {
           addToCart: async () => {},
           removeFromCart: async () => {},
           syncCart: async () => {},
+          checkout: async () => {},
         }}
       >
         <LocaleSwitcher />

@@ -8,6 +8,7 @@ export interface CartContextValue {
 	addToCart: (item: CartItem) => Promise<void>;
 	removeFromCart: (id: string) => Promise<void>;
 	syncCart: () => Promise<void>;
+	checkout: () => Promise<void>;
 }
 
 export const CartContext = createContext<CartContextValue>({
@@ -19,4 +20,6 @@ export const CartContext = createContext<CartContextValue>({
 	removeFromCart: async () => {},
 	/* v8 ignore next */
 	syncCart: async () => {},
+	/* v8 ignore next */
+	checkout: async () => {},
 });

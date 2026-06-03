@@ -1,6 +1,9 @@
 import { type ReactNode, useState, useEffect, useCallback, useRef } from 'react';
+import { Box, CircularProgress, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import { CartContext } from './cartContext';
+import { CHECKOUT_ON_LOGIN_KEY, redirectToStripeCheckout } from '../cart/checkout';
 import type { CartItem } from '../cart';
 
 interface CartContextProviderProps {
@@ -15,9 +18,34 @@ const isLoggedIn = async (): Promise<boolean> => {
 };
 
 export function CartContextProvider({ children }: CartContextProviderProps) {
+  const { t } = useTranslation();
   const [items, setItems] = useState<CartItem[]>([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  // Read synchronously at mount so we show the redirect screen immediately
+  // instead of flashing the home page during the post-login round-trips.
+  const [resumingCheckout, setResumingCheckout] = useState(
+    () => sessionStorage.getItem(CHECKOUT_ON_LOGIN_KEY) === 'true',
+  );
   const hasLoaded = useRef(false);
+
+  // Shows the redirect screen, refreshes prices/stock, then hands off to
+  // Stripe. Used both by the cart button and the resume-after-login flow, so
+  // a logged-in checkout gets the same feedback as one resumed after login.
+  const checkout = useCallback(async (): Promise<void> => {
+    setResumingCheckout(true);
+    const res = await fetch('/shopper/api/v0/cart/sync', {
+      method: 'POST',
+      credentials: 'include',
+    });
+    const synced: CartItem[] = await res.json();
+    setItems(synced);
+    if (synced.length > 0) {
+      await redirectToStripeCheckout();
+      return; // leave the redirect screen up while the browser navigates away
+    }
+    // Nothing left to check out (e.g. all items went out of stock).
+    setResumingCheckout(false);
+  }, []);
 
   useEffect(() => {
     // Run the guest-cart merge exactly once. StrictMode (and any remount)
@@ -63,7 +91,17 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         } else {
           setItems(data);
         }
+
+        // Resume a checkout the user started as a guest, now that the guest
+        // cart has been merged into their account.
+        if (sessionStorage.getItem(CHECKOUT_ON_LOGIN_KEY) === 'true') {
+          sessionStorage.removeItem(CHECKOUT_ON_LOGIN_KEY);
+          await checkout();
+        }
       } else {
+        // Came back without logging in: drop any stale checkout intent.
+        sessionStorage.removeItem(CHECKOUT_ON_LOGIN_KEY);
+        setResumingCheckout(false);
         const guestCart: CartItem[] = JSON.parse(
           localStorage.getItem('cart') ?? '[]',
         );
@@ -71,7 +109,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       }
     };
     load();
-  }, []);
+  }, [checkout]);
 
   const addToCart = async (item: CartItem) => {
     if (loggedIn) {
@@ -153,8 +191,24 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   }, [loggedIn]);
 
   return (
-    <CartContext.Provider value={{ items, loggedIn, addToCart, removeFromCart, syncCart }}>
-      {children}
+    <CartContext.Provider value={{ items, loggedIn, addToCart, removeFromCart, syncCart, checkout }}>
+      {resumingCheckout ? (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh',
+            gap: 2,
+          }}
+        >
+          <CircularProgress />
+          <Typography variant="h6">{t('Redirecting to checkout…')}</Typography>
+        </Box>
+      ) : (
+        children
+      )}
     </CartContext.Provider>
   );
 }

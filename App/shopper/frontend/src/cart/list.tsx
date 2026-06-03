@@ -4,25 +4,22 @@ import { Box, Button, Divider, List, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 import CartItem from './card';
+import { CHECKOUT_ON_LOGIN_KEY } from './checkout';
 import { CartContext } from '../context/cartContext';
 
 const Cart = () => {
 	const { t } = useTranslation();
 	const navigate = useNavigate();
-	const { items, loggedIn, removeFromCart, syncCart } = useContext(CartContext);
+	const { items, loggedIn, removeFromCart, checkout } = useContext(CartContext);
 
 	const handleCheckout = async () => {
 		if (!loggedIn) {
+			// Remember the intent so checkout resumes after the OAuth round-trip.
+			sessionStorage.setItem(CHECKOUT_ON_LOGIN_KEY, 'true');
 			navigate('/login');
 			return;
 		}
-		await syncCart();
-		const res = await fetch('/shopper/api/v0/cart/checkout', {
-			method: 'POST',
-			credentials: 'include',
-		});
-		const { url } = await res.json();
-		window.location.href = url;
+		await checkout();
 	};
 
 	const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
