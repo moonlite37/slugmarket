@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
 
 import CartItem from '../src/cart/card'
@@ -15,6 +15,16 @@ import { mockListings } from './mocks';
 
 const porkChop = { listing_id: 'pork-chop', name: 'Pork Chop', price: 10.99, quantity: 1, seller: '00000000-0000-0000-0000-000000000001' };
 const singleItemContext = { items: [porkChop], loggedIn: false, addToCart: async () => {}, removeFromCart: async () => {}, syncCart: async () => {}, checkout: async () => {} };
+
+function LoginPage() {
+	const location = useLocation();
+	return (
+		<div>
+			<span>Login Page</span>
+			<span>{location.search}</span>
+		</div>
+	);
+}
 
 describe('cart item', () => {
 	it('renders item', () => {
@@ -111,22 +121,26 @@ describe('add and remove items', () => {
 })
 
 describe('checkout button', () => {
+	afterEach(() => {
+		sessionStorage.clear();
+	});
+
 	it('redirects to login when not logged in', async () => {
 		render(
 			<MemoryRouter initialEntries={['/cart']}>
 				<CartContext.Provider value={singleItemContext}>
 					<Routes>
 						<Route path="/cart" element={<Cart />} />
-						<Route path="/login" element={<div>Login Page</div>} />
+						<Route path="/login" element={<LoginPage />} />
 					</Routes>
 				</CartContext.Provider>
 			</MemoryRouter>,
 		);
 		await userEvent.click(screen.getByText('Proceed to Checkout'));
-		expect(screen.getByText('Login Page')).toBeInTheDocument();
+		expect(screen.getByText(/Login Page/)).toBeInTheDocument();
+		expect(screen.getByText('?source=cart')).toBeInTheDocument();
 		// Remembers the intent so checkout can resume after login.
 		expect(sessionStorage.getItem('checkoutOnLogin')).toBe('true');
-		sessionStorage.clear();
 	});
 
 	it('calls checkout and receives a Stripe URL when logged in', async () => {

@@ -38,7 +38,11 @@ function GoogleIcon() {
 export default function Login() {
   const { t } = useTranslation();
   const handleLogin = async () => {
-    const res = await fetch('/shopper/api/v0/oauthlogin');
+    const source = new URLSearchParams(window.location.search).get('source');
+    const oauthUrl = source
+      ? `/shopper/api/v0/oauthlogin?source=${encodeURIComponent(source)}`
+      : '/shopper/api/v0/oauthlogin';
+    const res = await fetch(oauthUrl);
     const { url } = await res.json();
     window.location.href = url;
   };

@@ -21,18 +21,40 @@ describe('Login Page', async () => {
   });
 
   it('Click Sign In With Google', async () => {
-    vi.stubGlobal('location', { href: '' });
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+    vi.stubGlobal('location', { href: '', search: '' });
+    const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ url: 'mock-url' }),
-    }));
+    });
+    vi.stubGlobal('fetch', fetchMock);
     const user = userEvent.setup();
     render(<Login />);
     await user.click(
       screen.getByRole('button', { name: /sign in with google/i }),
     );
     await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith('/shopper/api/v0/oauthlogin');
       expect(location.href).toBe('mock-url');
+    });
+  });
+
+  it('passes cart source to oauth login', async () => {
+    window.history.pushState({}, '', '/login?source=cart');
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ url: 'mock-url' }),
+    });
+    vi.stubGlobal('location', { href: '', search: '?source=cart' });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const user = userEvent.setup();
+    render(<Login />);
+    await user.click(
+      screen.getByRole('button', { name: /sign in with google/i }),
+    );
+
+    await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith('/shopper/api/v0/oauthlogin?source=cart');
     });
   });
 });
