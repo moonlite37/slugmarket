@@ -73,6 +73,21 @@ describe('Payment checkout', () => {
 		expect(args.cancel_url).toContain('/payment/failed');
 	});
 
+	it('prefills the Stripe email when an email is provided', async () => {
+		await request.post('/api/v0/checkout').send({
+			orders: [{ orderId, name: 'Pork Chop', quantity: 1, unitAmount: 1250 }],
+			email: 'shopper@test.com',
+		});
+		const args = createCheckoutSession.mock.calls[0][0];
+		expect(args.customer_email).toBe('shopper@test.com');
+	});
+
+	it('omits customer_email when no email is provided', async () => {
+		await checkout();
+		const args = createCheckoutSession.mock.calls[0][0];
+		expect(args.customer_email).toBeUndefined();
+	});
+
 	it('stores stockItems in metadata', async () => {
 		await request.post('/api/v0/checkout').send({
 			orders: [{ orderId, name: 'Pork Chop', quantity: 2, unitAmount: 1250 }],
