@@ -3,6 +3,7 @@ import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {http, HttpResponse} from 'msw';
 import {MemoryRouter} from 'react-router-dom';
+import {StrictMode} from 'react';
 
 import {CartContextProvider} from '../src/context/CartContextProvider';
 import Cart from '../src/cart/list';
@@ -80,6 +81,32 @@ describe('guest cart merge on login', () => {
 		renderCartOnly();
 		await waitFor(() => expect(screen.getByLabelText('Blue Hoodie in cart')).toBeInTheDocument());
 		expect(localStorage.getItem('cart')).toBeNull();
+	});
+
+	it('merges the guest cart only once under StrictMode (no double POST)', async () => {
+		localStorage.setItem('cart', JSON.stringify([cartItem]));
+		let postCount = 0;
+		server.use(
+			http.get('/shopper/api/v0/protected', () => new HttpResponse(null, {status: 200})),
+			http.get('/shopper/api/v0/cart', () => HttpResponse.json([])),
+			http.post('/shopper/api/v0/cart/item', () => {
+				postCount += 1;
+				return new HttpResponse(null, {status: 201});
+			}),
+		);
+		// StrictMode double-invokes effects in non-production builds, which used
+		// to merge the guest cart twice and double the quantity in the DB.
+		render(
+			<StrictMode>
+				<MemoryRouter>
+					<CartContextProvider>
+						<Cart />
+					</CartContextProvider>
+				</MemoryRouter>
+			</StrictMode>,
+		);
+		await waitFor(() => expect(localStorage.getItem('cart')).toBeNull());
+		expect(postCount).toBe(1);
 	});
 });
 

@@ -1,4 +1,4 @@
-import { type ReactNode, useState, useEffect, useCallback } from 'react';
+import { type ReactNode, useState, useEffect, useCallback, useRef } from 'react';
 
 import { CartContext } from './cartContext';
 import type { CartItem } from '../cart';
@@ -17,8 +17,15 @@ const isLoggedIn = async (): Promise<boolean> => {
 export function CartContextProvider({ children }: CartContextProviderProps) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const hasLoaded = useRef(false);
 
   useEffect(() => {
+    // Run the guest-cart merge exactly once. StrictMode (and any remount)
+    // double-invokes effects; without this guard both runs read the guest
+    // cart before it is cleared and POST it twice, doubling the merged quantity.
+    if (hasLoaded.current) return;
+    hasLoaded.current = true;
+
     const load = async () => {
       const authenticated = await isLoggedIn();
       setLoggedIn(authenticated);
