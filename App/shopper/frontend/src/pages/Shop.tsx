@@ -3,14 +3,17 @@ import FilterSidebar from '@/filter/sidebar';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import HistoryIcon from '@mui/icons-material/History';
-import { AppBar, Drawer, Grid, IconButton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Badge, Drawer, Grid, IconButton, Toolbar, Typography } from '@mui/material';
 import { FilterContextProvider } from '@/context/FilterContextProvider';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import SignupBanner from '@/components/SignupBanner';
 import { Link } from 'react-router-dom';
+import { CartContext } from '@/context/cartContext';
 
 function ShopPage() {
 	const [filtersOpen, setFiltersOpen] = useState(false);
+	const { items } = useContext(CartContext);
+	const cartCount = items.reduce((total, item) => total + item.quantity, 0);
 
 	return (
 		<FilterContextProvider>
@@ -51,7 +54,9 @@ function ShopPage() {
 						to="/cart"
 						color="inherit"
 					>
-						<ShoppingCartIcon />
+						<Badge badgeContent={cartCount} color="error">
+							<ShoppingCartIcon />
+						</Badge>
 					</IconButton>
 					</Toolbar>
 				</AppBar>
