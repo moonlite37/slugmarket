@@ -125,3 +125,47 @@ describe('Category picker', () => {
 		expect((foodCheckbox as HTMLInputElement).checked).toBe(true);
 	});
 });
+
+describe('image upload', () => {
+        const mockImageUpload = () => {
+                server.use(
+                        http.post('http://localhost:3000/seller/api/v0/image', () => {
+                                return HttpResponse.json({ url: 'https://s3.test/image.png' }, { status: 201 });
+                        }),
+                );
+        };
+        const uploadAndPreview = async () => {
+                const file = new File(['fake-image'], 'test.png', { type: 'image/png' });
+                await userEvent.upload(screen.getByLabelText('Upload Image'), file);
+                await waitFor(() => { expect(screen.getByAltText('Preview')).toBeTruthy(); });
+        };
+        it('has an image upload button', () => {
+                renderCreateListing();
+                expect(screen.getByLabelText('Upload Image')).toBeTruthy();
+        });
+        it('shows preview after uploading', async () => {
+                mockImageUpload();
+                renderCreateListing();
+                await uploadAndPreview();
+        });
+        it('includes image URL in listing creation', async () => {
+                let listingBody: Record<string, unknown> = {};
+                mockImageUpload();
+                server.use(
+                        http.post('http://localhost:3000/seller/api/v0/listing', async ({ request: req }) => {
+                                listingBody = await req.json() as Record<string, unknown>;
+                                return new HttpResponse(null, { status: 201 });
+                        }),
+                );
+                renderCreateListing();
+                await uploadAndPreview();
+                await userEvent.type(screen.getByPlaceholderText('Title'), 'Widget');
+                await userEvent.type(screen.getByPlaceholderText('Description'), 'A widget');
+                await userEvent.type(screen.getByPlaceholderText('Price'), '9.99');
+                await userEvent.type(screen.getByPlaceholderText('Stock'), '5');
+                await userEvent.click(screen.getByRole('button', { name: /save/i }));
+                await waitFor(() => {
+                        expect((listingBody.images as string[])?.[0]).toBe('https://s3.test/image.png');
+                });
+        });
+});

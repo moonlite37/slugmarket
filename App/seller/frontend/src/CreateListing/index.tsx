@@ -20,6 +20,23 @@ export default function CreateListing() {
 	const [submitted, setSubmitted] = useState(false);
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+	const [imageUrl, setImageUrl] = useState('');
+
+	const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+		const formData = new FormData();
+		formData.append('image', file);
+		const res = await fetch('/seller/api/v0/image', {
+			method: 'POST',
+			credentials: 'include',
+			body: formData,
+		});
+		if (res.status === 201) {
+			const data = await res.json();
+			setImageUrl(data.url);
+		}
+	};
 
 	useEffect(() => {
 		fetch('/seller/api/v0/category', { credentials: 'include' })
@@ -45,6 +62,7 @@ export default function CreateListing() {
 				price: Number(price),
 				stock: Number(stock),
 				categories: selectedCategories,
+						...(imageUrl ? { images: [imageUrl] } : {}),
 			}),
 		});
 		if (res.status === 201) {
@@ -68,7 +86,14 @@ export default function CreateListing() {
 			}}>
 				<ListingFormFields />
 			</ListingFormContext.Provider>
-			{categories.length > 0 && (
+			{imageUrl && (
+					<Box component="img" src={imageUrl} alt="Preview" sx={{ width: '100%', maxHeight: 200, objectFit: 'contain', mt: 2, borderRadius: 1 }} />
+				)}
+				<Box sx={{ mt: 2 }}>
+					<label htmlFor="image-upload">Upload Image</label>
+					<input id="image-upload" aria-label="Upload Image" type="file" accept="image/*" onChange={handleImageUpload} />
+				</Box>
+				{categories.length > 0 && (
 				<FormGroup sx={{ mt: 2 }}>
 					<Typography variant="subtitle2" sx={{ mb: 1 }}>{t('Categories')}</Typography>
 					{categories.map((cat) => (
