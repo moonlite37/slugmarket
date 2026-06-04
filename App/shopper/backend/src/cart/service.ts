@@ -1,5 +1,4 @@
 import { ListingService } from '../listing/service';
-import { OrderService } from '../order/service';
 
 const CART_MICROSERVICE = 'http://127.0.0.1:3017/api/v0';
 const PAYMENT_SERVICE = 'http://127.0.0.1:3016/api/v0';
@@ -73,22 +72,20 @@ export class CartService {
 			bySeller.set(item.seller, group);
 		}
 
-		const paymentOrders: { orderId: string; name: string; quantity: number; unitAmount: number }[] = [];
+		const lineItems = cartItems.map((i) => ({
+			name: i.name,
+			quantity: i.quantity,
+			unitAmount: Math.round(i.price * 100),
+		}));
+
+		const orderData = [];
 		for (const [seller, items] of bySeller) {
 			const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-			const order = await new OrderService().createOrder(userId, name, email, {
+			orderData.push({
 				seller,
 				items: items.map((i) => ({ listingId: i.listing_id, title: i.name, price: i.price, quantity: i.quantity })),
 				total,
 			});
-			for (const item of items) {
-				paymentOrders.push({
-					orderId: order.id,
-					name: item.name,
-					quantity: item.quantity,
-					unitAmount: Math.round(item.price * 100),
-				});
-			}
 		}
 
 		const stockItems = cartItems.map((i) => ({ listingId: i.listing_id, quantity: i.quantity }));
@@ -96,7 +93,14 @@ export class CartService {
 		const res = await fetch(`${PAYMENT_SERVICE}/checkout`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ orders: paymentOrders, email, stockItems }),
+			body: JSON.stringify({
+				lineItems,
+				shopperId: userId,
+				shopperName: name || '',
+				shopperEmail: email || '',
+				orderData,
+				stockItems,
+			}),
 		});
 		const { url } = await res.json();
 

@@ -1,8 +1,20 @@
-export interface CheckoutOrder {
-	orderId: string;
+export interface LineItem {
 	name: string;
 	quantity: number;
 	unitAmount: number;
+}
+
+export interface OrderItemData {
+	listingId: string;
+	title: string;
+	price: number;
+	quantity: number;
+}
+
+export interface OrderData {
+	seller: string;
+	items: OrderItemData[];
+	total: number;
 }
 
 export interface StockItem {
@@ -11,8 +23,11 @@ export interface StockItem {
 }
 
 export interface CheckoutRequest {
-	orders: CheckoutOrder[];
-	email?: string;
+	lineItems: LineItem[];
+	shopperId: string;
+	shopperName?: string;
+	shopperEmail?: string;
+	orderData: OrderData[];
 	stockItems?: StockItem[];
 }
 
@@ -23,8 +38,10 @@ export interface CheckoutResponse {
 export interface WebhookSession {
 	id: string;
 	metadata: {
-		orderIds: string;
-		email?: string;
+		shopperId: string;
+		shopperName?: string;
+		shopperEmail?: string;
+		orderData?: string;
 		stockItems?: string;
 	};
 }

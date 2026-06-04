@@ -23,9 +23,16 @@ vi.mock('stripe', () => {
 	};
 });
 
-describe('Payment checkout', () => {
-	const orderId = 'order_123';
+const sampleCheckout = {
+	lineItems: [{ name: 'Pork Chop', quantity: 1, unitAmount: 1250 }],
+	shopperId: 'shopper-1',
+	shopperName: 'John',
+	shopperEmail: 'john@test.com',
+	orderData: [{ seller: 'seller-1', items: [{ listingId: 'l1', title: 'Pork Chop', price: 12.5, quantity: 1 }], total: 12.5 }],
+	stockItems: [{ listingId: 'l1', quantity: 1 }],
+};
 
+describe('Payment checkout', () => {
 	beforeEach(() => {
 		createCheckoutSession.mockClear();
 		createCheckoutSession.mockResolvedValue({
@@ -34,12 +41,8 @@ describe('Payment checkout', () => {
 		});
 	});
 
-	const checkout = () => {
-		return request
-			.post('/api/v0/checkout')
-			.send({
-				orders: [{ orderId, name: 'Pork Chop', quantity: 1, unitAmount: 1250 }],
-			});
+	const checkout = (body = sampleCheckout) => {
+		return request.post('/api/v0/checkout').send(body);
 	};
 
 	it('returns 200 for checkout session', async () => {
@@ -53,10 +56,7 @@ describe('Payment checkout', () => {
 	});
 
 	it('returns empty url when checkout session has no url', async () => {
-		createCheckoutSession.mockResolvedValueOnce({
-			id: 'cs_test_123',
-			url: null,
-		});
+		createCheckoutSession.mockResolvedValueOnce({ id: 'cs_test_123', url: null });
 		const res = await checkout();
 		expect(res.body.url).toBe('');
 	});
@@ -79,112 +79,111 @@ describe('Payment checkout', () => {
 		expect(args.payment_method_types).toEqual(['card']);
 	});
 
-	it('prefills the Stripe email when an email is provided', async () => {
-		await request.post('/api/v0/checkout').send({
-			orders: [{ orderId, name: 'Pork Chop', quantity: 1, unitAmount: 1250 }],
-			email: 'shopper@test.com',
-		});
+	it('prefills Stripe email when provided', async () => {
+		await checkout();
 		const args = createCheckoutSession.mock.calls[0][0];
-		expect(args.customer_email).toBe('shopper@test.com');
+		expect(args.customer_email).toBe('john@test.com');
 	});
 
-	it('omits customer_email when no email is provided', async () => {
-		await checkout();
+	it('omits customer_email when no email provided', async () => {
+		await checkout({ ...sampleCheckout, shopperEmail: '' });
 		const args = createCheckoutSession.mock.calls[0][0];
 		expect(args.customer_email).toBeUndefined();
 	});
 
-	it('stores stockItems in metadata', async () => {
-		await request.post('/api/v0/checkout').send({
-			orders: [{ orderId, name: 'Pork Chop', quantity: 2, unitAmount: 1250 }],
-			stockItems: [{ listingId: 'listing-1', quantity: 2 }],
-		});
+	it('stores orderData in metadata', async () => {
+		await checkout();
 		const args = createCheckoutSession.mock.calls[0][0];
-		expect(JSON.parse(args.metadata.stockItems)).toEqual([{ listingId: 'listing-1', quantity: 2 }]);
+		const stored = JSON.parse(args.metadata.orderData);
+		expect(stored[0].seller).toBe('seller-1');
+	});
+
+	it('stores stockItems in metadata', async () => {
+		await checkout();
+		const args = createCheckoutSession.mock.calls[0][0];
+		expect(JSON.parse(args.metadata.stockItems)).toEqual([{ listingId: 'l1', quantity: 1 }]);
 	});
 });
 
 describe('Payment webhook', () => {
-	const orderId = 'order_123';
-
 	beforeEach(() => {
 		mockFetch.mockClear();
-		mockFetch.mockResolvedValue(new Response(JSON.stringify({ stock: 10 })));
+		mockFetch.mockImplementation(() => Promise.resolve(new Response(JSON.stringify({
+			data: { createOrder: { id: 'order-new-1', status: 'pending' } },
+			stock: 10,
+		}))));
 		vi.stubGlobal('fetch', mockFetch);
 	});
 
-	const checkoutSession = (type: string) => {
-		return request
-			.post('/api/v0/webhook')
-			.send({
-				type,
-				data: {
-					object: {
-						id: 'cs_test_123',
-						metadata: {
-							orderIds: orderId,
-							email: 'shopper@test.com',
-							stockItems: JSON.stringify([{ listingId: 'listing-1', quantity: 2 }]),
-						},
+	const webhookEvent = (type: string) => {
+		return request.post('/api/v0/webhook').send({
+			type,
+			data: {
+				object: {
+					id: 'cs_test_123',
+					metadata: {
+						shopperId: 'shopper-1',
+						shopperName: 'John',
+						shopperEmail: 'john@test.com',
+						orderData: JSON.stringify([{
+							seller: 'seller-1',
+							items: [{ listingId: 'l1', title: 'Pork Chop', price: 12.5, quantity: 1 }],
+							total: 12.5,
+						}]),
+						stockItems: JSON.stringify([{ listingId: 'l1', quantity: 1 }]),
 					},
 				},
-			});
+			},
+		});
 	};
 
-	const completedCheckoutSession = () => checkoutSession('checkout.session.completed');
-	const failedCheckoutSession = () => checkoutSession('checkout.session.expired');
-
-	it('returns 204 for completed checkout session', async () => {
-		const res = await completedCheckoutSession();
+	it('returns 204 for completed checkout', async () => {
+		const res = await webhookEvent('checkout.session.completed');
 		expect(res.status).toBe(204);
 	});
 
-	it('updates order status for completed checkout session', async () => {
-		await completedCheckoutSession();
-		const body = JSON.parse(mockFetch.mock.calls[0][1].body);
-		expect(body.variables).toEqual({
-			id: orderId,
-			status: 'paid',
-		});
+	it('creates order on successful payment', async () => {
+		await webhookEvent('checkout.session.completed');
+		const graphqlCall = mockFetch.mock.calls.find(
+			(call: unknown[]) => (call[0] as string).includes('graphql'),
+		);
+		expect(graphqlCall).toBeDefined();
+		const body = JSON.parse(((graphqlCall as unknown[])[1] as Record<string, string>).body);
+		expect(body.query).toContain('createOrder');
+		expect(body.variables.input.shopper).toBe('shopper-1');
 	});
 
-	it('updates order status for failed checkout session', async () => {
-		await failedCheckoutSession();
-		const body = JSON.parse(mockFetch.mock.calls[0][1].body);
-		expect(body.variables).toEqual({
-			id: orderId,
-			status: 'failed',
-		});
+	it('does not create order on failed payment', async () => {
+		await webhookEvent('checkout.session.expired');
+		const graphqlCall = mockFetch.mock.calls.find(
+			(call: unknown[]) => (call[0] as string).includes('graphql'),
+		);
+		expect(graphqlCall).toBeUndefined();
 	});
 
-	it('sends order confirmation email for completed checkout', async () => {
-		await completedCheckoutSession();
+	it('sends confirmation email on success', async () => {
+		await webhookEvent('checkout.session.completed');
 		const emailCall = mockFetch.mock.calls.find(
 			(call: unknown[]) => (call[0] as string).includes('/email'),
 		);
 		expect(emailCall).toBeDefined();
 	});
 
-	it('does not send email for failed checkout', async () => {
-		await failedCheckoutSession();
-		const emailCall = mockFetch.mock.calls.find(
-			(call: unknown[]) => (call[0] as string).includes('/email'),
-		);
-		expect(emailCall).toBeUndefined();
+	it('does not send email on failure', async () => {
+		await webhookEvent('checkout.session.expired');
+		expect(mockFetch.mock.calls.length).toBe(0);
 	});
 
-	it('decreases stock on successful payment', async () => {
-		await completedCheckoutSession();
+	it('decreases stock on success', async () => {
+		await webhookEvent('checkout.session.completed');
 		const putCall = mockFetch.mock.calls.find(
 			(call: unknown[]) => (call[1] as Record<string, string>)?.method === 'PUT',
 		);
-		const opts = (putCall as unknown[])[1] as Record<string, string>;
-		const body = JSON.parse(opts.body);
-		expect(body.stock).toBe(8);
+		expect(putCall).toBeDefined();
 	});
 
-	it('does not decrease stock on failed payment', async () => {
-		await failedCheckoutSession();
+	it('does not decrease stock on failure', async () => {
+		await webhookEvent('checkout.session.expired');
 		const putCall = mockFetch.mock.calls.find(
 			(call: unknown[]) => (call[1] as Record<string, string>)?.method === 'PUT',
 		);

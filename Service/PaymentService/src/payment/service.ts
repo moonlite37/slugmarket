@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import {
 	CheckoutRequest,
 	CheckoutResponse,
+	OrderData,
 	StockItem,
 	WebhookRequest,
 } from '.';
@@ -15,54 +16,78 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const ORDER_GRAPHQL_URL = process.env.ORDER_GRAPHQL_URL ?? 'http://localhost:4000/graphql';
 const NOTIFICATION_URL = process.env.NOTIFICATION_URL ?? 'http://127.0.0.1:3019/api/v0';
 const LISTING_URL = process.env.LISTING_URL ?? 'http://127.0.0.1:3011/api/v0';
-const UPDATE_ORDER_STATUS_MUTATION = 'mutation UpdateOrderStatus($id: String!, $status: String!) { updateOrderStatus(id: $id, status: $status) { id status } }';
+
+const CREATE_ORDER_MUTATION = `mutation CreateOrder($input: CreateOrderInput!) {
+	createOrder(input: $input) { id status }
+}`;
 
 export class PaymentService {
 	public async checkout(request: CheckoutRequest): Promise<CheckoutResponse> {
-		const orderIds = request.orders.map((o) => o.orderId).join(',');
 		const session = await stripe.checkout.sessions.create({
 			mode: 'payment',
 			payment_method_types: ['card'],
-			...(request.email ? { customer_email: request.email } : {}),
-			line_items: request.orders.map((o) => ({
+			...(request.shopperEmail ? { customer_email: request.shopperEmail } : {}),
+			line_items: request.lineItems.map((item) => ({
 				price_data: {
 					currency: 'usd',
-					product_data: { name: o.name },
-					unit_amount: o.unitAmount,
+					product_data: { name: item.name },
+					unit_amount: item.unitAmount,
 				},
-				quantity: o.quantity,
+				quantity: item.quantity,
 			})),
 			metadata: {
-				orderIds,
-				email: request.email ?? '',
+				shopperId: request.shopperId,
+				shopperName: request.shopperName || '',
+				shopperEmail: request.shopperEmail || '',
+				orderData: JSON.stringify(request.orderData),
 				stockItems: JSON.stringify(request.stockItems || []),
 			},
 			success_url: 'https://slugmarket.shop/shopper/payment/success',
 			cancel_url: 'https://slugmarket.shop/shopper/payment/failed',
 		});
-		return {url: session.url ?? ''};
+		return { url: session.url ?? '' };
 	}
 
 	public async webhook(request: WebhookRequest): Promise<void> {
-		const status = request.type === 'checkout.session.completed' ? 'paid' : 'failed';
-		const orderIds = request.data.object.metadata.orderIds.split(',');
-		await Promise.all(orderIds.map((id) => this.updateOrderStatus(id, status)));
-		if (status === 'paid') {
-			const email = request.data.object.metadata.email;
-			await Promise.all(orderIds.map((id) => this.sendOrderConfirmation(id, email)));
-			await this.decreaseStock(request.data.object.metadata.stockItems);
+		if (request.type !== 'checkout.session.completed') return;
+
+		const meta = request.data.object.metadata;
+		const orderDataList: OrderData[] = JSON.parse(meta.orderData || '[]');
+
+		const orderIds: string[] = [];
+		for (const orderData of orderDataList) {
+			const order = await this.createOrder(
+				meta.shopperId, meta.shopperName, meta.shopperEmail, orderData,
+			);
+			if (order) orderIds.push(order.id);
 		}
+
+		await Promise.all(orderIds.map((id) => this.sendOrderConfirmation(id, meta.shopperEmail)));
+		await this.decreaseStock(meta.stockItems);
 	}
 
-	private async updateOrderStatus(orderId: string, status: string): Promise<void> {
-		await fetch(ORDER_GRAPHQL_URL, {
+	private async createOrder(
+		shopperId: string, shopperName?: string, shopperEmail?: string, orderData?: OrderData,
+	): Promise<{ id: string } | null> {
+		const res = await fetch(ORDER_GRAPHQL_URL, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				query: UPDATE_ORDER_STATUS_MUTATION,
-				variables: { id: orderId, status },
+				query: CREATE_ORDER_MUTATION,
+				variables: {
+					input: {
+						shopper: shopperId,
+						seller: orderData?.seller,
+						shopperName: shopperName || '',
+						shopperEmail: shopperEmail || '',
+						items: orderData?.items,
+						total: orderData?.total,
+					},
+				},
 			}),
 		});
+		const data = await res.json();
+		return data.data?.createOrder ?? null;
 	}
 
 	private async sendOrderConfirmation(orderId: string, email?: string): Promise<void> {

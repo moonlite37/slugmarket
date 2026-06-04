@@ -77,42 +77,38 @@ describe('POST /api/v0/cart/checkout', () => {
 	});
 
 	it('sends correct line item data to payment service', async () => {
-		let paymentBody: { orders: { name: string; unitAmount: number; quantity: number; orderId: string }[] };
+		let paymentBody: Record<string, unknown>;
 		server.use(
 			mockCart(),
 			http.post('http://127.0.0.1:3016/api/v0/checkout', async ({ request: req }) => {
-				paymentBody = await req.json() as typeof paymentBody;
+				paymentBody = await req.json() as Record<string, unknown>;
 				return HttpResponse.json({ url: 'https://checkout.stripe.com/test' });
 			}),
 		);
 		await request.post('/api/v0/cart/checkout').set('Cookie', 'authToken=mock-token');
-		expect(paymentBody!.orders[0].name).toBe('Blue Hoodie');
-		expect(paymentBody!.orders[0].unitAmount).toBe(2999);
-		expect(paymentBody!.orders[0].quantity).toBe(1);
-		expect(paymentBody!.orders[0].orderId).toBe('mock-order-id');
+		const lineItems = paymentBody!.lineItems as { name: string; unitAmount: number; quantity: number }[];
+		expect(lineItems[0].name).toBe('Blue Hoodie');
+		expect(lineItems[0].unitAmount).toBe(2999);
+		expect(lineItems[0].quantity).toBe(1);
+		expect(paymentBody!.shopperId).toBe('mock-id');
 	});
 
-	it('creates one order per seller', async () => {
-		let createOrderCount = 0;
+	it('groups order data by seller', async () => {
+		let paymentBody: Record<string, unknown>;
 		server.use(
 			mockCart([
 				{ ...item, seller: 'seller-1' },
 				{ ...item, listing_id: 'item-2', name: 'iPhone 7', seller: 'seller-2' },
 			]),
-			http.post('http://127.0.0.1:4000/graphql', async ({ request: req }) => {
-				const body = await req.json() as { query: string };
-				if (body.query.includes('createOrder')) {
-					createOrderCount++;
-					return HttpResponse.json({
-						data: { createOrder: { id: `order-${createOrderCount}`, shopper: 'mock-id', seller: 'mock-seller', items: [], total: 10, status: 'pending', created: '2026-05-01' } },
-					});
-				}
-				return HttpResponse.json({ data: {} });
+			http.post('http://127.0.0.1:3016/api/v0/checkout', async ({ request: req }) => {
+				paymentBody = await req.json() as Record<string, unknown>;
+				return HttpResponse.json({ url: 'https://checkout.stripe.com/test' });
 			}),
-			mockPayment(),
 		);
 		await request.post('/api/v0/cart/checkout').set('Cookie', 'authToken=mock-token');
-		expect(createOrderCount).toBe(2);
+		const orderData = paymentBody!.orderData as { seller: string }[];
+		expect(orderData.length).toBe(2);
+		expect(orderData.map(o => o.seller).sort()).toEqual(['seller-1', 'seller-2']);
 	});
 
 	it('clears the cart after checkout', async () => {
