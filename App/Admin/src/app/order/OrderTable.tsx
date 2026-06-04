@@ -72,7 +72,7 @@ export default function OrderTable() {
 							<TableCell>{order.id.slice(0, 8)}</TableCell>
 							<TableCell>{order.shopperName || order.shopper.slice(0, 8)}</TableCell>
 							<TableCell>
-								{order.items.map((item) => item.title).join(', ')}
+								{order.items.map((item) => `${item.title} × ${item.quantity}`).join(', ')}
 							</TableCell>
 							<TableCell>${order.total}</TableCell>
 							<TableCell>{order.status}</TableCell>

@@ -14,7 +14,7 @@ describe('OrderTable', () => {
 	it('renders order data', async () => {
 		render(<OrderTable />);
 		await waitFor(() => {
-			expect(screen.getByText('Widget')).toBeInTheDocument();
+			expect(screen.getByText('Widget × 1')).toBeInTheDocument();
 		});
 		expect(screen.getByText('$10')).toBeInTheDocument();
 		expect(screen.getByText('pending')).toBeInTheDocument();
