@@ -78,14 +78,6 @@ export default function OrderTable() {
 							<TableCell>{order.status}</TableCell>
 							<TableCell>{order.created}</TableCell>
 							<TableCell>
-								{order.status === 'pending' && (
-									<Button
-										size="small"
-										onClick={() => { void handleStatusUpdate(order.id, 'fulfilled'); }}
-									>
-                                                                                Fulfill
-									</Button>
-								)}
 								{order.status !== 'cancelled' && (
 									<Button
 										size="small"
