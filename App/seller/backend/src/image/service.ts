@@ -6,7 +6,7 @@ const IMAGE_MICROSERVICE = 'http://127.0.0.1:3018/api/v0';
 export class ImageService {
 	public async upload(image: File): Promise<ImageUploadResponse> {
 		const formData = new FormData();
-		formData.append('image', new Blob([image.buffer], { type: image.mimetype }), image.originalname);
+		formData.append('image', new Blob([new Uint8Array(image.buffer)], { type: image.mimetype }), image.originalname);
 		const res = await fetch(`${IMAGE_MICROSERVICE}/image`, {
 			method: 'POST',
 			body: formData,
