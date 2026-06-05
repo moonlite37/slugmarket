@@ -7,10 +7,14 @@ vi.mock('../src/app/listing/actions', () => ({
 	getListings: vi.fn().mockResolvedValue([]),
 	deleteListing: vi.fn().mockResolvedValue(undefined),
 }));
-
 vi.mock('../src/app/order/actions', () => ({
 	getOrders: vi.fn().mockResolvedValue([]),
 	updateOrderStatus: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock('../src/app/category/actions', () => ({
+	getCategories: vi.fn().mockResolvedValue([]),
+	createCategory: vi.fn().mockResolvedValue({ id: 'c1', name: 'Test' }),
+	deleteCategory: vi.fn().mockResolvedValue(undefined),
 }));
 
 describe('page', () => {
