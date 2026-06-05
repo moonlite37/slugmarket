@@ -71,3 +71,27 @@ describe('listing list', () => {
 		expect(await screen.queryByText('Pork Chops')).toBeNull();
 	});
 });
+
+describe('search bar on main page', () => {
+	it('shows search bar without opening filters', async () => {
+		server.use(mockListings());
+		render(
+			<MemoryRouter>
+				<ShopPage />
+			</MemoryRouter>,
+		);
+		expect(screen.getByPlaceholderText('Search listings...')).toBeTruthy();
+	});
+	it('updates search value when typing', async () => {
+		const user = userEvent.setup();
+		server.use(mockListings());
+		render(
+			<MemoryRouter>
+				<ShopPage />
+			</MemoryRouter>,
+		);
+		const searchInput = screen.getByPlaceholderText('Search listings...');
+		await user.type(searchInput, 'hoodie');
+		expect(searchInput).toHaveValue('hoodie');
+	});
+});

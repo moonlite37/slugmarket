@@ -3,24 +3,27 @@ import FilterSidebar from '@/filter/sidebar';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import HistoryIcon from '@mui/icons-material/History';
-import { AppBar, Badge, Drawer, Grid, IconButton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Badge, Drawer, Grid, IconButton, TextField, Toolbar, Typography } from '@mui/material';
 import { FilterContextProvider } from '@/context/FilterContextProvider';
+import { FilterContext } from '@/context/FilterContext';
 import { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import SignupBanner from '@/components/SignupBanner';
 import { Link } from 'react-router-dom';
 import { CartContext } from '@/context/cartContext';
 
-function ShopPage() {
+function ShopContent() {
 	const [filtersOpen, setFiltersOpen] = useState(false);
 	const { items } = useContext(CartContext);
+	const { search, setSearch } = useContext(FilterContext);
+	const { t } = useTranslation();
 	const cartCount = items.reduce((total, item) => total + item.quantity, 0);
 
 	return (
-		<FilterContextProvider>
-			<Grid>
-				<SignupBanner />
-				<AppBar position="static" sx={{ mb: 2 }}>
-					<Toolbar sx={{ position: 'relative' }}>
+		<Grid>
+			<SignupBanner />
+			<AppBar position="static" sx={{ mb: 2 }}>
+				<Toolbar sx={{ gap: 1 }}>
 					<IconButton
 						aria-label="open filters"
 						onClick={() => setFiltersOpen(true)}
@@ -28,23 +31,21 @@ function ShopPage() {
 					>
 						<FilterListIcon />
 					</IconButton>
-					<Typography
-						variant="h4"
-						component="h1"
-						sx={{
-							position: 'absolute',
-							left: '50%',
-							transform: 'translateX(-50%)',
-						}}
-					>
+					<Typography variant="h6" component="h1" sx={{ whiteSpace: 'nowrap' }}>
 						Slug Market
 					</Typography>
+					<TextField
+						placeholder={t('Search listings...')}
+						size="small"
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						sx={{ mx: 1, flexGrow: 1, bgcolor: 'rgba(255,255,255,0.15)', borderRadius: 1, input: { color: 'white' } }}
+					/>
 					<IconButton
 						aria-label="order history"
 						component={Link}
 						to="/orders"
 						color="inherit"
-						sx={{ ml: 'auto' }}
 					>
 						<HistoryIcon />
 					</IconButton>
@@ -58,20 +59,28 @@ function ShopPage() {
 							<ShoppingCartIcon />
 						</Badge>
 					</IconButton>
-					</Toolbar>
-				</AppBar>
-				<Drawer
-					open={filtersOpen}
-					onClose={() => setFiltersOpen(false)}
-					slotProps={{ paper: { sx: { width: 300 } } }}
-				>
-					<FilterSidebar />
-				</Drawer>
-				<Grid sx={{ px: 3 }}>
-					<ListingList />
-				</Grid>
+				</Toolbar>
+			</AppBar>
+			<Drawer
+				open={filtersOpen}
+				onClose={() => setFiltersOpen(false)}
+				slotProps={{ paper: { sx: { width: 300 } } }}
+			>
+				<FilterSidebar />
+			</Drawer>
+			<Grid sx={{ px: 3 }}>
+				<ListingList />
 			</Grid>
+		</Grid>
+	);
+}
+
+function ShopPage() {
+	return (
+		<FilterContextProvider>
+			<ShopContent />
 		</FilterContextProvider>
 	);
 }
+
 export default ShopPage;
