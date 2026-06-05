@@ -1,4 +1,4 @@
-import { Route, Controller, Get, Query, Security } from 'tsoa';
+import { Route, Controller, Get, Delete, Query, Security } from 'tsoa';
 import { AuthService } from './service';
 
 @Route('')
@@ -28,5 +28,10 @@ export class AuthController extends Controller {
 		this.setHeader('Set-Cookie', `authToken=${authToken}; HttpOnly; Secure; Path=/seller; SameSite=Lax; Max-Age=3600`);
 		this.setStatus(302);
 		this.setHeader('Location', process.env.SELLER_FRONTEND_URL as string);
+	}
+
+	@Delete('logout')
+	public async logout(): Promise<void> {
+		this.setHeader('Set-Cookie', 'authToken=; HttpOnly; Secure; Path=/seller; SameSite=Lax; Max-Age=0');
 	}
 }

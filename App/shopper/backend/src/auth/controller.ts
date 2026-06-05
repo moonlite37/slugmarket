@@ -1,4 +1,4 @@
-import { Route, Controller, Get, Query, Security } from 'tsoa';
+import { Route, Controller, Get, Delete, Query, Security } from 'tsoa';
 import { AuthService } from './service';
 
 const SOURCE_REDIRECTS: Record<string, string> = {
@@ -36,5 +36,10 @@ export class AuthController extends Controller {
 		this.setStatus(302);
 		const redirectPath = state ? SOURCE_REDIRECTS[state] : undefined;
 		this.setHeader('Location', `${process.env.SHOPPER_FRONTEND_URL}${redirectPath ?? ''}`);
+	}
+
+	@Delete('logout')
+	public async logout(): Promise<void> {
+		this.setHeader('Set-Cookie', 'authToken=; HttpOnly; Secure; Path=/shopper; SameSite=Lax; Max-Age=0');
 	}
 }

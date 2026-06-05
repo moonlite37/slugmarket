@@ -85,3 +85,13 @@ describe('auth middleware', () => {
 		expect(res.status).toBe(401);
 	});
 });
+
+describe('DELETE /api/v0/logout', () => {
+	it('clears the auth cookie', async () => {
+		const res = await request.delete('/api/v0/logout');
+		expect(res.status).toBe(204);
+		const cookie = res.headers['set-cookie']?.[0] ?? '';
+		expect(cookie).toContain('authToken=');
+		expect(cookie).toContain('Max-Age=0');
+	});
+});
