@@ -21,12 +21,25 @@ quality:
         npm run cpd
         cd $CI_PROJECT_DIR
       done
-app-test:
+app-test-1:
   stage: test
   timeout: 30m
   script:
     - |
-      for dir in App/Admin/ App/seller/frontend/ App/shopper/frontend/ App/seller/backend/ App/shopper/backend/; do
+      for dir in App/Admin/ App/seller/frontend/ App/seller/backend/; do
+        [ -f "$dir/package.json" ] || continue
+        cd $dir
+        npm install
+        [ ! -f "tsoa.json" ] || npx tsoa spec-and-routes
+        npx vitest run --no-file-parallelism --testTimeout=10000 --coverage
+        cd $CI_PROJECT_DIR
+      done
+app-test-2:
+  stage: test
+  timeout: 30m
+  script:
+    - |
+      for dir in App/shopper/frontend/ App/shopper/backend/; do
         [ -f "$dir/package.json" ] || continue
         cd $dir
         npm install
