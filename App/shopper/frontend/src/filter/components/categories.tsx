@@ -23,7 +23,6 @@ export default function Categories(){
         categories.map((category) => {
             return <Button
                 fullWidth
-                variant="contained"
                 onClick={() => setCategory(selectedCategory === category.id ? '' : category.id)}
                 variant={selectedCategory === category.id ? 'contained' : 'outlined'}
                 sx={{ justifyContent: 'flex-start' }}
