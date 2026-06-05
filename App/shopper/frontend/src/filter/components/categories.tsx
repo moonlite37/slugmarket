@@ -10,7 +10,7 @@ type Category = {
 };
 
 export default function Categories(){
-    const {setCategory} = useContext(FilterContext);
+    const {category: selectedCategory, setCategory} = useContext(FilterContext);
     const [categories, setCategories] = useState<Category[]>([]);
     useEffect(() => {
             async function load() {
@@ -24,7 +24,8 @@ export default function Categories(){
             return <Button
                 fullWidth
                 variant="contained"
-                onClick={() => setCategory(category.id)}
+                onClick={() => setCategory(selectedCategory === category.id ? '' : category.id)}
+                variant={selectedCategory === category.id ? 'contained' : 'outlined'}
                 sx={{ justifyContent: 'flex-start' }}
                 >
                 {category.name}

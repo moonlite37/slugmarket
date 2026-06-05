@@ -107,6 +107,20 @@ describe('Category Tests', () => {
         await userEvent.click(cat);
         expect(category).toBe('dummy id')
     });
+    it('deselects category when already selected', async () => {
+        category = 'dummy id';
+        render(<Wrapper />);
+        const cat = await screen.findByText('dummy category');
+        await userEvent.click(cat);
+        expect(category).toBe('');
+    });
+    it('highlights selected category', async () => {
+        category = 'dummy id';
+        render(<Wrapper />);
+        const cat = await screen.findByText('dummy category');
+        const btn = cat.closest('button');
+        expect(btn?.className).toContain('contained');
+    });
 });
 
 describe('Sort Tests', () => {
@@ -136,5 +150,3 @@ describe('Search Tests', () => {
         expect(s).toHaveValue('testing')
     });
 });
-
-
