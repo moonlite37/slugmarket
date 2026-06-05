@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { Box, Typography } from '@mui/material';
 import ListingTable from './listing/ListingTable';
 import OrderTable from './order/OrderTable';
+import CategoryTable from './category/CategoryTable';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +18,7 @@ export default async function Page() {
 			<Typography variant="h4" sx={{ mb: 3 }}>Admin Dashboard</Typography>
 			<ListingTable />
 			<OrderTable />
+			<CategoryTable />
 		</Box>
 	);
 }
