@@ -3,17 +3,20 @@ import FilterSidebar from '@/filter/sidebar';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import HistoryIcon from '@mui/icons-material/History';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { AppBar, Badge, Drawer, Grid, IconButton, TextField, Toolbar, Typography } from '@mui/material';
 import { FilterContextProvider } from '@/context/FilterContextProvider';
 import { FilterContext } from '@/context/FilterContext';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import SignupBanner from '@/components/SignupBanner';
+import SettingsModal from '@/components/SettingsModal';
 import { Link } from 'react-router-dom';
 import { CartContext } from '@/context/cartContext';
 
 function ShopContent() {
 	const [filtersOpen, setFiltersOpen] = useState(false);
+	const [settingsOpen, setSettingsOpen] = useState(false);
 	const { items } = useContext(CartContext);
 	const { search, setSearch } = useContext(FilterContext);
 	const { t } = useTranslation();
@@ -59,8 +62,16 @@ function ShopContent() {
 							<ShoppingCartIcon />
 						</Badge>
 					</IconButton>
+					<IconButton
+						aria-label="open settings"
+						onClick={() => setSettingsOpen(true)}
+						color="inherit"
+					>
+						<SettingsIcon />
+					</IconButton>
 				</Toolbar>
 			</AppBar>
+			<SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
 			<Drawer
 				open={filtersOpen}
 				onClose={() => setFiltersOpen(false)}

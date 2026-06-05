@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { server } from '../vitest.setup';
 import { mockListings } from './mocks';
 import ShopPage from '@/pages/Shop';
@@ -69,6 +69,37 @@ describe('listing list', () => {
 		await user.type(maxInput, "1000");
 		await user.tab();
 		expect(await screen.queryByText('Pork Chops')).toBeNull();
+	});
+});
+
+describe('settings modal', () => {
+	it('opens the settings modal with the locale switcher', async () => {
+		const user = userEvent.setup();
+		server.use(mockListings());
+		render(
+			<MemoryRouter>
+				<ShopPage />
+			</MemoryRouter>,
+		);
+		expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+		await user.click(screen.getByLabelText(/open settings/i));
+		const dialog = await screen.findByRole('dialog');
+		expect(within(dialog).getByText('Settings')).toBeInTheDocument();
+		expect(within(dialog).getByRole('combobox')).toBeInTheDocument();
+	});
+
+	it('closes the settings modal', async () => {
+		const user = userEvent.setup();
+		server.use(mockListings());
+		render(
+			<MemoryRouter>
+				<ShopPage />
+			</MemoryRouter>,
+		);
+		await user.click(screen.getByLabelText(/open settings/i));
+		await screen.findByRole('dialog');
+		await user.keyboard('{Escape}');
+		await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
 	});
 });
 

@@ -9,13 +9,11 @@ import ListingDetail from './pages/ListingDetail'
 import SuccessfulPayment from './pages/SuccessfulPayment'
 import FailedPayment from './pages/FailedPayment'
 import { CartContextProvider } from './context/CartContextProvider';
-import LocaleSwitcher from './LocaleSwitcher';
 
 function App() {
 	return (
 		<>
 			<GlobalStyles styles={{ body: { overflow: 'hidden', margin: 0 } }} />
-			<LocaleSwitcher />
 			<BrowserRouter basename="/shopper">
 				<CartContextProvider>
 					<Routes>

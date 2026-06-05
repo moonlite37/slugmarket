@@ -16,5 +16,7 @@
   "{{discount}}% off": "{{discount}}% de descuento",
   "Add to cart": "Agregar al carrito",
   "Sold by": "Vendido por",
-  "Redirecting to checkout…": "Redirigiendo al pago…"
+  "Redirecting to checkout…": "Redirigiendo al pago…",
+  "Settings": "Configuración",
+  "Language": "Idioma"
 }
