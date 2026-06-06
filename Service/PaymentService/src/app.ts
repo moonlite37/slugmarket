@@ -16,11 +16,11 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 if (process.env.DISABLE_DOCS !== 'true') {
-app.use('/api/v0/docs', swaggerUi.serve, async (_req: ExRequest, res: ExResponse) => {
-	res.send(
-		swaggerUi.generateHTML(await import('../build/swagger.json')),
-	);
-});
+	app.use('/api/v0/docs', swaggerUi.serve, async (_req: ExRequest, res: ExResponse) => {
+		res.send(
+			swaggerUi.generateHTML(await import('../build/swagger.json')),
+		);
+	});
 }
 
 const router = Router();

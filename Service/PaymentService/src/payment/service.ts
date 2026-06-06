@@ -16,6 +16,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const ORDER_GRAPHQL_URL = process.env.ORDER_GRAPHQL_URL ?? 'http://localhost:4000/graphql';
 const NOTIFICATION_URL = process.env.NOTIFICATION_URL ?? 'http://127.0.0.1:3019/api/v0';
 const LISTING_URL = process.env.LISTING_URL ?? 'http://127.0.0.1:3011/api/v0';
+const CART_URL = process.env.CART_URL ?? 'http://127.0.0.1:3017/api/v0';
 
 const CREATE_ORDER_MUTATION = `mutation CreateOrder($input: CreateOrderInput!) {
 	createOrder(input: $input) { id status }
@@ -50,7 +51,6 @@ export class PaymentService {
 
 	public async webhook(request: WebhookRequest): Promise<void> {
 		if (request.type !== 'checkout.session.completed') return;
-
 		const meta = request.data.object.metadata;
 		const orderDataList: OrderData[] = JSON.parse(meta.orderData || '[]');
 
@@ -61,9 +61,18 @@ export class PaymentService {
 			);
 			if (order) orderIds.push(order.id);
 		}
-
 		await Promise.all(orderIds.map((id) => this.sendOrderConfirmation(id, meta.shopperEmail)));
 		await this.decreaseStock(meta.stockItems);
+		await this.clearCart(meta.shopperId, meta.stockItems);
+	}
+
+	private async clearCart(shopperId: string, stockItemsJson?: string): Promise<void> {
+		const items: StockItem[] = JSON.parse(stockItemsJson || '[]');
+		await Promise.all(items.map((item) =>
+			fetch(`${CART_URL}/cart/item/${item.listingId}?userId=${shopperId}`, {
+				method: 'DELETE',
+			}).catch(() => { /* */ }),
+		));
 	}
 
 	private async createOrder(

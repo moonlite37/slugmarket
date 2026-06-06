@@ -110,18 +110,4 @@ describe('POST /api/v0/cart/checkout', () => {
 		expect(orderData.length).toBe(2);
 		expect(orderData.map(o => o.seller).sort()).toEqual(['seller-1', 'seller-2']);
 	});
-
-	it('clears the cart after checkout', async () => {
-		let deleteCount = 0;
-		server.use(
-			mockCart(),
-			mockPayment(),
-			http.delete('http://127.0.0.1:3017/api/v0/cart/item/:listingId', () => {
-				deleteCount++;
-				return new HttpResponse(null, { status: 204 });
-			}),
-		);
-		await request.post('/api/v0/cart/checkout').set('Cookie', 'authToken=mock-token');
-		expect(deleteCount).toBe(1);
-	});
 });

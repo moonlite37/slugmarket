@@ -89,7 +89,6 @@ export class CartService {
 		}
 
 		const stockItems = cartItems.map((i) => ({ listingId: i.listing_id, quantity: i.quantity }));
-
 		const res = await fetch(`${PAYMENT_SERVICE}/checkout`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -103,8 +102,6 @@ export class CartService {
 			}),
 		});
 		const { url } = await res.json();
-
-		await Promise.all(cartItems.map((item) => this.deleteItem(userId, item.listing_id)));
 
 		return url;
 	}

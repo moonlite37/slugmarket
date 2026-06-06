@@ -189,6 +189,25 @@ describe('Payment webhook', () => {
 		);
 		expect(putCall).toBeUndefined();
 	});
+
+	it('clears the cart on success', async () => {
+		await webhookEvent('checkout.session.completed');
+		const deleteCall = mockFetch.mock.calls.find(
+			(call: unknown[]) =>
+				(call[1] as Record<string, string>)?.method === 'DELETE' &&
+				(call[0] as string).includes('/cart/item/'),
+		);
+		expect(deleteCall).toBeDefined();
+		expect((deleteCall as unknown[])[0] as string).toContain('userId=shopper-1');
+	});
+
+	it('does not clear the cart on failure', async () => {
+		await webhookEvent('checkout.session.expired');
+		const deleteCall = mockFetch.mock.calls.find(
+			(call: unknown[]) => (call[1] as Record<string, string>)?.method === 'DELETE',
+		);
+		expect(deleteCall).toBeUndefined();
+	});
 });
 
 describe('docs', () => {
