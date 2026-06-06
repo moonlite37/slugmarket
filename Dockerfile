@@ -51,7 +51,7 @@ COPY App/shopper/frontend/index.html App/shopper/frontend/tsconfig.json App/shop
 COPY App/corporate/backend/src ./App/corporate/backend/src
 COPY App/corporate/backend/tsoa.json App/corporate/backend/tsconfig.json ./App/corporate/backend/
 
-EXPOSE 3000 5173 5174 3013 3012 4000 3015 3040 3018 3019
+EXPOSE 3000 5173 5174 3013 3012 4000 3015 3040 3018 3019 3016
 
 RUN npm run cis
 
