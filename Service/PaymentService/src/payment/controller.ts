@@ -1,8 +1,8 @@
-import {Body, Controller, Post, Route} from 'tsoa';
+import {Body, Controller, Post, Request, Route} from 'tsoa';
+import * as express from 'express';
 import {
 	CheckoutRequest,
 	CheckoutResponse,
-	WebhookRequest,
 } from '.';
 import {PaymentService} from './service';
 
@@ -17,8 +17,9 @@ export class PaymentController extends Controller {
 
 	@Post('webhook')
 	public async webhook(
-		@Body() body: WebhookRequest,
+		@Request() req: express.Request,
 	): Promise<void> {
-		return new PaymentService().webhook(body);
+		this.setStatus(204);
+		return new PaymentService().webhook(req.body);
 	}
 }
