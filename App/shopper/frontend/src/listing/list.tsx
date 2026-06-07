@@ -20,7 +20,7 @@ export default function ListingList() {
 		<Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto', p: 2 }}>
 			<Grid container spacing={2}>
 				{listings.map((l) => (
-					<Grid key={l.id}>
+					<Grid key={l.id} size={{ xs: 12, sm: 'auto' }}>
 						<ListingCard listing={l} />
 					</Grid>
 				))}

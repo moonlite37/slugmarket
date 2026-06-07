@@ -49,7 +49,8 @@ export default function ListingCard({ listing }: ListingCardProps) {
 		<Card
 			elevation={0}
 			sx={{
-				width: 360,
+				width: { xs: '100%', sm: 360 },
+				maxWidth: '100%',
 				borderRadius: 3,
 				border: "1px solid",
 				borderColor: "grey.200",
