@@ -23,7 +23,7 @@ function ShopContent() {
 	const cartCount = items.reduce((total, item) => total + item.quantity, 0);
 
 	return (
-		<Grid>
+		<Grid sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 			<SignupBanner />
 			<AppBar position="static" sx={{ mb: 2 }}>
 				<Toolbar sx={{ gap: 1 }}>
@@ -79,7 +79,7 @@ function ShopContent() {
 			>
 				<FilterSidebar />
 			</Drawer>
-			<Grid sx={{ px: 3 }}>
+			<Grid sx={{ px: 3, flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
 				<ListingList />
 			</Grid>
 		</Grid>

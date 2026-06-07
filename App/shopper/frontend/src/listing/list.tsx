@@ -17,7 +17,7 @@ export default function ListingList() {
 		load();
 	}, [minPrice, maxPrice, sort, search, category]);
 	return (
-		<Box sx={{ height: '100vh', overflowY: 'auto', p: 2 }}>
+		<Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto', p: 2 }}>
 			<Grid container spacing={2}>
 				{listings.map((l) => (
 					<Grid key={l.id}>
