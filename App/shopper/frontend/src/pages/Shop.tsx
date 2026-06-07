@@ -34,7 +34,11 @@ function ShopContent() {
 					>
 						<FilterListIcon />
 					</IconButton>
-					<Typography variant="h6" component="h1" sx={{ whiteSpace: 'nowrap' }}>
+					<Typography
+						variant="h6"
+						component="h1"
+						sx={{ whiteSpace: 'nowrap', display: { xs: 'none', sm: 'block' } }}
+					>
 						Slug Market
 					</Typography>
 					<TextField
