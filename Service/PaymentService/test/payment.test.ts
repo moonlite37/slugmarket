@@ -102,6 +102,22 @@ describe('Payment checkout', () => {
 		expect(args.metadata.stockItems).toBe('[]');
 	});
 
+	it('splits large orderData across multiple metadata keys (under 500 chars each)', async () => {
+		const bigOrderData = Array.from({ length: 6 }, (_, i) => ({
+			seller: `seller-${i}`,
+			items: [{ listingId: `00000000-0000-0000-0000-00000000000${i}`, title: 'Product Title', price: 9.99, quantity: 1 }],
+			total: 9.99,
+		}));
+		await request.post('/api/v0/checkout').send({
+			lineItems: [{ name: 'X', quantity: 1, unitAmount: 100 }],
+			shopperId: 's1',
+			orderData: bigOrderData,
+		});
+		const args = createCheckoutSession.mock.calls[0][0];
+		expect(args.metadata.orderData.length).toBeLessThanOrEqual(450);
+		expect(args.metadata.orderData1).toBeDefined();
+	});
+
 	it('stores orderData in metadata', async () => {
 		await checkout();
 		const args = createCheckoutSession.mock.calls[0][0];
@@ -312,6 +328,25 @@ describe('Payment webhook', () => {
 			stockItems: '[]',
 		});
 		expect(res.status).toBe(204);
+	});
+
+	it('reassembles orderData split across numbered metadata keys', async () => {
+		mockFetch.mockImplementation(() =>
+			Promise.resolve(new Response(JSON.stringify({ data: { createOrder: { id: 'o1' } } }))),
+		);
+		const orderJson = JSON.stringify([
+			{ seller: 's1', items: [{ listingId: 'l1', title: 'T', price: 1, quantity: 1 }], total: 1 },
+		]);
+		await webhookWith({
+			shopperId: 'shopper-1', shopperName: 'John', shopperEmail: 'j@t.com',
+			orderData: orderJson.slice(0, 20),
+			orderData1: orderJson.slice(20),
+			stockItems: '[]',
+		});
+		const graphqlCall = mockFetch.mock.calls.find(
+			(call: unknown[]) => (call[0] as string).includes('graphql'),
+		);
+		expect(graphqlCall).toBeDefined();
 	});
 });
 

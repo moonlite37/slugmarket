@@ -22,6 +22,26 @@ const CREATE_ORDER_MUTATION = `mutation CreateOrder($input: CreateOrderInput!) {
 	createOrder(input: $input) { id status }
 }`;
 
+// Stripe caps each metadata value at 500 characters
+const METADATA_CHUNK_SIZE = 450;
+
+function chunkMetadata(prefix: string, value: string): Record<string, string> {
+	const chunks: Record<string, string> = {};
+	for (let i = 0; i === 0 || i * METADATA_CHUNK_SIZE < value.length; i++) {
+		const key = i === 0 ? prefix : `${prefix}${i}`;
+		chunks[key] = value.slice(i * METADATA_CHUNK_SIZE, (i + 1) * METADATA_CHUNK_SIZE);
+	}
+	return chunks;
+}
+
+function joinMetadata(meta: Record<string, string | undefined>, prefix: string): string {
+	let value = meta[prefix] ?? '';
+	for (let i = 1; meta[`${prefix}${i}`] !== undefined; i++) {
+		value += meta[`${prefix}${i}`];
+	}
+	return value;
+}
+
 export class PaymentService {
 	public async checkout(request: CheckoutRequest): Promise<CheckoutResponse> {
 		const session = await stripe.checkout.sessions.create({
@@ -40,8 +60,8 @@ export class PaymentService {
 				shopperId: request.shopperId,
 				shopperName: request.shopperName || '',
 				shopperEmail: request.shopperEmail || '',
-				orderData: JSON.stringify(request.orderData),
-				stockItems: JSON.stringify(request.stockItems || []),
+				...chunkMetadata('orderData', JSON.stringify(request.orderData)),
+				...chunkMetadata('stockItems', JSON.stringify(request.stockItems || [])),
 			},
 			success_url: 'https://slugmarket.shop/shopper/payment/success',
 			cancel_url: 'https://slugmarket.shop/shopper/payment/failed',
@@ -52,7 +72,7 @@ export class PaymentService {
 	public async webhook(request: WebhookRequest): Promise<void> {
 		if (request.type !== 'checkout.session.completed') return;
 		const meta = request.data.object.metadata;
-		const orderDataList: OrderData[] = JSON.parse(meta.orderData || '[]');
+		const orderDataList: OrderData[] = JSON.parse(joinMetadata(meta, 'orderData') || '[]');
 
 		const orderIds: string[] = [];
 		for (const orderData of orderDataList) {
@@ -61,9 +81,10 @@ export class PaymentService {
 			);
 			if (order) orderIds.push(order.id);
 		}
+		const stockItems = joinMetadata(meta, 'stockItems');
 		await Promise.all(orderIds.map((id) => this.sendOrderConfirmation(id, meta.shopperEmail)));
-		await this.decreaseStock(meta.stockItems);
-		await this.clearCart(meta.shopperId, meta.stockItems);
+		await this.decreaseStock(stockItems);
+		await this.clearCart(meta.shopperId, stockItems);
 	}
 
 	private async clearCart(shopperId: string, stockItemsJson?: string): Promise<void> {

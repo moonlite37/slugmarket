@@ -41,8 +41,7 @@ export interface WebhookSession {
 		shopperId: string;
 		shopperName?: string;
 		shopperEmail?: string;
-		orderData?: string;
-		stockItems?: string;
+		[key: string]: string | undefined;
 	};
 }
 
