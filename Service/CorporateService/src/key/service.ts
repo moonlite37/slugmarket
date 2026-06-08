@@ -24,87 +24,70 @@ export class ApiService {
 			VALUES ($1, jsonb_build_object('key', crypt($2::text, gen_salt('bf')), 'username', $3::text))
 			RETURNING id, account, data;
 		`;
-		await pool.query(q, [id, key, username ?? '']);
+		await pool.query(q, [id, key, username]);
 		return key;
 	}
 
 	public async check(key: string | undefined) {
 		const rawKey = key?.startsWith('Bearer ') ? key.slice(7) : key;
-		const pq = 'SELECT account FROM api_key WHERE data->>\'key\' = crypt($1::text, data->>\'key\')';
-		const account = (await pool.query(pq, [rawKey])).rows[0];
-		if (!account) {
-			return undefined;
-		}
-		return account.account;
+		const pq = 'SELECT account, data->>\'username\' as username FROM api_key WHERE data->>\'key\' = crypt($1::text, data->>\'key\')';
+		const row = (await pool.query(pq, [rawKey])).rows[0];
+		if (!row) return undefined;
+		return { account: row.account as string, username: row.username as string };
 	}
 
 	public async getListing(key: string | undefined) {
-		const account = await this.check(key);
-		if (!account) {
-			return undefined;
-		}
-		const res = await fetch(`${LISTING_MICROSERVICE}/listing?author=${account}`, {
+		const info = await this.check(key);
+		if (!info) return undefined;
+		const res = await fetch(`${LISTING_MICROSERVICE}/listing?author=${info.account}`, {
 			method: 'GET',
 		});
 		return res.json();
 	}
 
 	public async createListing(key: string | undefined, body: NewListing) {
-		const rawKey = key?.startsWith('Bearer ') ? key.slice(7) : key;
-		const pq = `SELECT account, data->>'username' as username FROM api_key WHERE data->>'key' = crypt($1::text, data->>'key')`;
-		const row = (await pool.query(pq, [rawKey])).rows[0];
-		if (!row) return undefined;
-		const { account, username } = row;
+		const info = await this.check(key);
+		console.log(info);
+		if (!info) return undefined;
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ authorId: account, username: username ?? '', ...body }),
+			body: JSON.stringify({ authorId: info.account, username: info.username, ...body }),
 		});
-		if (res.status !== 201) return undefined;
 		return res.json();
 	}
 
 	public async updateListing(key: string | undefined, id: string, body: UpdateListingBody) {
-		const account = await this.check(key);
-		if (!account) {
-			return null;
-		}
+		const info = await this.check(key);
+		if (!info) return null;
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing/${id}`, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(body),
 		});
-		if (res.status === 404) {
-			return undefined;
-		}
+		if (res.status === 404) return undefined;
 		return res.json();
 	}
 
 	public async deleteListing(key: string | undefined, id: string) {
-		const account = await this.check(key);
-		if (!account) {
-			throw new Error('Unauthorized');
-		}
+		const info = await this.check(key);
+		if (!info) throw new Error('Unauthorized');
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing/${id}`, {
 			method: 'DELETE',
 		});
-		if (res.status !== 204) {
-			return false;
-		}
+		if (res.status !== 204) return false;
 		return true;
 	}
 
 	public async getOrders(key: string | undefined) {
-		const account = await this.check(key);
-		if (!account) {
-			return undefined;
-		}
+		const info = await this.check(key);
+		if (!info) return undefined;
 		const res = await fetch(ORDER_MICROSERVICE, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				query: 'query OrdersBySeller($sellerId: String!) { ordersBySeller(sellerId: $sellerId) { id items total status } }',
-				variables: { sellerId: account },
+				variables: { sellerId: info.account },
 			}),
 		});
 		const data = await res.json();
@@ -112,10 +95,8 @@ export class ApiService {
 	}
 
 	public async updateOrderStatus(key: string | undefined, id: string, status: string) {
-		const account = await this.check(key);
-		if (!account) {
-			return undefined;
-		}
+		const info = await this.check(key);
+		if (!info) return undefined;
 		const res = await fetch(ORDER_MICROSERVICE, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },

@@ -13,17 +13,21 @@ const authServer = setupServer(
 		if (cookie === 'invalid') {
 			return HttpResponse.json({
 				id: '00000000-0000-0000-0000-000000000001',
+				name: 'something',
 				roles: ['shopper'],
 			});
 		}
 		return HttpResponse.json({
 			id: '00000000-0000-0000-0000-000000000001',
+			name: 'something',
 			roles: ['seller'],
 		});
 	}),
 	http.post('http://127.0.0.1:3011/api/v0/listing', () => {
-		return HttpResponse.json({ id: 'mock-id', title: 'Test Widget' });
-	}),
+		return HttpResponse.json(
+			{ id: 'mock-id', title: 'Test Widget' },
+			{ status: 201 },
+		);	}),
 	http.get('http://127.0.0.1:3011/api/v0/listing', () => {
 		return HttpResponse.json([{ id: 'mock-1', title: 'Mock Listing' }]);
 	}),
