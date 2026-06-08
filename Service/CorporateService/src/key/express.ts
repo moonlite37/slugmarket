@@ -21,7 +21,7 @@ export async function expressAuthentication(
 	}
 	const data = await res.json();
 	const perms = data.roles;
-	if(perms.includes('corporate')){
+	if(perms.includes('seller')){
 		return data;
 	}
 	throw new Error('Unauthorized');

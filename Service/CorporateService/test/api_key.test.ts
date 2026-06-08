@@ -13,12 +13,12 @@ const authServer = setupServer(
 		if (cookie === 'invalid') {
 			return HttpResponse.json({
 				id: '00000000-0000-0000-0000-000000000001',
-				roles: ['seller', 'shopper'],
+				roles: ['shopper'],
 			});
 		}
 		return HttpResponse.json({
 			id: '00000000-0000-0000-0000-000000000001',
-			roles: ['seller', 'corporate'],
+			roles: ['seller'],
 		});
 	}),
 	http.post('http://127.0.0.1:3011/api/v0/listing', () => {
