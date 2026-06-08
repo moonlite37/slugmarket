@@ -6,5 +6,6 @@ export interface Listing {
   price: number
   stock: number
   username?: string
+  categories?: string[]
   created: string
 }
