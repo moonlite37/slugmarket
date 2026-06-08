@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 import LocaleSwitcher from '../LocaleSwitcher';
 import { CartContext } from '../context/cartContext';
@@ -14,12 +14,10 @@ interface SettingsModalProps {
 export default function SettingsModal({ open, onClose }: SettingsModalProps) {
 	const { t } = useTranslation();
 	const { loggedIn } = useContext(CartContext);
-	const navigate = useNavigate();
 
 	const handleLogout = async () => {
 		await fetch('/shopper/api/v0/logout', { method: 'DELETE', credentials: 'include' });
 		onClose();
-		navigate('/login');
 	};
 
 	return (

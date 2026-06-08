@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor,  } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
@@ -48,7 +48,7 @@ describe('SettingsModal', () => {
 		expect(screen.getByRole('button', { name: /log\s*out/i })).toBeInTheDocument();
 	});
 
-	it('logs out, closes, and redirects to login on click', async () => {
+	it('logs out, closes', async () => {
 		let logoutCalled = false;
 		server.use(
 			http.delete('/shopper/api/v0/logout', () => {
@@ -61,6 +61,5 @@ describe('SettingsModal', () => {
 		await userEvent.click(screen.getByRole('button', { name: /log\s*out/i }));
 		await waitFor(() => expect(logoutCalled).toBe(true));
 		expect(onClose).toHaveBeenCalled();
-		expect(await screen.findByText('Login Page')).toBeInTheDocument();
 	});
 });
