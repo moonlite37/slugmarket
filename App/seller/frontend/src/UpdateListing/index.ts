@@ -6,7 +6,6 @@ export interface EditableListing {
 	stock: number;
 	categories: string[];
 	images?: string[];
-	images?: string[];
 }
 
 export interface EditableListingUpdate {
