@@ -54,7 +54,6 @@ export class CorpController extends Controller {
 	}
 
 	@Get('listing')
-	@Security('bearer')
 	public async getListing(@Request() request: ExpressRequest): Promise<Listing[] | undefined> {
 		const apiKey = request.headers['x-api-key'] as string | undefined;
 		const res = await new CorpService().getListing(apiKey);
