@@ -29,8 +29,9 @@ export class ApiService {
 	}
 
 	public async check(key: string | undefined) {
+		const rawKey = key?.startsWith('Bearer ') ? key.slice(7) : key;
 		const pq = 'SELECT account FROM api_key WHERE data->>\'key\' = crypt($1::text, data->>\'key\')';
-		const account = (await pool.query(pq, [key])).rows[0];
+		const account = (await pool.query(pq, [rawKey])).rows[0];
 		if (!account) {
 			return undefined;
 		}
