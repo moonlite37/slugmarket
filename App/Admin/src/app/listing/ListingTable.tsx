@@ -54,7 +54,7 @@ export default function ListingTable() {
 				<InputLabel>Category</InputLabel>
 				<Select value={categoryFilter} label="Category" onChange={(e) => { setCategoryFilter(e.target.value); setPage(0); }}>
 					<MenuItem value="">All</MenuItem>
-					{categories.map((c) => <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>)}
+					{categories.map((c) => <MenuItem key={c.id} value={c.name}>{c.name}</MenuItem>)}
 				</Select>
 			</FormControl>
 			<TableContainer component={Paper} variant="outlined">

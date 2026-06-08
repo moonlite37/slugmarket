@@ -58,9 +58,9 @@ describe('Shopper OrderHistory', () => {
 			</MemoryRouter>,
 		);
 		await waitFor(() => {
-			screen.getByText('May 20, 2026');
+			screen.getByText(/May 20, 2026/);
 		});
-		screen.getByText('May 25, 2026');
+		screen.getByText(/May 25, 2026/);
 	});
 
 	it('shows no orders message when empty', async () => {

@@ -73,7 +73,7 @@ export default function OrderHistory() {
 							<CardContent>
 								<Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
 									<Typography variant="subtitle2" color="text.secondary">
-										{formatDate(order.created)}
+										Order #{order.id.slice(0, 8)} — {formatDate(order.created)}
 									</Typography>
 									<Chip label={order.status} size="small" color={chipColor(order.status)} />
 								</Box>
