@@ -14,10 +14,12 @@ export default async function Page() {
 		redirect('/login');
 	}
 	return (
-		<Box sx={{ p: 3 }}>
+		<Box sx={{ p: 3}}>
 			<Typography variant="h4" sx={{ mb: 3 }}>Admin Dashboard</Typography>
 			<ListingTable />
+			<Box sx={{ height: 32 }} /> 
 			<OrderTable />
+			<Box sx={{ height: 32 }} /> 
 			<CategoryTable />
 		</Box>
 	);
