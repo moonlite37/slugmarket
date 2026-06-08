@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
 import PriceRange from './components/priceRange';
-import Search from './components/search';
 import Sort from './components/sort';
 import Categories from './components/categories';
 
@@ -17,7 +16,6 @@ export default function FilterSidebar() {
 				{t('Filters')}
 			</Typography>
 
-			<Search/>
 
       <Sort/>
 

@@ -137,16 +137,3 @@ describe('Sort Tests', () => {
         expect(sort).toBe('date_asc')
     });
 });
-
-describe('Search Tests', () => {
-    it('Displays Search', async () => {
-        render(<Wrapper />);
-        expect(await screen.findByLabelText('Search')).toBeDefined()
-    });
-    it('Can change search by parameter', async () => {
-        render(<Wrapper />);
-        const s = await screen.findByLabelText('Search');
-        await userEvent.type(s, 'testing');
-        expect(s).toHaveValue('testing')
-    });
-});
