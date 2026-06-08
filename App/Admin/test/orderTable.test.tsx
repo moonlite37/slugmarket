@@ -83,3 +83,53 @@ describe('OrderTable fallback', () => {
 		});
 	});
 });
+
+describe('Order search and pagination', () => {
+	it('filters orders by shopper name', async () => {
+		const user = userEvent.setup();
+		render(<OrderTable />);
+		await waitFor(() => {
+			expect(screen.getByText('Jane Doe')).toBeDefined();
+		});
+		await user.type(screen.getByPlaceholderText('Search by shopper...'), 'xyz');
+		await waitFor(() => {
+			expect(screen.queryByText('Jane Doe')).toBeNull();
+		});
+	});
+
+	it('paginates orders at 5 per page', async () => {
+		const { getOrders } = await import('../src/app/order/actions');
+		(getOrders as ReturnType<typeof vi.fn>).mockResolvedValue(
+			Array.from({ length: 8 }, (_, i) => ({
+				id: `o-${i}`, shopper: 's1', seller: 'se1', shopperName: `Buyer ${i}`,
+				items: [{ listingId: 'l1', title: 'Item', price: 10, quantity: 1 }],
+				total: 10, status: 'pending', created: '2026-06-01',
+			})),
+		);
+		render(<OrderTable />);
+		await waitFor(() => {
+			expect(screen.getByText('Buyer 0')).toBeDefined();
+		});
+		expect(screen.getByText('Buyer 4')).toBeDefined();
+		expect(screen.queryByText('Buyer 5')).toBeNull();
+	});
+
+	it('navigates to next page of orders', async () => {
+		const { getOrders } = await import('../src/app/order/actions');
+		(getOrders as ReturnType<typeof vi.fn>).mockResolvedValue(
+			Array.from({ length: 8 }, (_, i) => ({
+				id: `o-${i}`, shopper: 's1', seller: 'se1', shopperName: `Buyer ${i}`,
+				items: [{ listingId: 'l1', title: 'Item', price: 10, quantity: 1 }],
+				total: 10, status: 'pending', created: '2026-06-01',
+			})),
+		);
+		const user = userEvent.setup();
+		render(<OrderTable />);
+		await waitFor(() => {
+			expect(screen.getByText('Buyer 0')).toBeDefined();
+		});
+		await user.click(screen.getByRole('button', { name: /next/i }));
+		expect(screen.getByText('Buyer 5')).toBeDefined();
+		expect(screen.queryByText('Buyer 0')).toBeNull();
+	});
+});
