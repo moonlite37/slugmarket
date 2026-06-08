@@ -59,7 +59,7 @@ export const server = setupServer(
   }),
   http.post('http://127.0.0.1:3040/api/v0/generate', ({ request }) => {
     const auth = request.headers.get('authorization');
-    if (auth === 'valid') {
+    if (auth === 'Bearer valid') {
       return new HttpResponse('api key', { status: 201 });
     }
     return new HttpResponse(null, { status: 401 });
