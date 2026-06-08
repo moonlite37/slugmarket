@@ -18,6 +18,21 @@ interface Order {
 	created: string;
 }
 
+
+function formatDate(raw: string): string {
+	const date = new Date(raw);
+	const now = new Date();
+	const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+	const yesterday = new Date(today.getTime() - 86400000);
+	if (date >= today) {
+		const h = date.getHours(); const m = String(date.getMinutes()).padStart(2,'0'); return (h % 12 || 12) + ':' + m + ' ' + (h >= 12 ? 'PM' : 'AM');
+	}
+	if (date >= yesterday) {
+		return 'Yesterday';
+	}
+	const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return months[date.getUTCMonth()] + ' ' + date.getUTCDate() + ', ' + date.getUTCFullYear();
+}
+
 export default function OrderHistory() {
 	const { t } = useTranslation();
 	const [orders, setOrders] = useState<Order[]>([]);
@@ -58,7 +73,7 @@ export default function OrderHistory() {
 							<CardContent>
 								<Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
 									<Typography variant="subtitle2" color="text.secondary">
-										{order.created}
+										{formatDate(order.created)}
 									</Typography>
 									<Chip label={order.status} size="small" color={chipColor(order.status)} />
 								</Box>
