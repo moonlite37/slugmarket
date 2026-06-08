@@ -41,6 +41,7 @@ export default function ListingTable() {
 				<TableHead>
 					<TableRow>
 						<TableCell>Title</TableCell>
+						<TableCell>Seller</TableCell>
 						<TableCell>Price</TableCell>
 						<TableCell>Stock</TableCell>
 						<TableCell>Actions</TableCell>
@@ -50,6 +51,7 @@ export default function ListingTable() {
 					{listings.map((listing) => (
 						<TableRow key={listing.id}>
 							<TableCell>{listing.title}</TableCell>
+							<TableCell>{listing.username || listing.author.slice(0, 8)}</TableCell>
 							<TableCell>${listing.price}</TableCell>
 							<TableCell>{listing.stock}</TableCell>
 							<TableCell>

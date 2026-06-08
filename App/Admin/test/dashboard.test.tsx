@@ -5,14 +5,14 @@ import userEvent from '@testing-library/user-event';
 import ListingTable from '../src/app/listing/ListingTable';
 
 const mockListings = [
-	{ id: 'mock-1', author: 'a1', title: 'Widget', description: 'A widget', price: 10, stock: 5, created: '2026-05-10' },
-	{ id: 'mock-2', author: 'a2', title: 'Gadget', description: 'A gadget', price: 20, stock: 3, created: '2026-05-10' },
+	{ id: 'mock-1', author: 'a1', title: 'Widget', description: 'A widget', price: 10, stock: 5, username: 'alice', created: '2026-05-10' },
+	{ id: 'mock-2', author: 'a2', title: 'Gadget', description: 'A gadget', price: 20, stock: 3, username: 'bob', created: '2026-05-10' },
 ];
 
 vi.mock('../src/app/listing/actions', () => ({
 	getListings: vi.fn().mockResolvedValue([
-		{ id: 'mock-1', author: 'a1', title: 'Widget', description: 'A widget', price: 10, stock: 5, created: '2026-05-10' },
-		{ id: 'mock-2', author: 'a2', title: 'Gadget', description: 'A gadget', price: 20, stock: 3, created: '2026-05-10' },
+		{ id: 'mock-1', author: 'a1', title: 'Widget', description: 'A widget', price: 10, stock: 5, username: 'alice', created: '2026-05-10' },
+		{ id: 'mock-2', author: 'a2', title: 'Gadget', description: 'A gadget', price: 20, stock: 3, username: 'bob', created: '2026-05-10' },
 	]),
 	deleteListing: vi.fn().mockResolvedValue(undefined),
 }));
@@ -58,3 +58,10 @@ describe('Admin Dashboard - Listing Table', () => {
 		});
 	});
 });
+	it('shows seller username', async () => {
+		render(<ListingTable />);
+		await waitFor(() => {
+			expect(screen.getByText('alice')).toBeInTheDocument();
+		});
+		expect(screen.getByText('bob')).toBeInTheDocument();
+	});

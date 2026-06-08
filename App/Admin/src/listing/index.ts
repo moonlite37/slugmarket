@@ -5,5 +5,6 @@ export interface Listing {
   description: string
   price: number
   stock: number
+  username?: string
   created: string
 }
