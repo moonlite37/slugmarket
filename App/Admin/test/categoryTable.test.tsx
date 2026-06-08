@@ -69,3 +69,14 @@ describe('CategoryActions', () => {
 		await deleteCategory('c1');
 	});
 });
+
+	it('does not create category with empty name', async () => {
+		const user = userEvent.setup();
+		render(<CategoryTable />);
+		await waitFor(() => {
+			expect(screen.getByText('Electronics')).toBeDefined();
+		});
+		await user.click(screen.getByRole('button', { name: 'Add' }));
+		const { createCategory } = await import('../src/app/category/actions');
+		expect(createCategory).not.toHaveBeenCalled();
+	});

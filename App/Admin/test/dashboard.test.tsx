@@ -106,3 +106,14 @@ describe('Admin Dashboard - Listing Table', () => {
 		});
 		expect(screen.getByText('Widget')).toBeInTheDocument();
 	});
+
+	it('shows truncated author when username is missing', async () => {
+		const { getListings } = await import('../src/app/listing/actions');
+		(getListings as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
+			{ id: 'mock-3', author: 'abcdefgh-1234', title: 'NoUser', description: 'test', price: 5, stock: 1, created: '2026-05-10' },
+		]);
+		render(<ListingTable />);
+		await waitFor(() => {
+			expect(screen.getByText('abcdefgh')).toBeInTheDocument();
+		});
+	});
