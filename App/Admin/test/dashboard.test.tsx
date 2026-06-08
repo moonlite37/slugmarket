@@ -91,8 +91,8 @@ describe('Admin Dashboard - Listing Table', () => {
 		}));
 		const { getListings } = await import('../src/app/listing/actions');
 		(getListings as ReturnType<typeof vi.fn>).mockResolvedValue([
-			{ id: 'mock-1', author: 'a1', title: 'Widget', description: 'A widget', price: 10, stock: 5, username: 'alice', categories: ['cat-1'] },
-			{ id: 'mock-2', author: 'a2', title: 'Pork', description: 'Food', price: 20, stock: 3, username: 'bob', categories: ['cat-2'] },
+			{ id: 'mock-1', author: 'a1', title: 'Widget', description: 'A widget', price: 10, stock: 5, username: 'alice', categories: ['Electronics'] },
+			{ id: 'mock-2', author: 'a2', title: 'Pork', description: 'Food', price: 20, stock: 3, username: 'bob', categories: ['Food'] },
 		]);
 		render(<ListingTable />);
 		await waitFor(() => {
