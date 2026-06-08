@@ -13,6 +13,7 @@ export interface Authenticated {
 export interface SessionUser {
 	id: string
 	role: string
+	name?: string
 }
 
 declare module 'express-serve-static-core' {

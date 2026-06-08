@@ -10,7 +10,7 @@ const LISTING_MICROSERVICE = 'http://127.0.0.1:3011/api/v0';
 const ORDER_MICROSERVICE = 'http://127.0.0.1:4000/graphql';
 
 export class ApiService {
-	public async createAPIKey(id: string) {
+	public async createAPIKey(id: string, username?: string) {
 		const prefix = 'sm_';
 		const randomBytes = crypto.randomBytes(32);
 		const token = randomBytes
@@ -21,10 +21,10 @@ export class ApiService {
 		const key = prefix + token;
 		const q = `
 			INSERT INTO api_key (account, data)
-			VALUES ($1, jsonb_build_object('key', crypt($2::text, gen_salt('bf'))))
+			VALUES ($1, jsonb_build_object('key', crypt($2::text, gen_salt('bf')), 'username', $3::text))
 			RETURNING id, account, data;
 		`;
-		await pool.query(q, [id, key]);
+		await pool.query(q, [id, key, username ?? '']);
 		return key;
 	}
 
@@ -105,7 +105,7 @@ export class ApiService {
 			}),
 		});
 		const data = await res.json();
-		return data?.data?.ordersBySeller ?? [];
+		return data?.data?.ordersBySeller;
 	}
 
 	public async updateOrderStatus(key: string | undefined, id: string, status: string) {

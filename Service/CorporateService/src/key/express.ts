@@ -5,6 +5,7 @@ const AUTH_MICROSERVICE = 'http://127.0.0.1:3010/api/v0';
 export interface SessionUser {
   id: string
   roles: string
+  name?: string
 }
 
 export async function expressAuthentication(
@@ -25,6 +26,5 @@ export async function expressAuthentication(
 		return data;
 	}
 	throw new Error('Unauthorized');
-	
 }
 

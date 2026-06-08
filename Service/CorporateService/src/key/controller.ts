@@ -18,11 +18,11 @@ import { ApiService } from './service';
 @Route('')
 export class CorporateController extends Controller {
 	@Post('generate')
-	@Security('jwt', ['corporate'])
+	@Security('jwt', ['seller'])
 	@Response('201', 'Created')
 	public async createAPIKey(@Request() request: ExpressRequest): Promise<api_key> {
 		const currentId = request.user.id;
-		const res = await new ApiService().createAPIKey(currentId);
+		const res = await new ApiService().createAPIKey(currentId, request.user.name);
 		this.setStatus(201);
 		return res;
 	}
