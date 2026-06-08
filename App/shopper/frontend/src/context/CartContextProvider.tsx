@@ -21,16 +21,11 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   const { t } = useTranslation();
   const [items, setItems] = useState<CartItem[]>([]);
   const [loggedIn, setLoggedIn] = useState(false);
-  // Read synchronously at mount so we show the redirect screen immediately
-  // instead of flashing the home page during the post-login round-trips.
   const [resumingCheckout, setResumingCheckout] = useState(
     () => sessionStorage.getItem(CHECKOUT_ON_LOGIN_KEY) === 'true',
   );
   const hasLoaded = useRef(false);
 
-  // Shows the redirect screen, refreshes prices/stock, then hands off to
-  // Stripe. Used both by the cart button and the resume-after-login flow, so
-  // a logged-in checkout gets the same feedback as one resumed after login.
   const checkout = useCallback(async (): Promise<void> => {
     setResumingCheckout(true);
     const res = await fetch('/shopper/api/v0/cart/sync', {
@@ -41,16 +36,12 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     setItems(synced);
     if (synced.length > 0) {
       await redirectToStripeCheckout();
-      return; // leave the redirect screen up while the browser navigates away
+      return;
     }
-    // Nothing left to check out (e.g. all items went out of stock).
     setResumingCheckout(false);
   }, []);
 
   useEffect(() => {
-    // Run the guest-cart merge exactly once. StrictMode (and any remount)
-    // double-invokes effects; without this guard both runs read the guest
-    // cart before it is cleared and POST it twice, doubling the merged quantity.
     if (hasLoaded.current) return;
     hasLoaded.current = true;
 
@@ -92,14 +83,11 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
           setItems(data);
         }
 
-        // Resume a checkout the user started as a guest, now that the guest
-        // cart has been merged into their account.
         if (sessionStorage.getItem(CHECKOUT_ON_LOGIN_KEY) === 'true') {
           sessionStorage.removeItem(CHECKOUT_ON_LOGIN_KEY);
           await checkout();
         }
       } else {
-        // Came back without logging in: drop any stale checkout intent.
         sessionStorage.removeItem(CHECKOUT_ON_LOGIN_KEY);
         setResumingCheckout(false);
         const guestCart: CartItem[] = JSON.parse(

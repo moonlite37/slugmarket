@@ -14,7 +14,6 @@ const Cart = () => {
 
 	const handleCheckout = async () => {
 		if (!loggedIn) {
-			// Remember the intent so checkout resumes after the OAuth round-trip.
 			sessionStorage.setItem(CHECKOUT_ON_LOGIN_KEY, 'true');
 			navigate('/login?source=cart');
 			return;
