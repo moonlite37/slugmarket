@@ -10,7 +10,7 @@ import LocaleSwitcher from './LocaleSwitcher';
 function App() {
 	return (
 		<>
-			<GlobalStyles styles={{ body: { overflow: 'hidden', margin: 0 } }} />
+			<GlobalStyles styles={{ body: { overflow: 'auto', margin: 0 } }} />
 			<LocaleSwitcher />
 			<BrowserRouter basename="/seller">
 				<Routes>
