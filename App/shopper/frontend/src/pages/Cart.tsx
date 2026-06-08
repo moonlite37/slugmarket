@@ -1,5 +1,6 @@
 import { useEffect, useContext } from 'react';
-import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link } from 'react-router-dom';
 
 import Cart from '@/cart/list';
@@ -40,6 +41,7 @@ const CartPage = () => {
 				</Toolbar>
 			</AppBar>
 			<Box sx={{ px: 3, py: 2 }}>
+                                <Button component={Link} to="/" startIcon={<ArrowBackIcon />} sx={{ mb: 2 }}>Continue Shopping</Button>
 				<Cart />
 			</Box>
 		</Box>
