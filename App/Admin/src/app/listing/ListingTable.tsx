@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import {
 	Typography,
+	Box,
+	Button,
 	Table,
 	TableBody,
 	TableCell,
@@ -24,6 +26,8 @@ export default function ListingTable() {
 	const [search, setSearch] = useState('');
 	const [categoryFilter, setCategoryFilter] = useState('');
 	const [categories, setCategories] = useState<{id:string;name:string}[]>([]);
+	const [page, setPage] = useState(0);
+	const PAGE_SIZE = 5;
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -45,10 +49,10 @@ export default function ListingTable() {
 
 	return (
 		<>
-			<TextField placeholder="Search listings..." size="small" value={search} onChange={(e) => setSearch(e.target.value)} sx={{ mb: 2 }} fullWidth />
+			<TextField placeholder="Search listings..." size="small" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} sx={{ mb: 2 }} fullWidth />
 			<FormControl size="small" sx={{ mb: 2, minWidth: 200 }}>
 				<InputLabel>Category</InputLabel>
-				<Select value={categoryFilter} label="Category" onChange={(e) => setCategoryFilter(e.target.value)}>
+				<Select value={categoryFilter} label="Category" onChange={(e) => { setCategoryFilter(e.target.value); setPage(0); }}>
 					<MenuItem value="">All</MenuItem>
 					{categories.map((c) => <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>)}
 				</Select>
@@ -65,7 +69,7 @@ export default function ListingTable() {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{filtered.map((listing) => (
+						{filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map((listing) => (
 							<TableRow key={listing.id}>
 								<TableCell>{listing.title}</TableCell>
 								<TableCell>{listing.username || /* v8 ignore next */ listing.author.slice(0, 8)}</TableCell>
@@ -84,6 +88,13 @@ export default function ListingTable() {
 					</TableBody>
 				</Table>
 			</TableContainer>
+			{filtered.length > PAGE_SIZE && (
+				<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, mt: 2 }}>
+					<Button size="small" disabled={page === 0} onClick={() => setPage(page - 1)}>Previous</Button>
+					<Typography variant="body2">Page {page + 1} of {Math.ceil(filtered.length / PAGE_SIZE)}</Typography>
+					<Button size="small" disabled={(page + 1) * PAGE_SIZE >= filtered.length} onClick={() => setPage(page + 1)}>Next</Button>
+				</Box>
+			)}
 		</>
 	);
 }

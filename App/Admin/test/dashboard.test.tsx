@@ -117,3 +117,39 @@ describe('Admin Dashboard - Listing Table', () => {
 			expect(screen.getByText('abcdefgh')).toBeInTheDocument();
 		});
 	});
+
+describe('Pagination', () => {
+	it('shows only 5 listings per page', async () => {
+		const { getListings } = await import('../src/app/listing/actions');
+		(getListings as ReturnType<typeof vi.fn>).mockResolvedValue(
+			Array.from({ length: 8 }, (_, i) => ({
+				id: `m-${i}`, author: 'a1', title: `Item ${i}`, description: 'test',
+				price: 10, stock: 5, username: 'alice', created: '2026-05-10',
+			})),
+		);
+		render(<ListingTable />);
+		await waitFor(() => {
+			expect(screen.getByText('Item 0')).toBeInTheDocument();
+		});
+		expect(screen.getByText('Item 4')).toBeInTheDocument();
+		expect(screen.queryByText('Item 5')).toBeNull();
+	});
+
+	it('navigates to next page', async () => {
+		const { getListings } = await import('../src/app/listing/actions');
+		(getListings as ReturnType<typeof vi.fn>).mockResolvedValue(
+			Array.from({ length: 8 }, (_, i) => ({
+				id: `m-${i}`, author: 'a1', title: `Item ${i}`, description: 'test',
+				price: 10, stock: 5, username: 'alice', created: '2026-05-10',
+			})),
+		);
+		const user = userEvent.setup();
+		render(<ListingTable />);
+		await waitFor(() => {
+			expect(screen.getByText('Item 0')).toBeInTheDocument();
+		});
+		await user.click(screen.getByRole('button', { name: /next/i }));
+		expect(screen.getByText('Item 5')).toBeInTheDocument();
+		expect(screen.queryByText('Item 0')).toBeNull();
+	});
+});
