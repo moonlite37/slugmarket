@@ -13,7 +13,7 @@ import { CartContextProvider } from './context/CartContextProvider';
 function App() {
 	return (
 		<>
-			<GlobalStyles styles={{ body: { overflow: 'hidden', margin: 0 } }} />
+			<GlobalStyles styles={{ body: { overflow: 'auto', margin: 0 } }} />
 			<BrowserRouter basename="/shopper">
 				<CartContextProvider>
 					<Routes>
