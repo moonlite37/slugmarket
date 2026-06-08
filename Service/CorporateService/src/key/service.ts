@@ -50,15 +50,17 @@ export class ApiService {
 	}
 
 	public async createListing(key: string | undefined, body: NewListing) {
-		const account = await this.check(key);
-		if (!account) {
-			return undefined;
-		}
+		const rawKey = key?.startsWith('Bearer ') ? key.slice(7) : key;
+		const pq = `SELECT account, data->>'username' as username FROM api_key WHERE data->>'key' = crypt($1::text, data->>'key')`;
+		const row = (await pool.query(pq, [rawKey])).rows[0];
+		if (!row) return undefined;
+		const { account, username } = row;
 		const res = await fetch(`${LISTING_MICROSERVICE}/listing`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ authorId: account, ...body }),
+			body: JSON.stringify({ authorId: account, username: username ?? '', ...body }),
 		});
+		if (res.status !== 201) return undefined;
 		return res.json();
 	}
 
