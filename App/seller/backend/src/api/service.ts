@@ -5,7 +5,7 @@ export class APIService {
         const res = await fetch(`${CORPORATE_MICROSERVICE}/generate`, {
             method: 'POST',
             headers: {
-                authorization: auth,
+                authorization: `Bearer ${auth}`,
             },
         });
         if (!res.ok) {
