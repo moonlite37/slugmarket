@@ -324,3 +324,22 @@ describe('update listing button', () => {
 		expect(screen.getByText(updatePath)).toBeDefined();
 	});
 });
+
+describe('image management', () => {
+        const setupImageListing = () => {
+                server.use(http.get('http://localhost:3000/seller/api/v0/listing/test-id', () => HttpResponse.json({
+                        id: 'test-id', title: 'Widget', description: 'A widget', price: 10, stock: 5, categories: [], images: ['https://s3.test/existing.png'],
+                })));
+                render(<MemoryRouter initialEntries={['/listing/test-id/edit']}><Routes><Route path="/listing/:id/edit" element={<UpdateListing />}/></Routes></MemoryRouter>);
+        };
+        it('shows current image when listing has one', async () => {
+                setupImageListing();
+                expect(await screen.findByAltText('Listing image')).toBeTruthy();
+        });
+        it('can remove existing image', async () => {
+                setupImageListing();
+                await screen.findByAltText('Listing image');
+                await userEvent.click(screen.getByRole('button', { name: /remove image/i }));
+                expect(screen.queryByAltText('Listing image')).toBeNull();
+        });
+});

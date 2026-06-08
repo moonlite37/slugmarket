@@ -1,5 +1,5 @@
 import SaveIcon from '@mui/icons-material/Save';
-import { Box, IconButton, Stack, TextField } from '@mui/material';
+import { Box, Button, IconButton, Stack, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getListing, updateListing } from './model';
@@ -12,6 +12,7 @@ export default function UpdateListing() {
 	const [description, setDescription] = useState('');
 	const [stock, setStock] = useState('');
 	const [categories, setCategories] = useState('');
+	const [images, setImages] = useState<string[]>([]);
 
 	useEffect(() => {
 		const loadListing = async () => {
@@ -23,6 +24,7 @@ export default function UpdateListing() {
 			setPrice(String(listing.price));
 			setStock(String(listing.stock));
 			setCategories(listing.categories.join(', '));
+					setImages(listing.images || []);
 		};
 		void loadListing();
 	}, [id]);
@@ -34,7 +36,8 @@ export default function UpdateListing() {
 			description,
 			price: Number(price),
 			stock: Number(stock),
-			categories: categories
+			images,
+					categories: categories
 				.split(',')
 				.map((category) => category.trim())
 				.filter(Boolean),
@@ -77,6 +80,12 @@ export default function UpdateListing() {
 						setStock(e.target.value);
 					}}
 				/>
+                                {images[0] && (
+                                    <Box>
+                                        <Box component="img" src={images[0]} alt="Listing image" sx={{ width: "100%", maxHeight: 200, objectFit: "contain", borderRadius: 1 }} />
+                                        <Button size="small" color="error" onClick={() => setImages([])} aria-label="remove image">Remove Image</Button>
+                                    </Box>
+                                )}
 				<TextField
 					label="Categories"
 					value={categories}
