@@ -65,3 +65,16 @@ describe('Admin Dashboard - Listing Table', () => {
 		});
 		expect(screen.getByText('bob')).toBeInTheDocument();
 	});
+
+	it('filters listings by search', async () => {
+		const user = userEvent.setup();
+		render(<ListingTable />);
+		await waitFor(() => {
+			expect(screen.getByText('Widget')).toBeInTheDocument();
+		});
+		await user.type(screen.getByPlaceholderText('Search listings...'), 'Gad');
+		await waitFor(() => {
+			expect(screen.queryByText('Widget')).toBeNull();
+		});
+		expect(screen.getByText('Gadget')).toBeInTheDocument();
+	});

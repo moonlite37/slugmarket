@@ -13,11 +13,13 @@ import {
 	IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import TextField from '@mui/material/TextField';
 import { getListings, deleteListing } from './actions';
 import { Listing } from '../../listing';
 
 export default function ListingTable() {
 	const [listings, setListings] = useState<Listing[]>([]);
+	const [search, setSearch] = useState('');
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -31,41 +33,45 @@ export default function ListingTable() {
 		setListings(await getListings());
 	};
 
-	if (listings.length === 0) {
+	const filtered = listings.filter((l) => l.title.toLowerCase().includes(search.toLowerCase()));
+	if (filtered.length === 0 && listings.length === 0) {
 		return <Typography color="text.secondary">No listings</Typography>;
 	}
 
 	return (
-		<TableContainer component={Paper} variant="outlined">
-			<Table>
-				<TableHead>
-					<TableRow>
-						<TableCell>Title</TableCell>
-						<TableCell>Seller</TableCell>
-						<TableCell>Price</TableCell>
-						<TableCell>Stock</TableCell>
-						<TableCell>Actions</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{listings.map((listing) => (
-						<TableRow key={listing.id}>
-							<TableCell>{listing.title}</TableCell>
-							<TableCell>{listing.username || listing.author.slice(0, 8)}</TableCell>
-							<TableCell>${listing.price}</TableCell>
-							<TableCell>{listing.stock}</TableCell>
-							<TableCell>
-								<IconButton
-									aria-label="delete"
-									onClick={() => { void handleDelete(listing.id); }}
-								>
-									<DeleteIcon />
-								</IconButton>
-							</TableCell>
+		<>
+			<TextField placeholder="Search listings..." size="small" value={search} onChange={(e) => setSearch(e.target.value)} sx={{ mb: 2 }} fullWidth />
+			<TableContainer component={Paper} variant="outlined">
+				<Table>
+					<TableHead>
+						<TableRow>
+							<TableCell>Title</TableCell>
+							<TableCell>Seller</TableCell>
+							<TableCell>Price</TableCell>
+							<TableCell>Stock</TableCell>
+							<TableCell>Actions</TableCell>
 						</TableRow>
-					))}
-				</TableBody>
-			</Table>
-		</TableContainer>
+					</TableHead>
+					<TableBody>
+						{filtered.map((listing) => (
+							<TableRow key={listing.id}>
+								<TableCell>{listing.title}</TableCell>
+								<TableCell>{listing.username || listing.author.slice(0, 8)}</TableCell>
+								<TableCell>${listing.price}</TableCell>
+								<TableCell>{listing.stock}</TableCell>
+								<TableCell>
+									<IconButton
+										aria-label="delete"
+										onClick={() => { void handleDelete(listing.id); }}
+									>
+										<DeleteIcon />
+									</IconButton>
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</TableContainer>
+		</>
 	);
 }
