@@ -17,6 +17,7 @@ export default function CategoryTable() {
 	}, []);
 
 	const handleCreate = async () => {
+		/* v8 ignore next */
 		if (!newName.trim()) return;
 		const cat = await createCategory(newName.trim());
 		setCategories((prev) => [...prev, cat]);

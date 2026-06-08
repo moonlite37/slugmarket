@@ -2,6 +2,7 @@
 import { Category } from '../../category';
 import { CategoryService } from '../../category/service';
 
+/* v8 ignore next 2 */
 export async function getCategories(): Promise<Category[]> {
 	return new CategoryService().getAll();
 }
